@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- این یک Selector است که حالت فشرده و عادی دکمه را مدیریت می‌کند -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- حالت فشرده (Pressed) -->
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <corners android:radius="30dp"/>
+            <!-- کمی تیره‌تر و شفاف‌تر هنگام فشرده شدن -->
+            <solid android:color="#60000000"/>
+            <stroke android:width="2dp" android:color="#FFFFFF"/>
+        </shape>
+    </item>
+
+    <!-- حالت عادی (Default) -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="30dp"/>
+            <!-- همان ظاهر شیشه‌ای خاکستری -->
+            <solid android:color="#40424242"/>
+            <stroke android:width="1dp" android:color="#B0FFFFFF"/>
+        </shape>
+    </item>
+</selector>

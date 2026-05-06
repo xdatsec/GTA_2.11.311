@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector
+    xmlns:android="http://schemas.android.com/apk/res/android">
+  <item>
+    <shape>
+      <!-- رنگ سفید شیشه ای (نیمه شفاف) -->
+      <solid android:color="#AAFFFFFF" />
+      <corners android:radius="@dimen/_8sdp" />
+    </shape>
+  </item>
+</selector>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:aapt="http://schemas.android.com/aapt"
+    android:height="66dp"
+    android:width="66dp"
+    android:viewportWidth="66"
+    android:viewportHeight="66">
+    <path
+        android:fillColor="#ffffff"
+        android:pathData="M39.084,53H52.916C55.632,53 57,51.647 57,48.811V39.189C57,36.375 55.632,35 52.916,35H39.084C36.368,35 35,36.375 35,39.189V48.811C35,51.647 36.368,53 39.084,53Z"
+        android:fillAlpha="0.4"/>
+    <path
+        android:fillColor="@drawable/_hud_menu_icon__0_res_0x7f0801ea"
+        android:pathData="M13.084,53H26.916C29.632,53 31,51.647 31,48.811V39.189C31,36.375 29.632,35 26.916,35H13.084C10.368,35 9,36.375 9,39.189V48.811C9,51.647 10.368,53 13.084,53Z"/>
+    <path
+        android:fillColor="@drawable/_hud_menu_icon__1_res_0x7f0801eb"
+        android:pathData="M39.084,31H52.916C55.632,31 57,29.625 57,26.79V17.188C57,14.353 55.632,13 52.916,13H39.084C36.368,13 35,14.353 35,17.188V26.79C35,29.625 36.368,31 39.084,31Z"/>
+    <path
+        android:fillColor="@drawable/_hud_menu_icon__2_res_0x7f0801ec"
+        android:pathData="M13.084,31H26.916C29.632,31 31,29.625 31,26.79V17.188C31,14.353 29.632,13 26.916,13H13.084C10.368,13 9,14.353 9,17.188V26.79C9,29.625 10.368,31 13.084,31Z"/>
+</vector>

@@ -1,0 +1,82 @@
+
+plugins {
+    id 'com.android.application'
+}
+
+
+android {
+    compileSdk 36
+
+    allprojects {
+        repositories {
+            google()
+            mavenCentral()
+            maven { url 'https://maven.aliyun.com/repository/jcenter' }
+            maven { url 'https://jitpack.io' }
+        }
+    }
+
+    namespace 'com.rockstargames.gtasa'
+
+    defaultConfig {
+        applicationId "com.rockstargames.gtasa"
+        minSdk 26
+        targetSdk 36
+        versionCode 105
+        versionName "0.9.7"
+
+        multiDexEnabled true
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    packagingOptions {
+        pickFirst 'assets/dexopt/baseline.prof'
+        pickFirst 'assets/dexopt/baseline.profm'
+
+        jniLibs {
+            excludes += ['META-INF/*']
+        }
+        resources {
+            excludes += ['META-INF/*']
+        }
+    }
+
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+    buildFeatures {
+        prefab true
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation "com.google.android.material:material:1.9.0"
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.navigation:navigation-fragment:2.7.2'
+    implementation 'androidx.navigation:navigation-ui:2.7.2'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    implementation 'androidx.tonyodev.fetch2:xfetch2:3.1.6'
+    implementation 'androidx.tonyodev.fetch2okhttp:xfetch2okhttp:3.1.6'
+    implementation 'com.android.volley:volley:1.2.1'
+    implementation 'com.intuit.sdp:sdp-android:1.1.0'
+    implementation 'org.ini4j:ini4j:0.5.4'
+    implementation 'com.github.bumptech.glide:glide:4.15.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
+    implementation("androidx.lifecycle:lifecycle-process:2.6.2")
+    implementation "com.joom.paranoid:paranoid-gradle-plugin:0.3.14"
+    implementation 'com.bytedance.android:shadowhook:1.0.9'
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'com.google.android.gms:play-services-auth:20.7.0'
+    implementation 'com.airbnb.android:lottie:6.4.0'
+}

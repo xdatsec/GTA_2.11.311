@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp">
+
+    <TextView
+        android:id="@+id/tablist_item_id"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.15"
+        android:textColor="#1A1A1A" />
+
+    <TextView
+        android:id="@+id/tablist_item_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.55"
+        android:textColor="#1A1A1A" />
+
+    <TextView
+        android:id="@+id/tablist_item_score"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.15"
+        android:gravity="end"
+        android:textColor="#1A1A1A" />
+
+    <TextView
+        android:id="@+id/tablist_item_ping"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.15"
+        android:gravity="end"
+        android:textColor="#1A1A1A" />
+
+</LinearLayout>

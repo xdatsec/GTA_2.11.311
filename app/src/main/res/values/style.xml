@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="tab_layout_title" parent="@android:style/TextAppearance.Widget.TabWidget">
+        <item name="android:fontFamily">@font/montserrat_bold</item>
+    </style>
+
+    <style name="ButtonPanelButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/_26sdp</item>
+        <item name="android:minWidth">@dimen/_28sdp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingStart">@dimen/_8sdp</item>
+        <item name="android:paddingEnd">@dimen/_8sdp</item>
+        <item name="android:paddingTop">@dimen/_2sdp</item>
+        <item name="android:paddingBottom">@dimen/_2sdp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/_10sdp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/akrobat_extra_bold</item>
+        <item name="android:background">@drawable/btn_panel_button_bg</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+    <style name="GameActivity" parent="@style/Theme.AppCompat.NoActionBar">
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+</resources>

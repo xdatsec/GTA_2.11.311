@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/black"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <androidx.constraintlayout.widget.Guideline
+        android:orientation="vertical"
+        android:id="@+id/guideLeftMargin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintGuide_percent="0.05"
+        app:layout_constraintStart_toStartOf="parent"/>
+    <androidx.constraintlayout.widget.Guideline
+        android:orientation="vertical"
+        android:id="@+id/guideRightMargin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintGuide_percent="0.95"
+        app:layout_constraintStart_toStartOf="parent"/>
+    <ImageView
+        android:id="@+id/splashImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:importantForAccessibility="no"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+    <TextView
+        android:textColor="@android:color/white"
+        android:id="@+id/splashText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Use of this software is subject to license in game and at rockstargames.com/eula; online account terms at www.rockstargames.com/socialclub. Violation of EULA, Code of Conduct, or other policies may result in restriction or termination of access to game or online account. Non-transferable access to special features such as exclusive, unlockable, downloadable or online content, services, or functions may require single-use serial code, additional fee and/or online account registration (13+). Access to special features may require internet connection, may not be available to all users, and may, upon 30 days notice, be terminated, modified, or offered under different terms.  Your gameplay information may be displayed on web pages and leaderboards, including those located at http://www.rockstargames.com/socialclub.   Playing the game may make you eligible to claim some prizes. Check out http://www.rockstargames.com/socialclub/events.  For details, official rules, or to opt-out of certain Social Club features visit http://www.rockstargames.com/socialclub/privacy.  Contests void where prohibited. No purchase necessary. Sponsored by Rockstar Games, 622 Broadway, New York, NY, USA.  "
+        android:breakStrategy="simple"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideRightMargin"
+        app:layout_constraintStart_toEndOf="@+id/guideLeftMargin"
+        app:layout_constraintTop_toTopOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

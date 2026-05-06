@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    android:versionCode="3782367"
+    android:versionName="2.11.277"
+    android:compileSdkVersion="34"
+    android:compileSdkVersionCodename="14"
+    package="com.rockstargames.gtasa">
+
+    <uses-permission android:name="com.android.vending.CHECK_LICENSE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission-sdk-23 android:name="android.permission.READ_MEDIA_AUDIO"/>
+
+    <uses-sdk
+        android:minSdkVersion="28"
+        android:targetSdkVersion="34"/>
+
+    <uses-feature android:glEsVersion="0x20000" android:required="true"/>
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
+    <uses-feature android:name="android.hardware.touchscreen.multitouch" android:required="false"/>
+    <uses-feature android:name="android.software.leanback" android:required="false"/>
+
+    <application
+        android:label="Gtasa"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:banner="@drawable/leanbacktvlauncher"
+        android:theme="@style/Theme.SAMPLauncher.NoActionBar"
+        android:supportsRtl="true"
+        android:isGame="true"
+        android:appCategory="game"
+        android:requestLegacyExternalStorage="true"
+        android:appComponentFactory="androidx.core.app.CoreComponentFactory">
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
+        <activity
+            android:theme="@style/GameActivity"
+            android:name="com.rockstargames.gtasa.GameActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="userLandscape"
+            android:configChanges="fontScale|layoutDirection|smallestScreenSize|screenSize|uiMode|screenLayout|orientation|keyboardHidden|keyboard|locale"
+            android:documentLaunchMode="never"
+            android:resizeableActivity="false">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+    </application>
+
+</manifest>

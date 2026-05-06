@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_loading_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- ImageView 1 -->
+    <ImageView
+        android:id="@+id/background_image_1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/back1"
+        android:visibility="gone"
+        android:contentDescription="Loading Image 1" />
+
+    <!-- ImageView 2 -->
+    <ImageView
+        android:id="@+id/background_image_2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/back2"
+        android:visibility="gone"
+        android:contentDescription="Loading Image 2" />
+
+    <!-- ImageView 3 -->
+    <ImageView
+        android:id="@+id/background_image_3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/back3"
+        android:visibility="gone"
+        android:contentDescription="Loading Image 3" />
+
+    <!-- ImageView 4 -->
+    <ImageView
+        android:id="@+id/background_image_4"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/back4"
+        android:visibility="gone"
+        android:contentDescription="Loading Image 4" />
+
+    <!-- ImageView 5 -->
+    <ImageView
+        android:id="@+id/background_image_5"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/back5"
+        android:visibility="gone"
+        android:contentDescription="Loading Image 5" />
+
+
+    <!-- Loading Indicator Card -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        app:cardBackgroundColor="#80000000"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="0dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <!-- "Loading..." Text -->
+            <TextView
+                android:id="@+id/loading_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="Loading..."
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <!-- Circular ProgressBar -->
+            <ProgressBar
+                android:id="@+id/loading_spinner"
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:indeterminateTint="@android:color/white" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</FrameLayout>
+
