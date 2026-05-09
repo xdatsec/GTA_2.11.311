@@ -29,7 +29,7 @@ android {
     }
     aaptOptions {
         // List your heavy game extensions here
-        noCompress 'txd', 'dff', 'dat', 'bin', 'png','txt','img','dz','tmb','toc','ifp','bmp','zip','met','json','gxt' ,'alp','col','zon','scm','ipl','ide','ped','idx','osw','cfg'
+       // noCompress 'txd', 'dff', 'dat', 'bin', 'png','txt','img','dz','tmb','toc','ifp','bmp','zip','met','json','gxt' ,'alp','col','zon','scm','ipl','ide','ped','idx','osw','cfg'
     }
     defaultConfig {
         applicationId "com.rockstargames.gtasa"

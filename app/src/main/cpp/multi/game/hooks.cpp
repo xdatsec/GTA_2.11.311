@@ -99,8 +99,9 @@ char lastFile[123];
 
 stFile* NvFOpen(const char *r1)
 {
+
     strcpy(lastFile, r1);
-    g_pszStorage ="/storage/0/emulated/Documents/SampMobile";
+    g_pszStorage = "/storage/emulated/0/Android/media/com.rockstargames.gtasa/";
     static char path[255]{};
     memset(path, 0, sizeof(path));
 
