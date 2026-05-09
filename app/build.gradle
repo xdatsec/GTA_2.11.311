@@ -1,7 +1,7 @@
 
 plugins {
     id 'com.android.application'
-    id 'com.google.gms.google-services'
+
 }
 
 
@@ -33,9 +33,9 @@ android {
     }
     defaultConfig {
         applicationId "com.rockstargames.gtasa"
-        minSdk 26
+        minSdk 28
         targetSdk 36
-        versionCode 105
+        versionCode 1
         versionName "0.9.7"
 
         multiDexEnabled true
@@ -95,9 +95,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation 'com.google.firebase:firebase-messaging:24.1.0'
     implementation 'com.android.billingclient:billing:6.2.1'
-    implementation 'com.google.firebase:firebase-analytics:22.5.0'
     implementation 'com.google.android.play:asset-delivery:2.2.2'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation "com.google.android.material:material:1.9.0"

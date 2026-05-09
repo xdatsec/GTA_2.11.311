@@ -9,7 +9,7 @@
     package="com.rockstargames.gtasa">
     <uses-sdk
         android:minSdkVersion="28"
-        android:targetSdkVersion="34" />
+        android:targetSdkVersion="36" />
     <uses-feature
         android:glEsVersion="0x20000"
         android:required="true" />
@@ -77,6 +77,7 @@
         android:name="com.rockstargames.gtasa.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
         android:protectionLevel="signature" />
     <uses-permission android:name="com.rockstargames.gtasa.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+
     <application
         android:label="GTA: SA"
         android:icon="@mipmap/ic_launcher"
@@ -122,11 +123,6 @@
         <meta-data
             android:name="io.sentry.auto-init"
             android:value="false" />
-        <provider
-            android:name="rockstarmobile.Provider"
-            android:exported="true"
-            android:authorities="com.rockstargames.gtasa.rockstarprovider"
-            android:syncable="true" />
         <meta-data
             android:name="google_analytics_automatic_screen_reporting_enabled"
             android:value="false" />
@@ -147,26 +143,7 @@
                     android:name="com.rockstar.sdkfilter" />
             </intent-filter>
         </activity>
-        <activity
-            android:theme="@style/GameClubActivityFullscreenTheme"
-            android:name="rockstarmobile.ui.FlutterScreenHost"
-            android:configChanges="screenSize|screenLayout|orientation" />
-        <activity
-            android:theme="@style/GameClubActivityFullscreenTheme"
-            android:name="rockstarmobile.ui.BrowserScreen"
-            android:screenOrientation="portrait"
-            android:configChanges="screenSize|screenLayout|orientation" />
-        <service
-            android:name="rockstarmobile.integrations.GCFirebaseMessagingService"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action
-                    android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-        <receiver
-            android:name="rockstarmobile.GCBroadcastReceiver" />
+
         <meta-data
             android:name="flutterProjectType"
             android:value="module" />
@@ -201,57 +178,7 @@
             android:exported="false"
             android:configChanges="screenSize|screenLayout|orientation|keyboardHidden|keyboard"
             tools:replace="android:configChanges"/>
-        <service
-            android:name="com.google.firebase.components.ComponentDiscoveryService"
-            android:exported="false"
-            android:directBootAware="true">
-            <meta-data
-                android:name="com.google.firebase.components:com.google.firebase.iid.Registrar"
-                android:value="com.google.firebase.components.ComponentRegistrar" />
-            <meta-data
-                android:name="com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingRegistrar"
-                android:value="com.google.firebase.components.ComponentRegistrar" />
-            <meta-data
-                android:name="com.google.firebase.components:com.google.firebase.analytics.connector.internal.AnalyticsConnectorRegistrar"
-                android:value="com.google.firebase.components.ComponentRegistrar" />
-            <meta-data
-                android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsRegistrar"
-                android:value="com.google.firebase.components.ComponentRegistrar" />
-            <meta-data
-                android:name="com.google.firebase.components:com.google.firebase.datatransport.TransportRegistrar"
-                android:value="com.google.firebase.components.ComponentRegistrar" />
-        </service>
-        <receiver
-            android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND"
-            android:exported="true">
-            <intent-filter>
-                <action
-                    android:name="com.google.android.c2dm.intent.RECEIVE" />
-            </intent-filter>
-        </receiver>
-        <service
-            android:name="com.google.firebase.messaging.FirebaseMessagingService"
-            android:exported="false"
-            android:directBootAware="true">
-            <intent-filter android:priority="-500">
-                <action
-                    android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-        <receiver
-            android:name="com.google.android.gms.measurement.AppMeasurementReceiver"
-            android:enabled="true"
-            android:exported="false" />
-        <service
-            android:name="com.google.android.gms.measurement.AppMeasurementService"
-            android:enabled="true"
-            android:exported="false" />
-        <service
-            android:name="com.google.android.gms.measurement.AppMeasurementJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:enabled="true"
-            android:exported="false" />
+
         <activity
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:name="com.google.android.gms.common.api.GoogleApiActivity"
@@ -273,15 +200,7 @@
                 android:name="androidx.lifecycle.ProcessLifecycleInitializer"
                 android:value="androidx.startup" />
         </provider>
-        <provider
-            android:name="io.sentry.android.core.SentryInitProvider"
-            android:exported="false"
-            android:authorities="com.rockstargames.gtasa.SentryInitProvider" />
-        <provider
-            android:name="io.sentry.android.core.SentryPerformanceProvider"
-            android:exported="false"
-            android:authorities="com.rockstargames.gtasa.SentryPerformanceProvider"
-            android:initOrder="200" />
+
         <service
             android:name="com.google.android.datatransport.runtime.backends.TransportBackendDiscovery"
             android:exported="false">
