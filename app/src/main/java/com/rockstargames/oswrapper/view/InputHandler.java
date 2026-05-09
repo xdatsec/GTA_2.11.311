@@ -9,6 +9,15 @@ import android.view.MotionEvent;
 
 import com.rockstargames.oswrapper.GameActivityBase;
 import com.rockstargames.oswrapper.GameThread;
+import com.rockstargames.oswrapper.UtilsKt;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
+import kotlin.collections.CollectionsKt;
+import kotlin.jvm.internal.Intrinsics;
 
 public class InputHandler implements GameViewHandler {
 
@@ -51,36 +60,72 @@ public class InputHandler implements GameViewHandler {
     // Controller count (replaces Kotlin Companion)
     // -----------------------------------------------------------------------
 
-    public int getControllerCount() {
+    public final int getControllerCount() {
         int[] deviceIds = InputDevice.getDeviceIds();
-        int count = 0;
-        for (int id : deviceIds) {
-            InputDevice device = InputDevice.getDevice(id);
-            if (device != null && (device.getSources() & 0x1000011) != 0) {
-                count++;
+        Intrinsics.checkNotNullExpressionValue(deviceIds, "getDeviceIds(...)");
+        ArrayList arrayList = new ArrayList(deviceIds.length);
+        for (int i : deviceIds) {
+            arrayList.add(InputDevice.getDevice(i));
+        }
+        List listFilterNotNull = CollectionsKt.filterNotNull(arrayList);
+        if ((listFilterNotNull instanceof Collection) && listFilterNotNull.isEmpty()) {
+            return 0;
+        }
+        Iterator it = listFilterNotNull.iterator();
+        int i2 = 0;
+        while (it.hasNext()) {
+            if (((((InputDevice) it.next()).getSources() & 16778257) != 0) && (i2 = i2 + 1) < 0) {
+                CollectionsKt.throwCountOverflow();
             }
         }
-        return count;
+        return i2;
     }
+
 
     // -----------------------------------------------------------------------
     // Key mapping
     // -----------------------------------------------------------------------
 
-    private int toGamepadButton(int keyCode) {
+    private final int toGamepadButton(int keyCode) {
+        if (keyCode == 4) {
+            return 14;
+        }
+        if (keyCode == 82) {
+            return 15;
+        }
+        if (keyCode == 110) {
+            return 4;
+        }
+        if (keyCode == 96) {
+            return 0;
+        }
+        if (keyCode == 97) {
+            return 1;
+        }
+        if (keyCode == 99) {
+            return 2;
+        }
+        if (keyCode == 100) {
+            return 3;
+        }
+        if (keyCode == 102) {
+            return 6;
+        }
+        if (keyCode == 103) {
+            return 7;
+        }
         switch (keyCode) {
-            case 4:   return OSXP_BACK;     // Android back button
-            case 82:  return OSXP_GP_MENU;  // Menu key
-            case 110: return OSX360_START;  // Button START
-            case 96:  return OSX360_A;
-            case 97:  return OSX360_B;
-            case 99:  return OSX360_X;
-            case 100: return OSX360_Y;
-            case 102: return OSX360_L1;
-            case 103: return OSX360_R1;
-            default:  return -1;
+            case 106:
+                return 12;
+            case 107:
+                return 13;
+            case 108:
+                return 4;
+            default:
+                return -1;
         }
     }
+
 
     // -----------------------------------------------------------------------
     // Back button
@@ -122,110 +167,113 @@ public class InputHandler implements GameViewHandler {
     // Gamepad axes / motion
     // -----------------------------------------------------------------------
 
-    public boolean onGenericMotionEvent(MotionEvent event) {
-        if (event == null || (event.getSource() & 16) == 0) return false;
-
-        float axisX    = event.getAxisValue(MotionEvent.AXIS_X);
-        float axisY    = event.getAxisValue(MotionEvent.AXIS_Y);
-        float axisZ    = event.getAxisValue(MotionEvent.AXIS_Z);
-        float axisRZ   = event.getAxisValue(MotionEvent.AXIS_RZ);
-        float axisHatX = event.getAxisValue(MotionEvent.AXIS_HAT_X);
-        float axisHatY = event.getAxisValue(MotionEvent.AXIS_HAT_Y);
-
-        // D-pad horizontal
-        if (axisHatX > 0.2f) {
-            GameThread.INSTANCE.onGamepadButtonDown(0, OSX360_DPADRIGHT);
-            dpadRightPressed = true;
-        } else if (axisHatX < -0.2f) {
-            GameThread.INSTANCE.onGamepadButtonDown(0, OSX360_DPADLEFT);
-            dpadLeftPressed = true;
-        } else {
-            if (dpadLeftPressed)  GameThread.INSTANCE.onGamepadButtonUp(0, OSX360_DPADLEFT);
-            if (dpadRightPressed) GameThread.INSTANCE.onGamepadButtonUp(0, OSX360_DPADRIGHT);
-            dpadLeftPressed  = false;
-            dpadRightPressed = false;
+    public final boolean onGenericMotionEvent(MotionEvent event) {
+        if (event == null || (event.getSource() & 16) == 0) {
+            return false;
         }
-
-        // D-pad vertical
-        if (axisHatY < -0.2f) {
-            GameThread.INSTANCE.onGamepadButtonDown(0, OSX360_DPADUP);
-            dpadUpPressed = true;
-        } else if (axisHatY > 0.2f) {
-            GameThread.INSTANCE.onGamepadButtonDown(0, OSX360_DPADDOWN);
-            dpadDownPressed = true;
+        float axisValue = event.getAxisValue(0);
+        float axisValue2 = event.getAxisValue(1);
+        float axisValue3 = event.getAxisValue(11);
+        float axisValue4 = event.getAxisValue(14);
+        float axisValue5 = event.getAxisValue(15);
+        float axisValue6 = event.getAxisValue(16);
+        if (axisValue5 > 0.2f) {
+            GameThread.INSTANCE.onGamepadButtonDown(0, 11);
+            this.dpadRightPressed = true;
+        } else if (axisValue5 < -0.2f) {
+            GameThread.INSTANCE.onGamepadButtonDown(0, 10);
+            this.dpadLeftPressed = true;
         } else {
-            if (dpadUpPressed)   GameThread.INSTANCE.onGamepadButtonUp(0, OSX360_DPADUP);
-            if (dpadDownPressed) GameThread.INSTANCE.onGamepadButtonUp(0, OSX360_DPADDOWN);
-            dpadUpPressed   = false;
-            dpadDownPressed = false;
+            if (this.dpadLeftPressed) {
+                GameThread.INSTANCE.onGamepadButtonUp(0, 10);
+            }
+            if (this.dpadRightPressed) {
+                GameThread.INSTANCE.onGamepadButtonUp(0, 11);
+            }
+            this.dpadLeftPressed = false;
+            this.dpadRightPressed = false;
         }
-
-        // Triggers — take max of possible axis mappings
-        float triggerL = Math.max(event.getAxisValue(MotionEvent.AXIS_LTRIGGER),
-                event.getAxisValue(MotionEvent.AXIS_BRAKE));
-        float triggerR = max3(event.getAxisValue(MotionEvent.AXIS_RTRIGGER),
-                event.getAxisValue(MotionEvent.AXIS_GAS),
-                event.getAxisValue(MotionEvent.AXIS_THROTTLE));
-
-        GameThread.INSTANCE.onGamepadAxesChanged(0, axisX, axisY, axisZ, axisRZ, triggerL, triggerR);
+        if (axisValue6 < -0.2f) {
+            GameThread.INSTANCE.onGamepadButtonDown(0, 8);
+            this.dpadUpPressed = true;
+        } else if (axisValue6 > 0.2f) {
+            GameThread.INSTANCE.onGamepadButtonDown(0, 9);
+            this.dpadDownPressed = true;
+        } else {
+            if (this.dpadUpPressed) {
+                GameThread.INSTANCE.onGamepadButtonUp(0, 8);
+            }
+            if (this.dpadDownPressed) {
+                GameThread.INSTANCE.onGamepadButtonUp(0, 9);
+            }
+            this.dpadUpPressed = false;
+            this.dpadDownPressed = false;
+        }
+        float fMax3 = UtilsKt.max3(event.getAxisValue(18), event.getAxisValue(19), event.getAxisValue(22));
+        GameThread.INSTANCE.onGamepadAxesChanged(0, axisValue, axisValue2, axisValue3, axisValue4, Math.max(event.getAxisValue(17), event.getAxisValue(23)), fMax3);
         return true;
     }
+
 
     // -----------------------------------------------------------------------
     // Touch events
     // -----------------------------------------------------------------------
 
-    public boolean onTouchEvent(MotionEvent event) {
-        if (event == null) return false;
-
+    public final boolean onTouchEvent(MotionEvent event) {
+        Intrinsics.checkNotNullParameter(event, "event");
         int actionIndex = event.getActionIndex();
-        int pointerId   = event.getPointerId(actionIndex);
-
+        int pointerId = event.getPointerId(actionIndex);
+        int i = 0;
         switch (event.getActionMasked()) {
-            case MotionEvent.ACTION_DOWN:
-            case MotionEvent.ACTION_POINTER_DOWN: {
+            case 0:
+            case 5:
                 float x = event.getX(actionIndex);
                 float y = event.getY(actionIndex);
-                PointF pt = new PointF(x, y);
-                touches.put(pointerId, pt);
+                PointF pointF = new PointF();
+                pointF.x = x;
+                pointF.y = y;
+                this.touches.put(pointerId, pointF);
                 GameThread.INSTANCE.onTouchStart(pointerId, x, y);
                 return true;
-            }
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_POINTER_UP:
-            case MotionEvent.ACTION_OUTSIDE: {
-                PointF pt = touches.get(pointerId);
-                if (pt != null) {
-                    GameThread.INSTANCE.onTouchEnd(pointerId, pt.x, pt.y);
+            case 1:
+            case 4:
+            case 6:
+                PointF pointF2 = this.touches.get(pointerId);
+                if (pointF2 != null) {
+                    GameThread.INSTANCE.onTouchEnd(pointerId, pointF2.x, pointF2.y);
                 }
-                touches.remove(pointerId);
+                this.touches.remove(pointerId);
                 return true;
-            }
-            case MotionEvent.ACTION_MOVE: {
-                for (int i = 0; i < event.getPointerCount(); i++) {
-                    float x = event.getX(i);
-                    float y = event.getY(i);
-                    int pid = event.getPointerId(i);
-                    touches.put(pid, new PointF(x, y));
-                    GameThread.INSTANCE.onTouchMove(pid, x, y);
+            case 2:
+                while (i < event.getPointerCount()) {
+                    float x2 = event.getX(i);
+                    float y2 = event.getY(i);
+                    PointF pointF3 = new PointF();
+                    pointF3.x = x2;
+                    pointF3.y = y2;
+                    int pointerId2 = event.getPointerId(i);
+                    this.touches.put(pointerId2, pointF3);
+                    GameThread.INSTANCE.onTouchMove(pointerId2, x2, y2);
+                    i++;
                 }
                 return true;
-            }
-            case MotionEvent.ACTION_CANCEL: {
-                for (int i = 0; i < touches.size(); i++) {
-                    int key = touches.keyAt(i);
-                    PointF pt = touches.get(key);
-                    if (pt != null) {
-                        GameThread.INSTANCE.onTouchEnd(key, pt.x, pt.y);
+            case 3:
+                while (i < this.touches.size()) {
+                    int iKeyAt = this.touches.keyAt(i);
+                    PointF pointF4 = this.touches.get(iKeyAt);
+                    if (pointF4 != null) {
+                        GameThread.INSTANCE.onTouchEnd(iKeyAt, pointF4.x, pointF4.y);
                     }
+                    i++;
                 }
-                touches.clear();
+                this.touches.clear();
                 return true;
-            }
             default:
                 return false;
         }
     }
+
+
 
     // -----------------------------------------------------------------------
     // GameViewHandler

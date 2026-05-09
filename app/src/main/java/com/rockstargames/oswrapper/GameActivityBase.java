@@ -1,32 +1,59 @@
 package com.rockstargames.oswrapper;
 
+import static android.opengl.EGL14.EGL_CONTEXT_CLIENT_VERSION;
+import static android.opengl.EGL15.EGL_OPENGL_ES3_BIT;
+import static javax.microedition.khronos.egl.EGL10.EGL_RENDERABLE_TYPE;
+
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
 import android.util.Log;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.nvidia.devtech.NvAPKFile;
 import com.nvidia.devtech.NvAPKFileHelper;
 import com.nvidia.devtech.NvUtil;
+import com.rockstargames.gtasa.MainActivity;
 import com.rockstargames.gtasa.R;
 
 
 import java.io.File;
 
+import javax.microedition.khronos.egl.EGL10;
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.egl.EGLContext;
+import javax.microedition.khronos.egl.EGLDisplay;
+import javax.microedition.khronos.egl.EGLSurface;
+import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.khronos.opengles.GL11;
+import android.view.SurfaceHolder.Callback;
+import android.view.WindowManager;
+
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
+import kotlin.jvm.internal.Intrinsics;
+
 public abstract class GameActivityBase extends AppCompatActivity {
-
+    public Handler handler = null;
+    protected boolean supportPauseResume = true;
+    private boolean ranInit = false;
     public static final String TAG = "GameActivityBase";
-
+    protected boolean ResumeEventDone = false;
     protected ConnectivityManager connectivityManager;
     protected WifiManager wifiManager;
     public GamePlatformServices services;
     public GameView view;
-
     private int lastNetworkType;
     private ActivityResultLauncher<String> requestPermissionLauncher;
     private PermissionCallback requestPermissionCallback;
@@ -131,11 +158,29 @@ public abstract class GameActivityBase extends AppCompatActivity {
     // Inject event
     // -----------------------------------------------------------------------
 
-
-
     // -----------------------------------------------------------------------
     // Lifecycle
     // -----------------------------------------------------------------------
+
+    private String baseDirectory;
+    private String baseDirectoryRoot;
+
+    public String GetGameBaseDirectory() {
+        // Standard path: /storage/emulated/0/Documents/SampMobile/
+        File documentsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+        File gameDir = new File(documentsDir, "SampMobile");
+
+        try {
+            if (!gameDir.exists()) {
+                boolean created = gameDir.mkdirs();
+
+            }
+            return gameDir.getAbsolutePath() + "/";
+        } catch (Exception e) {
+
+            return "";
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,7 +192,7 @@ public abstract class GameActivityBase extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         //AssetUtils.extractAssets(this);
-
+        handler = new Handler();
         // Resolve storage paths
         File extDir = getExternalFilesDir(null);
         if (extDir == null) throw new IllegalStateException("getExternalFilesDir returned null");
@@ -160,12 +205,21 @@ public abstract class GameActivityBase extends AppCompatActivity {
 
         Log.i(TAG, "[!!] onCreate: STORAGE_ROOT = " + storagePath
                 + " STORAGE_ROOT_BASE = " + storageBase);
+        this.baseDirectory = GetGameBaseDirectory();
 
         // 3. ناردنی زانیارییەکان بۆ کتێبخانەی گرافیک و ناوەکی
         NvUtil.getInstance().setActivity(this);
-        NvUtil.getInstance().setAppLocalValue("STORAGE_ROOT", storagePath);
+        NvUtil.getInstance().setAppLocalValue("STORAGE_ROOT", this.baseDirectory);
         NvUtil.getInstance().setAppLocalValue("STORAGE_ROOT_BASE", storageBase);
         NvAPKFileHelper.getInstance().setContext(this);
+        NvAPKFile file = new NvAPKFile();
+        file.is = null;
+        try {
+            Intent intent = getIntent();
+
+            GameThread.INSTANCE.onInitialSetup(this);
+        } catch (UnsatisfiedLinkError e) {
+        }
 
         onActivitySetup();
 
@@ -223,11 +277,61 @@ public abstract class GameActivityBase extends AppCompatActivity {
         hideSystemUI();
         setContentView(R.layout.game);
 
-        setView((GameView) findViewById(R.id.viewGame));
+        // 1. Get the correct class directly (Matches XML)
+        view = findViewById(R.id.viewGame);
+
+// 2. Performance settings
+        getWindow().setSustainedPerformanceMode(true);
+
+        SurfaceHolder holder = view.getHolder();
+        holder.setKeepScreenOn(true); // Keep only the necessary calls
+
+        holder.addCallback(new SurfaceHolder.Callback2() {
+            @Override
+            public void surfaceCreated(SurfaceHolder holder) {
+                Log.i("GL", "Surface Created");
+
+                // Update the thread's reference immediately
+                GameThread.INSTANCE.cachedSurfaceHolder = holder;
+                GameThread.INSTANCE.viewIsActive = true;
+
+                // Dynamic Resolution Scaling for Speed
+                if (GameThread.INSTANCE.fixedWidth > 0) {
+                    holder.setFixedSize(GameThread.INSTANCE.fixedWidth, GameThread.INSTANCE.fixedHeight);
+                }
+                GameThread.INSTANCE.InitEGLAndGLES2(3);
+                // Trigger the native engine initialization
+                // Note: Ensure ResumeEventDone logic is handled safely
+            }
+
+            @Override
+            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+                GameThread.INSTANCE.surfaceWidth = width;
+                GameThread.INSTANCE.surfaceHeight = height;
+                // Optionally notify native engine of resolution change
+            }
+
+            @Override
+            public void surfaceDestroyed(SurfaceHolder holder) {
+                Log.i("GL", "Surface Destroyed");
+                GameThread.INSTANCE.viewIsActive = false;
+                GameThread.INSTANCE.destroyEGLSurface();
+
+                // CRITICAL: Clear the reference so we don't use a dead surface later
+                GameThread.INSTANCE.cachedSurfaceHolder = null;
+            }
+
+            @Override
+            public void surfaceRedrawNeeded(SurfaceHolder holder) {
+                // Callback2 requirement - helpful for rotation smoothness
+            }
+        });
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setServices(new GamePlatformServices(this, getView()));
 
         GameThread.INSTANCE.start(getServices());
-        GameThread.INSTANCE.onInitialSetup(this);
+
         /*
         GameThread.INSTANCE.onRockstarSetup(
                 Rockstar.socialClubEnvironment(),
@@ -236,8 +340,14 @@ public abstract class GameActivityBase extends AppCompatActivity {
         getView().setup(this);
         GameThread.INSTANCE.onActivityCreated(this, getView(), !initialized);
         onActivityReady(!initialized);
+
+
     }
 
+
+    public boolean getSupportPauseResume() {
+        return supportPauseResume;
+    }
     @Override
     protected void onDestroy() {
         Log.i(TAG, "[!!] onDestroy");

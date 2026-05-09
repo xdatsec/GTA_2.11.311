@@ -3,6 +3,11 @@ package com.rockstargames.oswrapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import kotlin.Unit;
+import kotlin.collections.CollectionsKt;
+import kotlin.jvm.functions.Function2;
+import kotlin.jvm.internal.Intrinsics;
+
 public final class DownloaderConfig {
 
     private static final int MAX_PACKS = 8; // matches PACK_VIEWS size
@@ -27,7 +32,46 @@ public final class DownloaderConfig {
         this.activity   = activity;
         this.packs      = packs;
     }
+    public final void forEachPack(Function2<? super Integer, ? super DownloaderPackConfig, Unit> action) {
+        Intrinsics.checkNotNullParameter(action, "action");
 
+        int index = 0;
+        // Use the specific type instead of Object to avoid casting issues
+        for (DownloaderPackConfig pack : this.packs) {
+            // Standard index overflow check (Kotlin style)
+            if (index < 0) {
+                CollectionsKt.throwIndexOverflow();
+            }
+
+            // Invoke the Kotlin Function2
+            action.invoke(index, pack);
+
+            index++;
+        }
+    }
+
+
+    public final void forEachRuntimePack(Function2<? super Integer, ? super DownloaderPackConfig, Unit> action) {
+        Intrinsics.checkNotNullParameter(action, "action");
+
+        // 1. Filter the packs list for RUNTIME types
+        List<DownloaderPackConfig> list = this.packs;
+        ArrayList<DownloaderPackConfig> runtimePacks = new ArrayList<>();
+
+        for (DownloaderPackConfig pack : list) {
+            if (pack.getType() == DownloaderPackType.RUNTIME) {
+                runtimePacks.add(pack);
+            }
+        }
+
+        // 2. Iterate with a proper index counter
+        int index = 0;
+        for (DownloaderPackConfig pack : runtimePacks) {
+            // Kotlin's forEachIndexed logic:
+            action.invoke(index, pack);
+            index++;
+        }
+    }
     // -----------------------------------------------------------------------
     // Getters
     // -----------------------------------------------------------------------

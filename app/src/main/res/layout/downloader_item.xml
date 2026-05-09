@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ProgressBar
+        android:id="@+id/barProgress"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:max="100"
+        android:progress="0"
+        android:indeterminate="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        style="?android:attr/progressBarStyleHorizontal"/>
+    <TextView
+        android:id="@+id/txtPackName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="[PACK NAME]"
+        app:layout_constraintBottom_toTopOf="@+id/txtProgressStatus"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/DownloaderText"/>
+    <TextView
+        android:id="@+id/txtProgressStatus"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="999 MB / 999 MB"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/barProgress"
+        app:layout_constraintEnd_toStartOf="@+id/txtProgressPercent"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/DownloaderText"/>
+    <TextView
+        android:id="@+id/txtProgressPercent"
+        android:layout_width="64dp"
+        android:layout_height="wrap_content"
+        android:text="100%"
+        android:textAlignment="viewEnd"
+        app:layout_constraintBottom_toTopOf="@+id/barProgress"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/DownloaderText"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

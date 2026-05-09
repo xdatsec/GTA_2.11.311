@@ -55,6 +55,8 @@ public final class RockstarServices implements IRockstarServices {
         GameThread.INSTANCE.onRockstarSignOutComplete();
     }
 
+
+
     @Override public void rockstarAccountDeletion() {
         GameThread.INSTANCE.onRockstarAccountDeletionComplete();
     }

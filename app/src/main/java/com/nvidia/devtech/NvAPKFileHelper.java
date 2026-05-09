@@ -5,134 +5,127 @@ import android.content.res.AssetManager;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 
 public class NvAPKFileHelper {
-    private static NvAPKFileHelper instance = new NvAPKFileHelper();
-    private static final boolean logAssetFiles = false;
-    String[] apkFiles;
+    private static final NvAPKFileHelper instance = new NvAPKFileHelper();
+
     private Context context = null;
-    int apkCount = 0;
     int myApkCount = 0;
     boolean hasAPKFiles = false;
 
-    private int findInAPKFiles(String str) {
-        if (this.myApkCount == 0) {
-            return -1;
-        }
-        String str2 = str + ".mp3";
-        int i = 0;
-        while (true) {
-            String[] strArr = this.apkFiles;
-            if (i >= strArr.length) {
-                return -1;
-            }
-            if (str.compareToIgnoreCase(strArr[i]) == 0 || str2.compareToIgnoreCase(this.apkFiles[i]) == 0) {
-                break;
-            }
-            i++;
-        }
-        str.compareTo(this.apkFiles[i]);
-        return i;
-    }
+    // O(1) lookup: lowercase asset path -> original asset path
+    private HashMap<String, String> apkFileMap = new HashMap<>();
+
+    private NvAPKFileHelper() {}
 
     public static NvAPKFileHelper getInstance() {
         return instance;
     }
 
+    // Returns the real asset path for the given name, or null if not found.
+    // Tries exact match first, then appends ".mp3" (original behaviour).
+    private String findInAPKFiles(String str) {
+        String lower = str.toLowerCase();
+        String path = apkFileMap.get(lower);
+        if (path != null) return path;
+        return apkFileMap.get(lower + ".mp3");
+    }
+
     void AddAssetFile(String str) {
-        String[] strArr = this.apkFiles;
-        int i = this.myApkCount;
-        this.myApkCount = i + 1;
-        strArr[i] = str;
+        apkFileMap.put(str.toLowerCase(), str);
+        myApkCount++;
     }
 
     void GetAssetList() {
+        // Prefer the pre-built index file — avoids the expensive recursive scan.
         try {
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(this.context.getAssets().open("assetfile.txt")));
-            int i = Integer.parseInt(bufferedReader.readLine());
-            this.myApkCount = 0;
-            if (i <= 0) {
-                return;
-            }
-            this.apkFiles = new String[i];
-            while (true) {
-                String line = bufferedReader.readLine();
-                if (line == null) {
-                    return;
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    this.context.getAssets().open("assetfile.txt")));
+            int count = Integer.parseInt(br.readLine().trim());
+            if (count > 0) {
+                apkFileMap = new HashMap<>(count * 2);
+                String line;
+                while ((line = br.readLine()) != null) {
+                    line = line.trim();
+                    if (!line.isEmpty()) {
+                        apkFileMap.put(line.toLowerCase(), line);
+                        myApkCount++;
+                    }
                 }
-                String[] strArr = this.apkFiles;
-                int i2 = this.myApkCount;
-                this.myApkCount = i2 + 1;
-                strArr[i2] = line;
             }
-        } catch (Exception unused) {
-            AssetManager assets = this.context.getAssets();
-            getDirectoryListing(assets, "", 0);
-            getDirectoryListing(assets, "", this.apkCount);
+            br.close();
+            return;
+        } catch (Exception ignored) {
+            // Fall through to directory scan
         }
+
+        // Single-pass recursive scan (was two-pass in the original).
+        apkFileMap = new HashMap<>();
+        getDirectoryListing(this.context.getAssets(), "");
     }
 
     public void closeFileAndroid(NvAPKFile nvAPKFile) {
         try {
             nvAPKFile.is.close();
-        } catch (IOException unused) {
+        } catch (IOException ignored) {
         }
         nvAPKFile.data = new byte[0];
         nvAPKFile.is = null;
     }
 
-    int getDirectoryListing(AssetManager assetManager, String str, int i) {
+    // Single-pass: builds the map directly without a counting pre-pass.
+    void getDirectoryListing(AssetManager assetManager, String path) {
         try {
-            if (this.apkFiles == null && i > 0) {
-                this.apkFiles = new String[i];
-            }
-            String[] list = assetManager.list(str);
+            String[] list = assetManager.list(path);
+            if (list == null) return;
+
             if (list.length == 0) {
-                if (i > 0) {
-                    AddAssetFile(str);
-                } else {
-                    this.apkCount++;
+                // It's a file, not a directory
+                if (!path.isEmpty()) {
+                    AddAssetFile(path);
                 }
+                return;
             }
-            for (int i2 = 0; i2 < list.length; i2++) {
-                if (list[i2].indexOf(46) == -1) {
-                    getDirectoryListing(assetManager, str.length() > 0 ? str + "/" + list[i2] : list[i2], i);
-                } else if (i > 0) {
-                    AddAssetFile(str.length() > 0 ? str + "/" + list[i2] : list[i2]);
+
+            for (String entry : list) {
+                String child = path.isEmpty() ? entry : path + "/" + entry;
+                if (entry.indexOf('.') == -1) {
+                    // No extension → treat as directory
+                    getDirectoryListing(assetManager, child);
                 } else {
-                    this.apkCount++;
+                    AddAssetFile(child);
                 }
             }
         } catch (Exception e) {
             System.out.println("ERROR: getDirectoryListing " + e.getMessage());
         }
-        return 0;
     }
 
     public NvAPKFile openFileAndroid(String str) {
         if (!this.hasAPKFiles) {
-            this.apkCount = 0;
-            this.apkFiles = null;
             GetAssetList();
             this.hasAPKFiles = true;
         }
-        int iFindInAPKFiles = findInAPKFiles(str);
-        if (iFindInAPKFiles == -1) {
+
+        String filePath = findInAPKFiles(str);
+        if (filePath == null) {
             return null;
         }
+
         NvAPKFile nvAPKFile = new NvAPKFile();
         nvAPKFile.is = null;
         nvAPKFile.length = 0;
         nvAPKFile.position = 0;
         nvAPKFile.bufferSize = 0;
         try {
-            nvAPKFile.is = this.context.getAssets().open(this.apkFiles[iFindInAPKFiles]);
+            nvAPKFile.is = this.context.getAssets().open(filePath);
             nvAPKFile.length = nvAPKFile.is.available();
             nvAPKFile.is.mark(268435456);
-            nvAPKFile.bufferSize = 1024;
+            nvAPKFile.bufferSize = 4096;
             nvAPKFile.data = new byte[nvAPKFile.bufferSize];
             return nvAPKFile;
-        } catch (Exception unused) {
+        } catch (Exception ignored) {
             return null;
         }
     }
@@ -145,28 +138,26 @@ public class NvAPKFileHelper {
         try {
             nvAPKFile.is.read(nvAPKFile.data, 0, i);
             nvAPKFile.position += i;
-        } catch (IOException unused) {
+        } catch (IOException ignored) {
         }
     }
 
-    public long seekFileAndroid(NvAPKFile nvAPKFile, int i) {
-        long j = 0;
+    // Fixed: was a 128-iteration retry loop that could leave the stream at the
+    // wrong position; now loops until all bytes are skipped or EOF is reached.
+    public long seekFileAndroid(NvAPKFile nvAPKFile, int targetPos) {
         try {
             nvAPKFile.is.reset();
-            long jSkip = 0;
-            for (int i2 = 128; i > 0 && i2 > 0; i2--) {
-                try {
-                    jSkip = nvAPKFile.is.skip(i);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                j += jSkip;
-                i = (int) (((long) i) - jSkip);
+            long remaining = targetPos;
+            while (remaining > 0) {
+                long skipped = nvAPKFile.is.skip(remaining);
+                if (skipped <= 0) break;
+                remaining -= skipped;
             }
-        } catch (IOException unused) {
+            nvAPKFile.position = (int) (targetPos - remaining);
+            return nvAPKFile.position;
+        } catch (IOException ignored) {
+            return nvAPKFile.position;
         }
-        nvAPKFile.position = (int) j;
-        return j;
     }
 
     public void setContext(Context context) {

@@ -3,13 +3,18 @@ package com.rockstargames.oswrapper;
 import android.content.res.AssetManager;
 import android.view.Surface;
 
+import com.bytedance.shadowhook.ShadowHook;
 
 
 public class GameNative {
     public static GameNative INSTANCE = new GameNative();
 
     static {
+        ShadowHook.init(new ShadowHook.ConfigBuilder()
+                .setMode(ShadowHook.Mode.UNIQUE)
+                .build());
         System.loadLibrary("Game");
+        System.loadLibrary("multi");
     }
 
     private GameNative() {

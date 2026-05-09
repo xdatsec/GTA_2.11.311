@@ -35,6 +35,8 @@ public   class GameView extends SurfaceView implements SurfaceHolder.Callback2 {
     public GameView(Context context, AttributeSet attribs) {
         super(context, attribs);
 
+        getHolder().addCallback(this);
+
         // سڕینەوەی Intrinsics چونکە لە جاڤادا پێویست نین
         this.hasFocus = true;
 
@@ -144,21 +146,18 @@ public   class GameView extends SurfaceView implements SurfaceHolder.Callback2 {
     }
 
     public void setup(GameActivityBase activity) {
-        // سڕینەوەی Intrinsics چونکە لە جاڤادا پێویست نییە
-        getHolder().setFormat(3); // ڕێکخستنی فۆرماتی ڕەنگەکان
-        getHolder().addCallback(this); // چالاککردنی کالباکەکانی سێرفیس (Surface)
-        setKeepScreenOn(true); // ڕێگری لە کوژانەوەی شاشە
+        Intrinsics.checkNotNullParameter(activity, "activity");
+        getHolder().setFormat(3);
+        getHolder().addCallback(this);
+        setKeepScreenOn(true);
         setFocusableInTouchMode(true);
         requestFocus();
-
         this.activity = activity;
-
-        // بەکارهێنانی لووپی for-each لە جیاتی Iterator<T> بۆ لابردنی ئیرۆرەکان
-        for (GameViewHandler handler : this.handlers) {
-            if (handler != null) {
-                handler.setup(activity);
-            }
+        Iterator<GameViewHandler> it = this.handlers.iterator();
+        while (it.hasNext()) {
+            ((GameViewHandler) it.next()).setup(activity);
         }
+
     }
     @Override // android.view.SurfaceHolder.Callback
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
@@ -174,6 +173,8 @@ public   class GameView extends SurfaceView implements SurfaceHolder.Callback2 {
     public void surfaceCreated(SurfaceHolder holder) {
         Intrinsics.checkNotNullParameter(holder, "holder");
         Log.i(TAG, "[!!] surfaceCreated: " + holder.getSurface());
+
+
         GameThread.INSTANCE.onSurfaceCreated();
     }
 

@@ -10,6 +10,8 @@ import com.rockstargames.gtasa.R;
 import com.rockstargames.oswrapper.GameActivityBase;
 import java.io.InputStream;
 
+import kotlin.jvm.internal.Intrinsics;
+
 public final class SplashScreenHandler implements GameViewHandler {
 
     private static final String TAG = "GameView.SplashScreenHandler";
@@ -37,22 +39,70 @@ public final class SplashScreenHandler implements GameViewHandler {
     }
 
     // ─── Visibility ──────────────────────────────────────────────────────────────
+    public static final void show$lambda$0(SplashScreenHandler this$0) {
+        Intrinsics.checkNotNullParameter(this$0, "this$0");
+        View view = this$0.view;
+        if (view == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("view");
+            view = null;
+        }
+        view.setVisibility(View.VISIBLE);
+    }
 
     public final void show() {
         Log.i(TAG, "[!!] show");
-        getActivity().runOnUiThread(() ->
-                view.setVisibility(View.VISIBLE)
-        );
+        GameActivityBase gameActivityBase = this.activity;
+        if (gameActivityBase == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("activity");
+            gameActivityBase = null;
+        }
+        gameActivityBase.runOnUiThread(new Runnable() { // from class: com.rockstargames.oswrapper.view.SplashScreenHandler$$ExternalSyntheticLambda3
+            @Override // java.lang.Runnable
+            public final void run() {
+                SplashScreenHandler.show$lambda$0(SplashScreenHandler.this);
+            }
+        });
+    }
+
+    public static final void hide$lambda$1(SplashScreenHandler this$0) {
+        Intrinsics.checkNotNullParameter(this$0, "this$0");
+        ImageView imageView = this$0.image;
+        View view = null;
+        if (imageView == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("image");
+            imageView = null;
+        }
+        imageView.setImageDrawable(null);
+        TextView textView = this$0.text;
+        if (textView == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("text");
+            textView = null;
+        }
+        textView.setText("");
+        View view2 = this$0.view;
+        if (view2 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("view");
+        } else {
+            view = view2;
+        }
+        view.setVisibility(View.GONE);
     }
 
     public final void hide() {
         Log.i(TAG, "[!!] hide");
-        getActivity().runOnUiThread(() -> {
-            image.setImageDrawable(null);
-            text.setText("");
-            view.setVisibility(View.GONE);
+        GameActivityBase gameActivityBase = this.activity;
+        if (gameActivityBase == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("activity");
+            gameActivityBase = null;
+        }
+        gameActivityBase.runOnUiThread(new Runnable() { // from class: com.rockstargames.oswrapper.view.SplashScreenHandler$$ExternalSyntheticLambda1
+            @Override // java.lang.Runnable
+            public final void run() {
+                SplashScreenHandler.hide$lambda$1(SplashScreenHandler.this);
+            }
         });
     }
+
 
     public final boolean getVisible() {
         return view != null && view.getVisibility() != View.GONE;

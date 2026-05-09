@@ -1,10 +1,14 @@
 
 plugins {
     id 'com.android.application'
+    id 'com.google.gms.google-services'
 }
 
 
 android {
+    buildFeatures {
+        prefab true
+    }
     compileSdk 36
 
     allprojects {
@@ -18,6 +22,15 @@ android {
 
     namespace 'com.rockstargames.gtasa'
 
+
+    // Optional: Packaging options to prevent issues with duplicate libs
+    packagingOptions {
+        doNotStrip "**/libdobby.a"
+    }
+    aaptOptions {
+        // List your heavy game extensions here
+        noCompress 'txd', 'dff', 'dat', 'bin', 'png','txt','img','dz','tmb','toc','ifp','bmp','zip','met','json','gxt' ,'alp','col','zon','scm','ipl','ide','ped','idx','osw','cfg'
+    }
     defaultConfig {
         applicationId "com.rockstargames.gtasa"
         minSdk 26
@@ -28,13 +41,25 @@ android {
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilters 'arm64-v8a'
+        }
+
     }
 
+    ndkVersion '26.2.11394342'
+
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+        }
+    }
     packagingOptions {
         pickFirst 'assets/dexopt/baseline.prof'
         pickFirst 'assets/dexopt/baseline.profm'
 
         jniLibs {
+            useLegacyPackaging true
             excludes += ['META-INF/*']
         }
         resources {
@@ -47,17 +72,33 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+    buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled false
+            jniDebuggable false
+        }
+        release {
+            debuggable false
+            jniDebuggable false
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+        }
+    }
+
     lintOptions {
         checkReleaseBuilds false
         abortOnError false
     }
-    buildFeatures {
-        prefab true
-    }
+
 }
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation 'com.google.firebase:firebase-messaging:24.1.0'
+    implementation 'com.android.billingclient:billing:6.2.1'
+    implementation 'com.google.firebase:firebase-analytics:22.5.0'
+    implementation 'com.google.android.play:asset-delivery:2.2.2'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation "com.google.android.material:material:1.9.0"
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
@@ -71,11 +112,11 @@ dependencies {
     implementation 'com.android.volley:volley:1.2.1'
     implementation 'com.intuit.sdp:sdp-android:1.1.0'
     implementation 'org.ini4j:ini4j:0.5.4'
+    implementation 'com.bytedance.android:shadowhook:2.0.0'
     implementation 'com.github.bumptech.glide:glide:4.15.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
     implementation("androidx.lifecycle:lifecycle-process:2.6.2")
     implementation "com.joom.paranoid:paranoid-gradle-plugin:0.3.14"
-    implementation 'com.bytedance.android:shadowhook:1.0.9'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.google.android.gms:play-services-auth:20.7.0'
     implementation 'com.airbnb.android:lottie:6.4.0'
