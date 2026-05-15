@@ -11,8 +11,6 @@
 #include <jni.h>
 #include <cstring>
 #include "game/common.h"
-#include "vendor/bass/bass.h"
-#include "vendor/bass/bass_fx.h"
 extern char* g_pszStorage;
 
 #ifndef SAFE_DELETE
@@ -30,7 +28,6 @@ extern char* g_pszStorage;
 
 #define RAKSAMP_CLIENT
 #define NETCODE_CONNCOOKIELULZ 0x6969
-
 extern uintptr_t g_libSAMP;
 extern uintptr_t g_libGTASA;
 extern JavaVM* javaVM;

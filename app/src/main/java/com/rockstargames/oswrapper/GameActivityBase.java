@@ -341,11 +341,11 @@ public abstract class GameActivityBase extends AppCompatActivity {
         GameThread.INSTANCE.onActivityCreated(this, getView(), !initialized);
         onActivityReady(!initialized);
 
-        try {
-            GameNative.initializeSAMP();
-        } catch (UnsatisfiedLinkError e5) {
-            Log.e(TAG, e5.getMessage());
-        }
+       // try {
+       //     GameNative.initializeSAMP();
+       // } catch (UnsatisfiedLinkError e5) {
+       //     Log.e(TAG, e5.getMessage());
+       // }
 
     }
 

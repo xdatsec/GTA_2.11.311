@@ -354,7 +354,6 @@ public final class GameThread {
 
         private final void guardedRun() {
             this.lastFrameTime = SystemClock.elapsedRealtime();
-            int i = -1;
             while (!this.exitRequested.get()) {
                 while (true) {
                     Runnable runnable = (Runnable) GameThread.eventQueue.poll();
@@ -368,18 +367,9 @@ public final class GameThread {
                 GameView gameView = gamePlatformServices != null ? gamePlatformServices.view : null;
                 long jElapsedRealtime = SystemClock.elapsedRealtime();
                 float f = (jElapsedRealtime - this.lastFrameTime) / 1000.0f;
-                this.lastFrameTime = jElapsedRealtime;
-                boolean z = false;
-                if (gameView != null && gameView.getHasFocus()) {
-                    z = true;
-                }
-                if (z && GameNative.implIsInitialized()) {
+                this.lastFrameTime = SystemClock.elapsedRealtime();
+                if (gameView != null && gameView.getHasFocus() && GameNative.implIsInitialized()) {
                     GameNative.implOnDrawFrame(f);
-                    int controllerCount = InputHandler.INSTANCE.getControllerCount();
-                    if (i != controllerCount) {
-                        GameNative.implOnGamepadCountChanged(controllerCount);
-                        i = controllerCount;
-                    }
                 }
                 Runnable runnable2 = this.finishDrawingRunnable;
                 if (runnable2 != null) {
@@ -388,6 +378,7 @@ public final class GameThread {
                 this.finishDrawingRunnable = null;
             }
         }
+
 
 
         @Override
