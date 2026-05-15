@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tab_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="424dp"
+        android:layout_height="281dp"
+        android:background="#DC000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Menu List CMD1 -->
+        <LinearLayout
+            android:id="@+id/fuckinghead"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:orientation="horizontal"
+            android:padding="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/svname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="22dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:padding="5dp"
+                    android:singleLine="true"
+                    android:text="SAMP MOBILE"
+                    android:textColor="#ffffffff"
+                    android:textSize="25.0px"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/closeButton"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/cross"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toEndOf="@+id/svname"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/menu_list_cmd1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fuckinghead">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_35sdp"
+                tools:layout_editor_absoluteY="4dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintLayout16"
+                    android:layout_width="186dp"
+                    android:layout_height="52dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/_15sdp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.444">
+
+                    <ImageView
+                        android:id="@+id/clearSearchButton"
+                        android:layout_width="@dimen/_10sdp"
+                        android:layout_height="@dimen/_10sdp"
+                        android:layout_marginEnd="@dimen/_13sdp"
+                        android:clickable="true"
+                        android:visibility="invisible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/goSearchButton"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/cross" />
+
+                    <ImageView
+                        android:id="@+id/goSearchButton"
+                        android:layout_width="@dimen/_15sdp"
+                        android:layout_height="@dimen/_10sdp"
+                        android:layout_marginEnd="8dp"
+                        android:src="@drawable/ic_search"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <EditText
+                        android:id="@+id/searchInput"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:autofillHints="no"
+                        android:background="@drawable/tabbg"
+                        android:fontFamily="@font/din_pro_medium"
+                        android:hint="Search"
+                        android:imeOptions="actionGo|actionSend|actionDone|flagNoFullscreen|flagNoExtractUi"
+                        android:importantForAutofill="no"
+                        android:inputType="text"
+                        android:paddingStart="@dimen/_9sdp"
+                        android:paddingBottom="@dimen/_2sdp"
+                        android:singleLine="true"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/progress_gray"
+                        android:textSize="@dimen/_8sdp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/goSearchButton"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:id="@+id/total_players"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="56dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="center_vertical"
+                    android:text="Players: 100/1000"
+                    android:textColor="@color/progress_gray"
+                    android:textSize="10sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+        <!-- Recycle Name Column -->
+        <LinearLayout
+            android:id="@+id/recycle_name_column"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            android:scrollbarAlwaysDrawHorizontalTrack="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/menu_list_cmd1">
+
+            <TextView
+                android:layout_width="@dimen/_10sdp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/din_pro_black"
+                android:gravity="center_vertical"
+                android:includeFontPadding="false"
+                android:paddingStart="@dimen/_5sdp"
+                android:text="Id"
+                android:textColor="#959494"
+                android:textSize="@dimen/_7sdp" />
+
+            <TextView
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:fontFamily="@font/din_pro_black"
+                android:gravity="center_vertical"
+                android:includeFontPadding="false"
+                android:text="Name"
+                android:textColor="#959494"
+                android:textSize="@dimen/_7sdp" />
+
+            <TextView
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:fontFamily="@font/din_pro_black"
+                android:includeFontPadding="false"
+                android:paddingStart="@dimen/_10sdp"
+                android:text="Level"
+                android:textColor="#959494"
+                android:textSize="@dimen/_7sdp" />
+
+            <TextView
+                android:layout_width="@dimen/_5sdp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/_20sdp"
+                android:layout_weight="2"
+                android:fontFamily="@font/din_pro_black"
+                android:includeFontPadding="false"
+                android:text="Ping"
+                android:textColor="#959494"
+                android:textSize="@dimen/_7sdp" />
+        </LinearLayout>
+
+        <!-- Separator View -->
+        <View
+            android:id="@+id/view"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_2sdp"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:background="#00FFFFFF"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recycle_name_column"
+            tools:visibility="gone" />
+
+        <!-- RecyclerView -->
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycle"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="3dp"
+            android:background="@drawable/tabbg"
+            android:fadeScrollbars="false"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:scrollbarStyle="insideInset"
+            android:scrollbarThumbVertical="@drawable/players_list_scroll_thumb"
+            android:scrollbarTrackVertical="@drawable/players_list_scroll_track"
+            android:scrollbars="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

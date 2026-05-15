@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/speedometer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/speedometerMenu"
+        android:layout_width="@dimen/_180sdp"
+        android:layout_height="@dimen/_180sdp"
+        android:layout_gravity="center"
+
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ui_speedo_layout_main"
+        android:layout_width="377dp"
+        android:layout_height="310dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.digitalbyte.samp.launcher.util.SeekArc
+            android:id="@+id/speed_line"
+            android:layout_width="@dimen/_95sdp"
+            android:layout_height="@dimen/_106sdp"
+            android:padding="@dimen/_12sdp"
+            android:paddingTop="@dimen/_24sdp"
+            app:arcColor="#70000000"
+            app:arcWidth="@dimen/_5sdp"
+            app:enabled="false"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.19"
+            app:max="200"
+            app:progress="40"
+            app:progressColor="#BD0000"
+            app:progressWidth="@dimen/_5sdp"
+            app:rotation="0"
+            app:roundEdges="true"
+            app:startAngle="245"
+            app:sweepAngle="230"
+            app:touchInside="true" />
+
+        <TextView
+            android:id="@+id/speed_text"
+            android:layout_width="40dp"
+            android:layout_height="22dp"
+            android:fontFamily="@font/actaywidebold"
+            android:text="023"
+            android:gravity="center"
+            android:textColor="#fff"
+            android:textSize="@dimen/_13sdp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/kmh"
+            app:layout_constraintHorizontal_bias="0.541"
+            app:layout_constraintStart_toStartOf="@+id/kmh"
+            app:layout_constraintTop_toTopOf="@+id/speed_line"
+            app:layout_constraintVertical_bias="0.38" />
+
+        <TextView
+            android:id="@+id/kmh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/akrobat_bold"
+            android:text="KM/H"
+            android:textColor="#80FFFFFF"
+            android:textSize="@dimen/_6sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/speed_text" />
+
+
+        <TextView
+            android:id="@+id/speed_car_hp_text"
+            android:layout_width="20dp"
+            android:layout_height="9dp"
+            android:fontFamily="@font/actaywidebold"
+            android:text="100%"
+            android:textColor="#FFFFFFFF"
+            android:textSize="@dimen/_4sdp"
+            app:layout_constraintBottom_toBottomOf="@+id/enginebg"
+            app:layout_constraintEnd_toEndOf="@+id/enginebg"
+            app:layout_constraintHorizontal_bias="0.48"
+            app:layout_constraintStart_toStartOf="@+id/enginebg"
+            app:layout_constraintTop_toTopOf="@+id/enginebg"
+            app:layout_constraintVertical_bias="0.93" />
+
+        <com.digitalbyte.samp.launcher.util.SeekArc
+            android:id="@+id/speed_car_hp_line"
+            android:layout_width="@dimen/_112sdp"
+            android:layout_height="@dimen/_106sdp"
+            android:layout_marginEnd="-10dp"
+            app:arcColor="#70000000"
+            app:arcWidth="@dimen/_5sdp"
+            app:enabled="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/speed_line"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.19"
+            app:max="100"
+            app:progress="70"
+            app:progressColor="#75B1F6"
+            app:progressWidth="@dimen/_5sdp"
+            app:rotation="0"
+            app:roundEdges="true"
+            app:startAngle="250"
+            app:sweepAngle="70"
+            app:touchInside="true" />
+
+        <ImageView
+            android:id="@+id/imageView9"
+            android:layout_width="46dp"
+            android:layout_height="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.77"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.90"
+            app:srcCompat="@drawable/bgfuel" />
+
+        <ImageView
+            android:id="@+id/enginebg"
+            android:layout_width="46dp"
+            android:layout_height="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.90"
+            app:layout_constraintHorizontal_bias="0.23"
+            app:srcCompat="@drawable/enginebg" />
+
+        <ImageView
+            android:id="@+id/povorotnikright"
+            android:layout_width="46dp"
+            android:layout_height="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.77"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1"
+            app:srcCompat="@drawable/povorotnikright" />
+
+        <ImageView
+            android:id="@+id/povorotnikleft"
+            android:layout_width="46dp"
+            android:layout_height="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.235"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1"
+            app:srcCompat="@drawable/povorotnik" />
+
+        <com.digitalbyte.samp.launcher.util.SeekArc
+            android:id="@+id/speed_fuel_line"
+            android:layout_width="@dimen/_112sdp"
+            android:layout_height="@dimen/_106sdp"
+            android:layout_marginLeft="-10dp"
+            app:arcColor="#70000000"
+            app:arcWidth="@dimen/_6sdp"
+            app:clockwise="false"
+            app:enabled="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/speed_line"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.19"
+            app:max="100"
+            app:progress="100"
+            app:progressColor="#7AEB27"
+            app:progressWidth="@dimen/_5sdp"
+            app:rotation="0"
+            app:roundEdges="true"
+            app:startAngle="250"
+            app:sweepAngle="70"
+            app:touchInside="true" />
+
+        <ImageView
+            android:id="@+id/imageView8"
+            android:layout_width="100dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/speed_fuel_line"
+            app:layout_constraintStart_toStartOf="@+id/speed_car_hp_line"
+            app:layout_constraintTop_toTopOf="@+id/speed_line"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/bgspeed" />
+
+        <TextView
+            android:id="@+id/speed_fuel_text"
+            android:layout_width="18dp"
+            android:layout_height="7dp"
+            android:fontFamily="@font/actaywidebold"
+            android:gravity="right"
+            android:text="45л"
+            android:textColor="#FFFFFFFF"
+            android:textSize="@dimen/_4sdp"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView9"
+            app:layout_constraintEnd_toEndOf="@+id/imageView9"
+            app:layout_constraintHorizontal_bias="0.52"
+            app:layout_constraintStart_toStartOf="@+id/imageView9"
+            app:layout_constraintTop_toTopOf="@+id/imageView9"
+            app:layout_constraintVertical_bias="0.8" />
+
+
+        <ImageView
+            android:id="@+id/ic_engine"
+            android:layout_width="20dp"
+            android:layout_height="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imageView9"
+            app:layout_constraintHorizontal_bias="0.38"
+            app:layout_constraintStart_toEndOf="@+id/enginebg"
+            app:layout_constraintTop_toTopOf="@+id/imageView8"
+            app:layout_constraintVertical_bias="0.955"
+            app:srcCompat="@drawable/engine" />
+
+        <ImageView
+            android:id="@+id/ic_lights"
+            android:layout_width="9dp"
+            android:layout_height="6dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imageView9"
+            app:layout_constraintHorizontal_bias="0.47"
+            app:layout_constraintStart_toEndOf="@+id/enginebg"
+            app:layout_constraintTop_toTopOf="@+id/imageView8"
+            app:layout_constraintVertical_bias="0.91"
+            app:srcCompat="@drawable/lights" />
+
+        <ImageView
+            android:id="@+id/ic_remen"
+            android:layout_width="20dp"
+            android:layout_height="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imageView9"
+            app:layout_constraintHorizontal_bias="0.55"
+            app:layout_constraintStart_toEndOf="@+id/enginebg"
+            app:layout_constraintTop_toTopOf="@+id/imageView8"
+            app:layout_constraintVertical_bias="0.955"
+            app:srcCompat="@drawable/remen" />
+
+        <ImageView
+            android:id="@+id/ic_key"
+            android:layout_width="10dp"
+            android:layout_height="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imageView9"
+            app:layout_constraintHorizontal_bias="0.61"
+            app:layout_constraintStart_toEndOf="@+id/enginebg"
+            app:layout_constraintTop_toTopOf="@+id/imageView8"
+            app:layout_constraintVertical_bias="0.915"
+            app:srcCompat="@drawable/key" />
+
+        <ImageView
+            android:id="@+id/datpovorleft"
+            android:layout_width="8dp"
+            android:layout_height="6dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/imageView8"
+            app:layout_constraintHorizontal_bias="0.388"
+            app:layout_constraintStart_toStartOf="@+id/imageView8"
+            app:layout_constraintTop_toTopOf="@+id/speed_text"
+            app:layout_constraintVertical_bias="0.71"
+            app:srcCompat="@drawable/datpovorne" />
+
+        <ImageView
+            android:id="@+id/datpovorright"
+            android:layout_width="8dp"
+            android:layout_height="6dp"
+            android:scaleX="-1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/imageView8"
+            app:layout_constraintHorizontal_bias="0.586"
+            app:layout_constraintStart_toStartOf="@+id/imageView8"
+            app:layout_constraintTop_toTopOf="@+id/speed_text"
+            app:layout_constraintVertical_bias="0.71"
+            app:srcCompat="@drawable/datpovorne" />
+
+        <ImageView
+            android:id="@+id/bgprobeg"
+            android:layout_width="54dp"
+            android:layout_height="17dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.905" />
+
+        <TextView
+            android:id="@+id/probeg_text"
+            android:layout_width="25dp"
+            android:layout_height="7dp"
+            android:fontFamily="@font/actaywidebold"
+            android:gravity="center"
+            android:text="000000"
+            android:textColor="#FFFFFFFF"
+            android:textSize="@dimen/_4sdp"
+            app:layout_constraintBottom_toBottomOf="@+id/bgprobeg"
+            app:layout_constraintEnd_toEndOf="@+id/bgprobeg"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/bgprobeg"
+            app:layout_constraintTop_toTopOf="@+id/bgprobeg"
+            app:layout_constraintVertical_bias="0.3" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

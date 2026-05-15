@@ -79,6 +79,8 @@ public:
     }
 
     static void UnFuck(uintptr_t ptr, uint64_t len = PAGE_SIZE) {
+        LOGI("void  UnFuck at address: 0x%",ptr);
+
 #if VER_x32
         if(mprotect((void*)(ptr & 0xFFFFF000), len, PROT_READ | PROT_WRITE | PROT_EXEC) == 0)
             return;
@@ -153,6 +155,7 @@ public:
     }
     static int WriteNOP(uintptr_t addr, size_t count)
     {
+        LOGI("void  WriteNOP at address: 0x%",addr);
 #ifdef __32BIT
         if(THUMBMODE(addr))
         {
@@ -201,6 +204,7 @@ public:
     template<typename Addr>
     static void NOP(Addr adr, size_t count)
     {
+        LOGI("void  hook at address: 0x%",adr);
         // fully check
         auto addr = (uintptr_t)(adr);
 #if VER_x32
@@ -234,6 +238,7 @@ public:
 
     static void RET(const char* sym)
     {
+        LOGI("void  hook at address: %s",sym);
         // fully check
         auto addr = getSym(sym);
 
@@ -242,6 +247,7 @@ public:
 
     static void RET(uintptr_t addr)
     {
+        LOGI("void  hook at address: 0x%",addr);
         // fully check
         #if VER_x32
         if(THUMBMODE(addr))
@@ -260,6 +266,7 @@ public:
     template <typename Src>
     static void WriteMemory(uintptr_t dest, Src src, uint64_t size)
     {
+        LOGI("WriteMemory  hook at address: 0x%",dest);
         UnFuck(dest, size);
         memcpy((void*)dest, (void*)src, size);
 
@@ -268,13 +275,15 @@ public:
 
     static void ReadMemory(uintptr_t addr, void* dest, size_t size)
     {
+        LOGI("ReadMemory  hook at address: 0x%",addr);
         UnFuck(addr, size);
         memcpy(dest, (void*)addr, size);
     }
 
     template <typename Src>
     static void Write(uintptr_t dest, Src src, uint64_t size = 0)
-    {   
+    {
+        LOGI("Write  hook at address: 0x%",dest);
 	    if(size <= 0)
             size = sizeof(Src);
         
@@ -317,11 +326,15 @@ public:
     template <typename Ret, typename... Args>
     static inline Ret CallFunction(uintptr_t address, Args... args)
     {
+        LOGI("InstallPLT PLT hook at address: %i",address);
         return (( Ret(*)(Args...))(address) )(args...);
     }
 
     template <typename Ret, typename... Args>
     static Ret CallFunction(const char* sym, Args... args) {
+
+        LOGI("CallFunction hook at address: %s",sym);
+
         static std::unordered_map<std::string, uintptr_t> addr_map;
 
         auto it = addr_map.find(sym);
@@ -363,6 +376,7 @@ public:
     template <typename Addr, typename Func, typename Orig>
     static void InstallPLT(Addr addr, Func hook_func, Orig* orig_func)
     {
+        LOGI("InstallPLT PLT hook at address: %i",addr);
         UnFuck(addr);
 
         *orig_func = reinterpret_cast<Orig>(*(uintptr_t*)addr);
@@ -373,6 +387,7 @@ public:
     template <typename Addr, typename Func>
     static void InstallPLT(Addr addr, Func hook_func)
     {
+        LOGI("Installing PLT hook at address: 0x%",addr);
         UnFuck(addr);
         *(uintptr_t*)addr = reinterpret_cast<uintptr_t>(hook_func);
     }
@@ -380,6 +395,7 @@ public:
     template <typename Func, typename Orig>
     static void InlineHook(const char* sym, Func func, Orig orig)
     {
+        LOGI("Installing InlineHook at address: %s",sym);
         shadowhook_hook_sym_name(
                 "libGame.so",
                 sym,
@@ -392,6 +408,11 @@ public:
     template <typename Ptr, typename Func, typename Orig>
     static void InlineHook(Ptr ptr, Func func, Orig orig)
     {
+        uintptr_t targetAddr = reinterpret_cast<uintptr_t>(ptr);
+        uintptr_t detourAddr = reinterpret_cast<uintptr_t>(func);
+        uintptr_t originalAddr = reinterpret_cast<uintptr_t>(orig);
+
+        LOGI("[InlineHook] Hooking: 0x%", ptr);
         shadowhook_hook_func_addr(
                 (void*)ptr,
                 (void *)func,
@@ -420,6 +441,7 @@ public:
     template <typename Func>
     static void Redirect(const char* sym, Func func)
     {
+        LOGI("HOOK REDIRECT %s", sym);
         auto addr = getSym(sym);
 
         Redirect(addr, func);
@@ -427,6 +449,9 @@ public:
     template <typename Ptr, typename Func>
     static void Redirect(Ptr ptr, Func func)
     {
+
+        LOGI("[InlineHook] Hooking: 0x%",ptr);
+
 #ifdef __32BIT
         uint32_t hook[2] = {0xE51FF004, reinterpret_cast<uintptr_t>(func)};
         if (THUMBMODE(ptr)) {

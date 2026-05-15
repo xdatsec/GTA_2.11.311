@@ -38,6 +38,12 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- Access Wi-Fi network state information -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <!-- Have full internet access -->
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- Allows an app to access audio data from media files. -->
@@ -82,6 +88,9 @@
         android:label="GTA: SA"
         android:icon="@mipmap/ic_launcher"
         android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
+        android:hardwareAccelerated="true"
+
         android:banner="@drawable/leanbacktvlauncher"
         android:isGame="true"
         android:roundIcon="@mipmap/ic_launcher_round"

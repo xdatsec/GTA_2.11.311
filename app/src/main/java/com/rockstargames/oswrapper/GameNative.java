@@ -20,10 +20,11 @@ public class GameNative {
     private GameNative() {
     }
 
-    
+    public static native void initializeSAMP();
+
     public static native boolean implIsInitialized();
 
-     
+
     public static   native void implOnAccelerometerChanged(float x, float y, float z);
 
      

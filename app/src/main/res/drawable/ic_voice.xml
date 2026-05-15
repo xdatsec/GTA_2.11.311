@@ -1,0 +1,37 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- mic head -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M12,2.5c1.66,0 3,1.34 3,3v6c0,1.66 -1.34,3 -3,3s-3,-1.34 -3,-3v-6c0,-1.66 1.34,-3 3,-3z" />
+
+    <!-- mic stem -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M11,14.5h2v3h-2z" />
+
+    <!-- mic base -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M8,19h8v1.5H8z" />
+
+    <!-- subtle outer arc (voice wave) -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="0.8"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M17,10a5,4 0 0 1 0,4" />
+
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="0.8"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M7,10a5,4 0 0 0 0,4" />
+
+</vector>

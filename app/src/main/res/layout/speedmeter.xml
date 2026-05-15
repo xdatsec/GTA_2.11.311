@@ -1,0 +1,239 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/speedometer_main_layout"
+    android:visibility="visible"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/spedometr_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:clickable="true"
+        custom:layout_constraintBottom_toBottomOf="parent"
+        custom:layout_constraintEnd_toEndOf="parent"
+        custom:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/speedometer_off_bg"
+            android:layout_width="@dimen/_80sdp"
+            android:layout_height="@dimen/_80sdp"
+            android:src="@drawable/speedometer_off"
+            custom:layout_constraintBottom_toBottomOf="parent"
+            custom:layout_constraintEnd_toEndOf="parent"
+            custom:layout_constraintStart_toStartOf="parent"
+            custom:layout_constraintTop_toTopOf="parent" />
+
+        <com.digitalbyte.samp.launcher.util.SeekArc
+            android:id="@+id/speedLine"
+            android:layout_width="@dimen/_80sdp"
+            android:layout_height="@dimen/_80sdp"
+            android:background="#00000000"
+            android:padding="@dimen/_4sdp"
+            android:rotation="270"
+            custom:arcColor="#00FF0000"
+            custom:enabled="false"
+            custom:layout_constraintBottom_toBottomOf="@id/speedometer_off_bg"
+            custom:layout_constraintEnd_toEndOf="@id/speedometer_off_bg"
+            custom:layout_constraintHorizontal_bias="0.0"
+            custom:layout_constraintStart_toStartOf="@id/speedometer_off_bg"
+            custom:layout_constraintTop_toTopOf="@id/speedometer_off_bg"
+            custom:layout_constraintVertical_bias="0.0"
+            custom:max="370"
+            custom:progress="260"
+            custom:progressColor="#940000"
+            custom:progressWidth="@dimen/_4sdp"
+            custom:sweepAngle="180"
+            custom:touchInside="true" />
+
+        <ImageView
+            android:id="@+id/speedometer_scale"
+            android:layout_width="@dimen/_80sdp"
+            android:adjustViewBounds="true"
+            android:layout_height="wrap_content"
+            android:src="@drawable/speedometer_scale"
+            custom:layout_constraintEnd_toEndOf="parent"
+            custom:layout_constraintStart_toStartOf="parent"
+            custom:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/speedText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:fontFamily="@font/visby_round_cf_extra_bold"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="162"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_16sdp"
+            custom:layout_constraintEnd_toEndOf="@+id/speedometer_off_bg"
+            custom:layout_constraintStart_toStartOf="@id/speedometer_off_bg"
+            custom:layout_constraintTop_toBottomOf="@+id/blinkerIcon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:fontFamily="@font/visby_round_cf_extra_bold"
+            android:includeFontPadding="false"
+            android:text="km/h"
+            android:textColor="#A8A2A2"
+            android:textSize="@dimen/_6sdp"
+            custom:layout_constraintEnd_toEndOf="@+id/speedText"
+            custom:layout_constraintStart_toStartOf="@+id/speedText"
+            custom:layout_constraintTop_toBottomOf="@+id/speedometer_scale" />
+
+        <ImageView
+            android:id="@+id/blinkerIcon"
+            android:layout_width="@dimen/_20sdp"
+            android:adjustViewBounds="true"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:src="@drawable/speedometer_ablinker_off"
+            custom:layout_constraintEnd_toEndOf="@+id/speedometer_off_bg"
+            custom:layout_constraintStart_toStartOf="@+id/speedometer_off_bg"
+            custom:layout_constraintTop_toTopOf="@+id/speedometer_off_bg" />
+
+        <ImageView
+            android:id="@+id/speedometr_milliage_bg"
+            android:layout_width="@dimen/_31sdp"
+            android:layout_height="@dimen/_12sdp"
+            android:layout_marginBottom="@dimen/_17sdp"
+            android:background="@drawable/speedometr_milliage_bg"
+            custom:layout_constraintBottom_toBottomOf="parent"
+            custom:layout_constraintEnd_toEndOf="parent"
+            custom:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/milliageText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/din_pro_medium"
+            android:includeFontPadding="false"
+            android:letterSpacing="0.30"
+            android:text="000002"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_5sdp"
+            custom:layout_constraintBottom_toBottomOf="@+id/speedometr_milliage_bg"
+            custom:layout_constraintEnd_toEndOf="@+id/speedometr_milliage_bg"
+            custom:layout_constraintStart_toStartOf="@+id/speedometr_milliage_bg"
+            custom:layout_constraintTop_toTopOf="@+id/speedometr_milliage_bg" />
+
+        <ImageView
+            android:id="@+id/lockIcon"
+            android:layout_width="@dimen/_6sdp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:tint="#00FF00"
+            android:backgroundTintMode="src_in"
+            android:src="@drawable/speedometer_lock_icon"
+            custom:layout_constraintEnd_toEndOf="@+id/speedometr_milliage_bg"
+            custom:layout_constraintStart_toStartOf="@+id/speedometr_milliage_bg"
+            custom:layout_constraintTop_toBottomOf="@+id/speedometr_milliage_bg" />
+
+
+        <ImageView
+            android:id="@+id/speedometr_fuel_icon"
+            android:layout_width="@dimen/_10sdp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/speedometr_fuel_icon"
+            custom:layout_constraintBottom_toBottomOf="parent"
+            custom:layout_constraintStart_toStartOf="parent"
+            custom:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/fuelText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_1sdp"
+            android:fontFamily="@font/din_pro_medium"
+            android:includeFontPadding="false"
+            android:text="150"
+            android:textColor="@color/white"
+            android:textSize="7sp"
+            custom:layout_constraintBottom_toTopOf="@+id/speedometr_fuel_icon"
+            custom:layout_constraintEnd_toEndOf="@+id/speedometr_fuel_icon"
+            custom:layout_constraintStart_toStartOf="@+id/speedometr_fuel_icon" />
+
+        <ImageView
+            android:id="@+id/speedometr_hp_icon"
+            android:layout_width="@dimen/_12sdp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/speedometr_hp_icon"
+            custom:layout_constraintBottom_toBottomOf="parent"
+            custom:layout_constraintEnd_toEndOf="@+id/speedometer_off_bg"
+            custom:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/hpText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_1sdp"
+            android:fontFamily="@font/din_pro_medium"
+            android:includeFontPadding="false"
+            android:text="100%"
+            android:textColor="@color/white"
+            android:textSize="7sp"
+            custom:layout_constraintBottom_toTopOf="@+id/speedometr_hp_icon"
+            custom:layout_constraintEnd_toEndOf="@+id/speedometr_hp_icon"
+            custom:layout_constraintStart_toStartOf="@+id/speedometr_hp_icon" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/lightIcon"
+        android:layout_width="@dimen/_40sdp"
+        android:adjustViewBounds="true"
+        android:tintMode="multiply"
+        android:layout_height="wrap_content"
+        android:src="@drawable/speedometr_light_off"
+        custom:layout_constraintBottom_toBottomOf="@+id/spedometr_layout"
+        custom:layout_constraintEnd_toStartOf="@+id/spedometr_layout"
+        custom:layout_constraintTop_toTopOf="@+id/spedometr_layout" />
+
+    <ImageView
+        android:id="@+id/enginenIcon"
+        android:adjustViewBounds="true"
+        android:layout_width="@dimen/_40sdp"
+        android:tintMode="multiply"
+        android:layout_height="wrap_content"
+        android:src="@drawable/speedometr_engine_off_icon"
+        custom:layout_constraintBottom_toBottomOf="@+id/spedometr_layout"
+        custom:layout_constraintStart_toEndOf="@+id/spedometr_layout"
+        custom:layout_constraintTop_toTopOf="@+id/spedometr_layout" />
+
+    <ImageView
+        android:id="@+id/turnRightIcon"
+        android:layout_width="wrap_content"
+        android:adjustViewBounds="true"
+        android:layout_height="@dimen/_30sdp"
+        android:clickable="true"
+        android:src="@drawable/speedometr_turn_off"
+        custom:layout_constraintBottom_toBottomOf="@+id/enginenIcon"
+        custom:layout_constraintStart_toEndOf="@+id/enginenIcon"
+        custom:layout_constraintTop_toTopOf="@+id/enginenIcon" />
+
+    <ImageView
+        android:id="@+id/turnLeftIcon"
+        android:clickable="true"
+        android:layout_width="wrap_content"
+        android:adjustViewBounds="true"
+        android:layout_height="@dimen/_30sdp"
+        android:rotation="180"
+        android:src="@drawable/speedometr_turn_off"
+        custom:layout_constraintBottom_toBottomOf="@+id/lightIcon"
+        custom:layout_constraintEnd_toStartOf="@+id/lightIcon"
+        custom:layout_constraintTop_toTopOf="@+id/lightIcon" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

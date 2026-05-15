@@ -1,0 +1,47 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="52dp"
+    android:height="52dp"
+    android:viewportWidth="52"
+    android:viewportHeight="52">
+  <path
+      android:pathData="M0,26C0,11.641 11.641,0 26,0C40.359,0 52,11.641 52,26C52,40.359 40.359,52 26,52C11.641,52 0,40.359 0,26ZM49.397,26C49.397,13.078 38.922,2.603 26,2.603C13.078,2.603 2.603,13.078 2.603,26C2.603,38.922 13.078,49.397 26,49.397C38.922,49.397 49.397,38.922 49.397,26Z">
+    <aapt:attr name="android:fillColor">
+      <gradient 
+          android:startX="26"
+          android:startY="53.3"
+          android:endX="26"
+          android:endY="-0"
+          android:type="linear">
+        <item android:offset="0" android:color="#4C444343"/>
+        <item android:offset="1" android:color="#4C8B8B8B"/>
+      </gradient>
+    </aapt:attr>
+  </path>
+  <path
+      android:strokeWidth="1"
+      android:pathData="M26,26m-25.5,0a25.5,25.5 0,1 1,51 0a25.5,25.5 0,1 1,-51 0">
+    <aapt:attr name="android:fillColor">
+      <gradient 
+          android:startX="26"
+          android:startY="-1.3"
+          android:endX="26"
+          android:endY="52"
+          android:type="linear">
+        <item android:offset="0" android:color="#7F000000"/>
+        <item android:offset="1" android:color="#00000000"/>
+      </gradient>
+    </aapt:attr>
+    <aapt:attr name="android:strokeColor">
+      <gradient 
+          android:startX="26"
+          android:startY="0"
+          android:endX="26"
+          android:endY="52"
+          android:type="linear">
+        <item android:offset="0" android:color="#FF585757"/>
+        <item android:offset="1" android:color="#008C8C8C"/>
+      </gradient>
+    </aapt:attr>
+  </path>
+</vector>

@@ -1,0 +1,26 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Background square -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#333333"/> <!-- رەنگی پشتەوە -->
+            <size android:width="30dp" android:height="30dp"/>
+            <corners android:radius="18dp"/>
+        </shape>
+    </item>
+
+    <!-- Circular progress -->
+    <item>
+        <rotate
+            android:fromDegrees="270"
+            android:toDegrees="270">
+            <shape android:shape="ring"
+                android:useLevel="true"
+                android:thickness="4dp"
+                android:innerRadiusRatio="3">
+                <solid android:color="#AB0009"/> <!-- رەنگی پرۆگریس -->
+            </shape>
+        </rotate>
+    </item>
+
+</layer-list>

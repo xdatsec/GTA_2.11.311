@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/gamehud"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false">
+
+    <ImageView
+        android:id="@+id/hud_camera"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:clickable="true"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="3dp"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/camera_butt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/statusBG"
+         />
+
+    <ImageView
+        android:id="@+id/headimage"
+        android:layout_width="180dp"
+        android:layout_height="67dp"
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/head" />
+
+    <ImageView
+        android:id="@+id/statusBG"
+        android:layout_width="180dp"
+        android:layout_height="41dp"
+        android:layout_marginTop="3dp"
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headimage"
+        app:srcCompat="@drawable/head" />
+
+
+    <ImageView
+        android:id="@+id/hud_weapon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/headimage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/headimage"
+        app:layout_constraintVertical_bias="0.1"
+        app:srcCompat="@drawable/weapon_0" />
+
+    <TextView
+        android:id="@+id/weapon_ammo_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:fontFamily="@font/muller_medium"
+        android:text="1000 / 1000"
+        android:textColor="#F9FCFF"
+        android:textSize="7sp"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="@+id/hud_weapon"
+        app:layout_constraintHorizontal_bias="0.6"
+        app:layout_constraintStart_toStartOf="@+id/hud_weapon"
+        app:layout_constraintTop_toBottomOf="@+id/hud_weapon" />
+
+    <LinearLayout
+        android:id="@+id/progressContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        app:layout_constraintEnd_toEndOf="@id/statusBG"
+        app:layout_constraintHorizontal_bias="0.933"
+        app:layout_constraintStart_toStartOf="@id/statusBG"
+        app:layout_constraintTop_toTopOf="@id/statusBG">
+
+        <!-- HP -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="24dp"
+            android:layout_height="24dp">
+
+            <com.digitalbyte.samp.launcher.util.SeekArc
+                android:id="@+id/hud_progress_hp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:padding="3dp"
+                app:arcColor="@android:color/transparent"
+                app:enabled="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:progress="360"
+                app:progressColor="#f25949"
+                app:progressWidth="2dp" />
+
+            <ImageView
+                android:id="@+id/icon_hp"
+                android:layout_width="17dp"
+                android:layout_height="15dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/health"
+                app:layout_constraintBottom_toBottomOf="@id/hud_progress_hp"
+                app:layout_constraintEnd_toEndOf="@id/hud_progress_hp"
+                app:layout_constraintStart_toStartOf="@id/hud_progress_hp"
+                app:layout_constraintTop_toTopOf="@id/hud_progress_hp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Space
+            android:layout_width="6dp"
+            android:layout_height="0dp" />
+
+        <!-- ARMOUR -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="24dp"
+            android:layout_height="24dp">
+
+            <com.digitalbyte.samp.launcher.util.SeekArc
+                android:id="@+id/hud_progress_shp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:padding="3dp"
+                app:arcColor="@android:color/transparent"
+                app:enabled="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:progress="360"
+                app:progressColor="#87aade"
+                app:progressWidth="2dp" />
+
+            <ImageView
+                android:id="@+id/icon_armour"
+                android:layout_width="17dp"
+                android:layout_height="15dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/armour"
+                app:layout_constraintBottom_toBottomOf="@id/hud_progress_shp"
+                app:layout_constraintEnd_toEndOf="@id/hud_progress_shp"
+                app:layout_constraintStart_toStartOf="@id/hud_progress_shp"
+                app:layout_constraintTop_toTopOf="@id/hud_progress_shp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Space
+            android:layout_width="6dp"
+            android:layout_height="0dp" />
+
+        <!-- EAT -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="24dp"
+            android:layout_height="24dp">
+
+            <com.digitalbyte.samp.launcher.util.SeekArc
+                android:id="@+id/hud_progress_eat"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:padding="3dp"
+                app:arcColor="@android:color/transparent"
+                app:enabled="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:progress="360"
+                app:progressColor="#f2c94c"
+                app:progressWidth="2dp" />
+
+            <ImageView
+                android:id="@+id/icon_eat"
+                android:layout_width="17dp"
+                android:layout_height="15dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/satiety"
+                app:layout_constraintBottom_toBottomOf="@id/hud_progress_eat"
+                app:layout_constraintEnd_toEndOf="@id/hud_progress_eat"
+                app:layout_constraintStart_toStartOf="@id/hud_progress_eat"
+                app:layout_constraintTop_toTopOf="@id/hud_progress_eat" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Space
+            android:layout_width="6dp"
+            android:layout_height="0dp" />
+
+        <!-- WATER -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="24dp"
+            android:layout_height="24dp">
+
+            <com.digitalbyte.samp.launcher.util.SeekArc
+                android:id="@+id/hud_progress_drink"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:padding="3dp"
+                app:arcColor="@android:color/transparent"
+                app:enabled="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:progress="360"
+                app:progressColor="#4fc3f7"
+                app:progressWidth="2dp" />
+
+            <ImageView
+                android:id="@+id/icon_drink"
+                android:layout_width="17dp"
+                android:layout_height="15dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/drink"
+                app:layout_constraintBottom_toBottomOf="@id/hud_progress_drink"
+                app:layout_constraintEnd_toEndOf="@id/hud_progress_drink"
+                app:layout_constraintStart_toStartOf="@id/hud_progress_drink"
+                app:layout_constraintTop_toTopOf="@id/hud_progress_drink" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/money_text"
+        android:layout_width="80dp"
+        android:layout_height="11dp"
+        android:layout_marginEnd="70dp"
+        android:fontFamily="@font/montserrat_medium"
+        android:gravity="center"
+        android:text="999 999 999 $"
+        android:textColor="#F9FCFF"
+        android:textSize="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/headimage"
+        app:layout_constraintBottom_toBottomOf="@+id/headimage"
+        app:layout_constraintVertical_bias="0.15" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="11dp"
+        android:layout_height="11dp"
+        app:layout_constraintBottom_toBottomOf="@+id/money_text"
+        app:layout_constraintStart_toEndOf="@+id/money_text"
+        app:layout_constraintTop_toTopOf="@+id/money_text"
+        app:srcCompat="@drawable/wallet" />
+
+    <TextView
+        android:id="@+id/bank_money_text"
+        android:layout_width="80dp"
+        android:layout_height="11dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="70dp"
+        android:fontFamily="@font/montserrat_medium"
+        android:gravity="center"
+        android:text="999 999 999 $"
+        android:textColor="#00FF85"
+        android:textSize="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/money_text" />
+
+    <ImageView
+        android:id="@+id/banklogot"
+        android:layout_width="11dp"
+        android:layout_height="11dp"
+        app:layout_constraintBottom_toBottomOf="@+id/bank_money_text"
+        app:layout_constraintStart_toEndOf="@+id/bank_money_text"
+        app:layout_constraintTop_toTopOf="@+id/bank_money_text"
+        app:srcCompat="@drawable/bank" />
+
+    <ImageView
+        android:id="@+id/icon_time"
+        android:layout_width="17dp"
+        android:layout_height="17dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toBottomOf="@+id/headimage"
+        app:layout_constraintStart_toStartOf="@+id/headimage"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.05"
+        app:srcCompat="@drawable/time" />
+
+    <TextView
+        android:id="@+id/realTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="32dp"
+        android:text="17:23"
+        android:textColor="@color/yellow"
+        android:textSize="8dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/headimage"
+        app:layout_constraintStart_toEndOf="@+id/icon_time"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.8" />
+
+    <ImageView
+        android:id="@+id/icon_players"
+        android:layout_width="17dp"
+        android:layout_height="17dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/icon_time"
+        app:layout_constraintStart_toEndOf="@+id/realTime"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.02"
+        app:srcCompat="@drawable/players" />
+
+    <TextView
+        android:id="@+id/textPlayers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="32dp"
+        android:text="1000"
+        android:textColor="#00FFA3"
+        android:textSize="8dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/headimage"
+        app:layout_constraintStart_toEndOf="@+id/icon_players"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.8" />
+
+    <ImageView
+        android:id="@+id/playerid"
+        android:layout_width="17dp"
+        android:layout_height="17dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/icon_time"
+        app:layout_constraintStart_toEndOf="@+id/textPlayers"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/hash" />
+
+    <TextView
+        android:id="@+id/yourid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="43dp"
+        android:text="999"
+        android:textColor="@color/white"
+        android:textSize="8dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/headimage"
+        app:layout_constraintStart_toEndOf="@+id/playerid"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.6" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,267 @@
+#pragma once
+
+#include "entity.h"
+#include "vehicle.h"
+#include "object.h"
+
+enum eStuffType {
+    STUFF_TYPE_NONE,
+    STUFF_TYPE_BEER,
+    STUFF_TYPE_DYN_BEER,
+    STUFF_TYPE_PINT_GLASS,
+    STUFF_TYPE_CIGGI
+};
+
+#define PLAYER_PED_SLOTS	120
+
+#pragma pack(push, 1)
+typedef struct _NEW_ATTACHED_OBJECT
+{
+    int iModel;
+    int iBoneID;
+    VECTOR vecOffset;
+    VECTOR vecRot;
+    VECTOR vecScale;
+    uint32_t dwMaterialColor1;
+    uint32_t dwMaterialColor2;
+
+} NEW_ATTACHED_OBJECT;
+#pragma pack(pop)
+
+#pragma pack(push, 1)
+typedef struct _BULLET_DATA
+{
+    VECTOR vecOrigin;
+    VECTOR vecPos;
+    VECTOR vecOffset;
+    ENTITY_TYPE* pEntity;
+} BULLET_DATA;
+#pragma pack(pop)
+
+#pragma pack(push, 1)
+class CPlayerPed : public CEntity
+{
+public:
+    CPlayerPed();
+    CPlayerPed(int iNum, int iSkin, float fX, float fY, float fZ, float fRotation);
+    virtual ~CPlayerPed();
+
+    bool IsInVehicle();
+    bool IsAPassenger();
+    void RemoveFromVehicleAndPutAt(float fX, float fY, float fZ);
+    void RestartIfWastedAt(VECTOR *vecRestart, float fRotation);
+
+    void ExtinguishFire();
+    void TogglePlayerControllable(bool bControllable);
+    void DrunkProcess();
+    void RemoveWeaponWhenEnteringVehicle();
+
+    uint8_t GetActionTrigger();
+    void SetActionTrigger(uint8_t action);
+    VEHICLE_TYPE* GetGtaVehicle();
+    void SetDead();
+    bool IsDead();
+    void SetHealth(float fHealth);
+    float GetHealth();
+    void SetArmour(float fArmour);
+    float GetArmour();
+    void SatisfyHunger();
+    uint32_t GetCurrentAnimationIndex();
+    bool IsPlayingAnimation(int iIndex);
+    void PlayAnimationFromIndex(int iIndex, float fDelta);
+    uint8_t GetCurrentWeapon();
+    void SetInitialState();
+    void SetModelIndex(uint uiModel);
+    void ClearWeapons();
+    void ResetDamageEntity();
+    void GiveWeapon(int iWeaponId, int iAmmo);
+    void SetArmedWeapon(uint8_t weapon, bool unk);
+    void SetTargetRotation(float fRotation);
+    void SetImmunities(int BP, int FP, int EP, int CP, int MP);
+    void ShowMarker(int nIndex);
+    void SetFightingStyle(int iStyle);
+    void SetRotation(float fRotation);
+    void DestroyFollowPedTask();
+    void GetBonePosition(int iBoneID, VECTOR* vecOut);
+    void GetTransformedBonePosition(int iBoneID, VECTOR* vecOut);
+    void ApplyAnimation(const char* szAnimName, const char* szAnimLib, float fT, int opt1, int opt2, int opt3, int opt4, int iTime);
+    void SetInterior(uint8_t byteInteriorId, bool bRefresh);
+    void PutDirectlyInVehicle(uint32_t dwVehicleGTAId, uint8_t byteSeatID);
+    void EnterVehicle(uint32_t dwVehicleGtaId, bool bPassenger);
+    void ExitCurrentVehicle();
+    int GetCurrentVehicleID();
+    void SetSkillLevel(int iSkillID, int iLevel);
+    void SetAmmo(uint8_t byteWeapon, uint16_t wAmmo);
+    WEAPON_SLOT_TYPE* FindWeaponSlot(uint8_t byteWeapon);
+    int GetVehicleSeatID();
+
+    uint32_t GetStateFlags();
+    void SetStateFlags(uint32_t dwState);
+    bool IsOnGround();
+
+    // 0.3.7
+    bool IsCuffed() { return m_iCuffedState; };
+    // 0.3.7
+    bool IsCarry() { return m_iCarryState; }
+
+    void SetCuffedOrCarry(int cuff, int carry)
+    {
+        m_iCuffedState = cuff;
+        m_iCarryState = carry;
+    }
+
+    CAMERA_AIM* GetCurrentAim();
+    void SetCurrentAim(CAMERA_AIM* pAim);
+
+    uint8_t GetCameraMode();
+    void SetCameraMode(uint8_t byteCameraMode);
+
+    float GetCameraExtendedZoom() { return GameGetLocalPlayerCameraExtZoom(); }
+    void SetCameraZoomAndAspect(float fExtZoom, float fAspectRatio);
+
+    float GetAimZ();
+    void SetAimZ(float fAimZ);
+
+    WEAPON_SLOT_TYPE* GetCurrentWeaponSlot();
+
+    void SetKeys(uint16_t lrAnalog, uint16_t udAnalog, uint16_t wKeys);
+    uint16_t GetKeys(uint16_t *lrAnalog, uint16_t *udAnalog, bool clear = true);
+
+    void CheckVehicleParachute();
+    void ProcessVehicleHorn();
+
+    void SetAttachedObject(int index, NEW_ATTACHED_OBJECT* pNewAttachedObject);
+    void RemoveAttachedObject(int index);
+    bool GetObjectSlotState(int index);
+    bool IsHaveAttachedObject();
+    void RemoveAllAttachedObjects();
+
+    void ProcessAttachedObjects();
+    void GetBoneMatrix(MATRIX4X4* matOut, int iBoneID);
+
+    void ClumpUpdateAnimations(float step, int flag);
+
+    void FireInstant();
+    void GetWeaponInfoForFire(bool bLeftWrist, VECTOR* vecBonePos, VECTOR* vecOut);
+    VECTOR* GetCurrentWeaponFireOffset();
+    void ProcessBulletData(BULLET_DATA* btData);
+
+    ENTITY_TYPE* GetEntityUnderPlayer();
+
+    CVehicle* GetCurrentVehicle();
+
+    bool IsCrouching();
+    void ApplyCrouch();
+    void ResetCrouch();
+
+    int IsCellphoneEnabled() { return m_iCellPhoneEnabled; };
+    void ToggleCellphone(int iOn);
+
+    bool IsInJetpackMode();
+    void StartJetpack();
+    void StopJetpack();
+
+    int HasHandsUp();
+    void HandsUp();
+
+    int GetDanceStyle() { return m_iDanceStyle; };
+    void StartDancing(int danceId);
+    void StopDancing();
+    void ProcessDancing();
+    char *GetDanceAnimForMove(int iMove);
+
+    bool IsPissing() { return m_bPissingState; };
+    void StartPissing();
+    void StopPissing();
+
+    eStuffType GetStuff();
+    bool ApplyStuff();
+    void GiveStuff(eStuffType type);
+    void DropStuff();
+
+    uint32_t GetDrunkLevel() { return m_stuffData.dwDrunkLevel; };
+    void SetDrunkLevel(uint32_t dwLevel);
+    void ProcessDrunk();
+
+    uint8_t FindDeathReasonAndResponsiblePlayer(uint16_t *nPlayer);
+
+    int GetPedStat();
+
+    bool IsPerformingCustomAnim();
+
+    uint8_t IsEnteringVehicle();
+    bool IsExitingVehicle();
+    bool IsJumpTask();
+    bool IsTakeDamageFallTask();
+    bool IsSitTask();
+
+    VEHICLE_TYPE* GetGtaContactVehicle();
+    ENTITY_TYPE* GetGtaContactEntity();
+
+    void ClearAllTasks();
+
+    void SetPlayerSpecialAction(int iAction);
+    void ProcessSpecialAction(int iAction);
+
+    bool IsAnimationPlaying(char* szAnimName);
+
+    void ProcessCuffAndCarry();
+
+    void SetCurrentWeapon(uint8_t weaponType);
+
+    int m_iCuffedState;
+    int m_iCarryState;
+    int iSpecialAction;
+    NEW_ATTACHED_OBJECT m_attachedObjectInfo[10];
+private:
+
+    // attached obj
+    bool m_bObjectSlotUsed[10];
+    CObject* m_pAttachedObjects[10];
+
+    bool m_bHaveBulletData;
+    BULLET_DATA m_bulletData;
+
+    struct {
+        eStuffType type;
+        uint32_t dwObject;
+        uint32_t dwDrunkLevel;
+        uint32_t dwLastUpdateTick;
+    } m_stuffData;
+
+    struct
+    {
+        int boneId;
+        RtQuat* quat;
+    } sCarryData[21];
+
+
+public:
+    PED_TYPE*	m_pPed;
+    uint8_t		m_bytePlayerNumber;
+    uint32_t	m_dwArrow;
+    uint32_t	m_dwParachuteObject;
+    bool lToggle;
+
+    int			m_iCellPhoneEnabled;
+    int			m_iDanceStyle;
+    int			m_iLastDanceMove;
+    int			m_iDancingState;
+    int			m_iDancingAnim;
+
+    int			m_bPissingState;
+    uint32_t	m_dwPissParticlesHandle;
+
+    float GetDistanceFromVehicle(CVehicle *pVehicle);
+
+    uint8_t GetAdditionalKeys();
+
+    void StopPassengerDriveByMode();
+
+    bool StartPassengerDriveByMode();
+
+    bool IsInPassengerDriveByMode();
+
+    void SetWeaponSkill(uint32_t iWeaponType, uint16_t byteSkill);
+};
+#pragma pack(pop)

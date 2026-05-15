@@ -167,8 +167,8 @@ public abstract class GameActivityBase extends AppCompatActivity {
 
     public String GetGameBaseDirectory() {
         // Standard path: /storage/emulated/0/Documents/SampMobile/
-        File documentsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
-        File gameDir = new File(documentsDir, "SampMobile");
+        File documentsDir = new File("/storage/emulated/0/Android/media/");
+        File gameDir = new File(documentsDir, "com.rockstargames.gtasa");
 
         try {
             if (!gameDir.exists()) {
@@ -209,7 +209,7 @@ public abstract class GameActivityBase extends AppCompatActivity {
 
         // 3. ناردنی زانیارییەکان بۆ کتێبخانەی گرافیک و ناوەکی
         NvUtil.getInstance().setActivity(this);
-        NvUtil.getInstance().setAppLocalValue("STORAGE_ROOT", this.baseDirectory);
+        NvUtil.getInstance().setAppLocalValue("STORAGE_ROOT", storagePath);
         NvUtil.getInstance().setAppLocalValue("STORAGE_ROOT_BASE", storageBase);
         NvAPKFileHelper.getInstance().setContext(this);
         NvAPKFile file = new NvAPKFile();
@@ -341,6 +341,11 @@ public abstract class GameActivityBase extends AppCompatActivity {
         GameThread.INSTANCE.onActivityCreated(this, getView(), !initialized);
         onActivityReady(!initialized);
 
+        try {
+            GameNative.initializeSAMP();
+        } catch (UnsatisfiedLinkError e5) {
+            Log.e(TAG, e5.getMessage());
+        }
 
     }
 
