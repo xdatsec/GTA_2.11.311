@@ -99,7 +99,7 @@
 						android:layout_height="wrap_content"
 						android:background="@android:color/transparent"
 						android:fontFamily="@font/muller_regular"
-						android:hint="Нажмите для ввода"
+						android:hint="بنووسە..."
 						android:imeOptions="flagNoExtractUi"
 						android:inputType="textShortMessage"
 						android:lines="1"
@@ -216,7 +216,7 @@
 						app:layout_constraintStart_toStartOf="parent"
 						app:layout_constraintTop_toBottomOf="@+id/dialog_tablist_row">
 
-						<com.rockstargames.gtasa.launcher.util.CustomRecyclerView
+						<com.kurdish.roleplay.launcher.util.CustomRecyclerView
 							android:id="@+id/dialog_list_recycler"
 							android:layout_width="0dp"
 							android:layout_height="0dp"

@@ -85,7 +85,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp">
 
-            <com.digitalbyte.samp.launcher.util.SeekArc
+            <com.kurdish.roleplay.launcher.util.SeekArc
                 android:id="@+id/hud_progress_hp"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -121,7 +121,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp">
 
-            <com.digitalbyte.samp.launcher.util.SeekArc
+            <com.kurdish.roleplay.launcher.util.SeekArc
                 android:id="@+id/hud_progress_shp"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -157,7 +157,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp">
 
-            <com.digitalbyte.samp.launcher.util.SeekArc
+            <com.kurdish.roleplay.launcher.util.SeekArc
                 android:id="@+id/hud_progress_eat"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -193,7 +193,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp">
 
-            <com.digitalbyte.samp.launcher.util.SeekArc
+            <com.kurdish.roleplay.launcher.util.SeekArc
                 android:id="@+id/hud_progress_drink"
                 android:layout_width="0dp"
                 android:layout_height="0dp"

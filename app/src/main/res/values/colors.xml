@@ -41,7 +41,7 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="gradient1">#ffce0e03</color>
-    <color name="gradient2">#fff75514</color>
+    <color name="gradient2">#FF3636</color>
     <color name="white6">#14ffffff</color>
     <color name="black20">#33000000</color>
     <color name="color_0F0F0F">#ff0f0f0f</color>
@@ -181,5 +181,30 @@
     <color name="yellow">#fbc02d</color>
     <color name="yellow_active_switch">#ffffba08</color>
     <color name="orange">#ffef4711</color>
+    <color name="primary_red">#8B0000</color>
+    <color name="primary_blue">#1E3A8A</color>
+    <color name="primary_dark">#0F0F0F</color>
+
+    <!-- Background Colors -->
+    <color name="card_dark">#1A1A1A</color>
+    <color name="input_background">#2D2D2D</color>
+
+    <!-- Text Colors -->
+    <color name="text_primary">#E0E0E0</color>
+    <color name="text_secondary">#888888</color>
+
+    <!-- Switch Colors -->
+    <color name="switch_track">#404040</color>
+
+    <color name="health_green">#FF4CAF50</color>
+    <color name="health_green_light">#334CAF50</color>
+
+    <!-- Armour Colors -->
+    <color name="armour_blue">#FF2196F3</color>
+    <color name="armour_blue_light">#332196F3</color>
+
+    <!-- Wanted Colors -->
+    <color name="wanted_red">#FFF44336</color>
+    <color name="wanted_red_light">#33F44336</color>
     <color name="dialog_bg_color">#A0FFFFFF</color>
 </resources>

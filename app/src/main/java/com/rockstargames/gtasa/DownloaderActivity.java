@@ -1,5 +1,6 @@
 package com.rockstargames.gtasa;
 
+import com.kurdish.roleplay.R;
 import com.rockstargames.oswrapper.DownloaderActivityBase;
 import com.rockstargames.oswrapper.DownloaderConfig;
 import com.rockstargames.oswrapper.DownloaderPackConfig;

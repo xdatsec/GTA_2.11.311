@@ -1,11 +1,26 @@
 <resources>
-    <string name="app_name">Gtasa</string>
+    <string name="app_name">Kurdish RolePlay</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+    <string name="basic_settings">ڕێکخستنە سەرەکییەکان</string>
+    <string name="nickname">ناوی بەکارهێنەر</string>
+    <string name="features">تایبەتمەندییەکان</string>
+    <string name="android_keyboard">کلیلەپانی ئەندرۆید</string>
+    <string name="auto_aim">ئامانجگرتنی خۆکار</string>
+    <string name="fps_display">پیشاندانی FPS</string>
+    <string name="monet_loader">مۆنێت لۆدەر</string>
+    <string name="performance">کارایی</string>
+    <string name="fps_limit">سنووری FPS</string>
+    <string name="message_count">ژمارەی نامەکان</string>
+
     <string name="downloaderAssetsHeader">Preparing assets:</string>
     <string name="downloaderError">Error</string>
     <string name="downloaderNoData">Game Data was either not installed or was deleted. Please connect to the internet and relaunch so it can download!</string>
@@ -28,7 +43,4 @@
     <string name="asset_pack_sfx1">Audio (part 1)</string>
     <string name="asset_pack_sfx2">Audio (part 2)</string>
     <string name="asset_pack_streams">Audio (part 3)</string>
-
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 </resources>

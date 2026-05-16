@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "757123888015",
+    "firebase_url": "https://kurdish-roleplay-default-rtdb.firebaseio.com",
+    "project_id": "kurdish-roleplay",
+    "storage_bucket": "kurdish-roleplay.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:757123888015:android:009e71fb232e512edf91fa",
+        "android_client_info": {
+          "package_name": "com.kurdish.roleplay"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHkpdmVnur8FZwN9636nzpQOhzMLIfGao"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

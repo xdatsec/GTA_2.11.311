@@ -13,7 +13,7 @@ import android.view.SurfaceView;
 import androidx.core.view.ViewCompat;
 
 
-import com.rockstargames.gtasa.R;
+import com.kurdish.roleplay.R;
 import com.rockstargames.oswrapper.GameActivityBase;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;

@@ -26,7 +26,7 @@
             custom:layout_constraintStart_toStartOf="parent"
             custom:layout_constraintTop_toTopOf="parent" />
 
-        <com.digitalbyte.samp.launcher.util.SeekArc
+        <com.kurdish.roleplay.launcher.util.SeekArc
             android:id="@+id/speedLine"
             android:layout_width="@dimen/_80sdp"
             android:layout_height="@dimen/_80sdp"

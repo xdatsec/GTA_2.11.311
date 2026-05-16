@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.rockstargames.gtasa.R;
+import com.kurdish.roleplay.R;
 import com.rockstargames.oswrapper.GameActivityBase;
 import java.io.InputStream;
 

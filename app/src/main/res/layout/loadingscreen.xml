@@ -1,105 +1,198 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_loading_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black"
-    android:clickable="true"
-    android:focusable="true">
+    android:background="@drawable/bg_gradient_modern"
+    android:id="@+id/mainLayoutContainer">
 
-    <!-- ImageView 1 -->
+    <!-- Animated Background Elements -->
     <ImageView
-        android:id="@+id/background_image_1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitCenter"
-        android:src="@drawable/back1"
-        android:visibility="gone"
-        android:contentDescription="Loading Image 1" />
+        android:id="@+id/bgCircle1"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="-30dp"
+        android:layout_marginEnd="-30dp"
+        android:alpha="0.2"
+        android:src="@drawable/bg_circle_red"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- ImageView 2 -->
     <ImageView
-        android:id="@+id/background_image_2"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitCenter"
-        android:src="@drawable/back2"
-        android:visibility="gone"
-        android:contentDescription="Loading Image 2" />
+        android:id="@+id/bgCircle2"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="-20dp"
+        android:layout_marginBottom="-20dp"
+        android:alpha="0.2"
+        android:src="@drawable/bg_circle_red"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- ImageView 3 -->
-    <ImageView
-        android:id="@+id/background_image_3"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitCenter"
-        android:src="@drawable/back3"
-        android:visibility="gone"
-        android:contentDescription="Loading Image 3" />
-
-    <!-- ImageView 4 -->
-    <ImageView
-        android:id="@+id/background_image_4"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitCenter"
-        android:src="@drawable/back4"
-        android:visibility="gone"
-        android:contentDescription="Loading Image 4" />
-
-    <!-- ImageView 5 -->
-    <ImageView
-        android:id="@+id/background_image_5"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitCenter"
-        android:src="@drawable/back5"
-        android:visibility="gone"
-        android:contentDescription="Loading Image 5" />
-
-
-    <!-- Loading Indicator Card -->
     <androidx.cardview.widget.CardView
-        android:layout_width="wrap_content"
+        android:id="@+id/progressCard"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        app:cardBackgroundColor="#80000000"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="0dp">
+        android:padding="3dp"
+        android:layout_marginTop="0dp"
+        app:cardBackgroundColor="@android:color/transparent"
+        app:cardCornerRadius="14dp"
+        app:cardElevation="6dp"
+
+        app:layout_constraintWidth_percent="0.35"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.5">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="8dp">
+            android:background="@drawable/card_gradient_red"
+            android:orientation="vertical"
+            android:paddingVertical="16dp"
+            android:paddingHorizontal="18dp">
 
-            <!-- "Loading..." Text -->
-            <TextView
-                android:id="@+id/loading_text"
-                android:layout_width="wrap_content"
+            <!-- Progress Bar Header -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:text="Loading..."
-                android:textColor="@android:color/white"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:layout_marginBottom="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <!-- Circular ProgressBar -->
+                <ImageView
+                    android:id="@+id/loadingIcon"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginEnd="10dp"
+                    android:color="@android:color/white"
+                    android:src="@drawable/ic_loading" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Loading Game"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif-medium" />
+
+                <TextView
+                    android:id="@+id/progressPercent"
+                    android:layout_width="45dp"
+                    android:layout_height="22dp"
+                    android:background="@drawable/value_indicator"
+                    android:gravity="center"
+                    android:text="0%"
+                    android:textColor="@android:color/white"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <!-- ProgressBar -->
             <ProgressBar
-                android:id="@+id/loading_spinner"
-                style="?android:attr/progressBarStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:indeterminate="true"
-                android:indeterminateTint="@android:color/white" />
+                android:id="@+id/progressBarr"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="12dp"
+                android:max="100"
+                android:progress="0"
+                android:indeterminateOnly="false"
+                android:progressDrawable="@drawable/custom_progress" />
 
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 
-</FrameLayout>
+    <!-- Loading Text with Animation -->
+    <TextView
+        android:id="@+id/loadingText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:letterSpacing="0.01"
+        android:text="Preparing your experience..."
+        android:textColor="#80FFFFFF"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progressCard" />
 
+    <!-- Loading Dots Animation -->
+    <LinearLayout
+        android:id="@+id/loadingDots"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loadingText">
+
+        <View
+            android:id="@+id/dot1"
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            android:layout_marginHorizontal="2dp"
+            android:background="@drawable/loading_dot" />
+
+        <View
+            android:id="@+id/dot2"
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            android:layout_marginHorizontal="2dp"
+            android:background="@drawable/loading_dot" />
+
+        <View
+            android:id="@+id/dot3"
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            android:layout_marginHorizontal="2dp"
+            android:background="@drawable/loading_dot" />
+
+    </LinearLayout>
+
+    <!-- Version Info -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/version_bg"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:text="v1.0.0"
+            android:textColor="#80FFFFFF"
+            android:textSize="8sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="8dp"
+            android:layout_marginHorizontal="4dp"
+            android:background="#40FFFFFF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kurdish RolePlay"
+            android:textColor="#80FFFFFF"
+            android:textSize="8sp" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

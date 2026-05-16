@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/tab_main"
     android:layout_width="match_parent"
+    android:id="@+id/tab_main"
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="424dp"
-        android:layout_height="281dp"
-        android:background="#DC000000"
+        android:layout_width="@dimen/_400sdp"
+        android:layout_height="@dimen/_250sdp"
+        android:background="@drawable/tab_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -17,58 +18,13 @@
 
         <!-- Menu List CMD1 -->
         <LinearLayout
-            android:id="@+id/fuckinghead"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="0dp"
-            android:orientation="horizontal"
-            android:padding="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/svname"
-                    android:layout_width="wrap_content"
-                    android:layout_height="22dp"
-                    android:fontFamily="@font/montserrat_bold"
-                    android:lines="1"
-                    android:maxLines="1"
-                    android:padding="5dp"
-                    android:singleLine="true"
-                    android:text="SAMP MOBILE"
-                    android:textColor="#ffffffff"
-                    android:textSize="25.0px"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <Button
-                    android:id="@+id/closeButton"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/cross"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toEndOf="@+id/svname"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
             android:id="@+id/menu_list_cmd1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fuckinghead">
+            app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -113,7 +69,7 @@
                         android:layout_width="0dp"
                         android:layout_height="@dimen/_20sdp"
                         android:autofillHints="no"
-                        android:background="@drawable/tabbg"
+                        android:background="@drawable/players_list_border_search"
                         android:fontFamily="@font/din_pro_medium"
                         android:hint="Search"
                         android:imeOptions="actionGo|actionSend|actionDone|flagNoFullscreen|flagNoExtractUi"
@@ -133,15 +89,51 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
+                <Button
+                    android:id="@+id/closeButton"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/cross"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/app_logo"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginStart="250dp"
+                    android:layout_marginTop="12dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.302"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_app_logo" />
+
                 <TextView
                     android:id="@+id/total_players"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="95dp"
+                    android:layout_height="21dp"
                     android:layout_marginTop="12dp"
                     android:layout_marginEnd="56dp"
                     android:fontFamily="@font/montserrat_bold"
                     android:gravity="center_vertical"
                     android:text="Players: 100/1000"
+                    android:textColor="@color/progress_gray"
+                    android:textSize="10sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_width="95dp"
+                    android:layout_height="21dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="212dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="center_vertical"
+                    android:text="Kurdish RolePlay"
                     android:textColor="@color/progress_gray"
                     android:textSize="10sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -155,9 +147,10 @@
             android:id="@+id/recycle_name_column"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_15sdp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="@dimen/_15sdp"
             android:orientation="horizontal"
-            android:scrollbarAlwaysDrawHorizontalTrack="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/menu_list_cmd1">
@@ -216,21 +209,20 @@
             android:layout_marginStart="@dimen/_15sdp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="@dimen/_15sdp"
-            android:background="#00FFFFFF"
-            android:visibility="gone"
+            android:background="@drawable/button_red_rectangle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/recycle_name_column"
-            tools:visibility="gone" />
+            app:layout_constraintTop_toBottomOf="@+id/recycle_name_column" />
 
         <!-- RecyclerView -->
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycle"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginStart="@dimen/_15sdp"
             android:layout_marginTop="3dp"
-            android:background="@drawable/tabbg"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:layout_marginBottom="8dp"
             android:fadeScrollbars="false"
             android:scrollbarAlwaysDrawVerticalTrack="true"
             android:scrollbarStyle="insideInset"
@@ -241,6 +233,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view" />
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

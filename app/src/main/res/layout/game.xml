@@ -39,4 +39,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
+
+    <include layout="@layout/hud_test"/>
+    <include layout="@layout/tab"/>
+    <include layout="@layout/speedometer"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,34 +4,17 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.rockstargames.gtasa",
+  "applicationId": "com.kurdish.roleplay",
   "variantName": "release",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 105,
-      "versionName": "0.9.7",
+      "versionCode": 2,
+      "versionName": "1.0.0",
       "outputFile": "app-release.apk"
     }
   ],
-  "elementType": "File",
-  "baselineProfiles": [
-    {
-      "minApi": 28,
-      "maxApi": 30,
-      "baselineProfiles": [
-        "baselineProfiles/1/app-release.dm"
-      ]
-    },
-    {
-      "minApi": 31,
-      "maxApi": 2147483647,
-      "baselineProfiles": [
-        "baselineProfiles/0/app-release.dm"
-      ]
-    }
-  ],
-  "minSdkVersionForDexing": 26
+  "elementType": "File"
 }

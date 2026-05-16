@@ -5,5 +5,5 @@ pluginManagement {
         mavenCentral()
     }
 }
-rootProject.name = "GTA 2.11"
+rootProject.name = "Kurdish RolePlay"
 include ':app'

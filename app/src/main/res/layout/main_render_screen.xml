@@ -12,12 +12,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <include layout="@layout/hud_test"/>
+    <include layout="@layout/tab"/>
+    <include layout="@layout/speedometer"/>
+
     <FrameLayout
         android:id="@+id/ui_layout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:visibility="visible">
 
+        <View android:id="@+id/dark_screen" android:background="#ff000000" android:visibility="visible" android:layout_width="fill_parent" android:layout_height="fill_parent" android:alpha="0.0" />
     </FrameLayout>
 
 </FrameLayout>

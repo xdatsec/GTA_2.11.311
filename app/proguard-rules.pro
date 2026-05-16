@@ -3,6 +3,10 @@
 
 -keep class com.nvidia.devtech.* { *; }
 
+-keep class com.wardrumstudios.utils.* { *; }
+
+-keep class com.kurdish.roleplay.game.* { *; }
+
 -dontwarn javax.servlet.**
 -dontwarn org.conscrypt.**
 -dontwarn org.bouncycastle.**

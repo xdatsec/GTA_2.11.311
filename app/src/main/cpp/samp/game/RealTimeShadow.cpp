@@ -1,0 +1,79 @@
+//
+// Created by Traw-GG on 05.10.2025.
+//
+
+#include "RealTimeShadow.h"
+#include "vendor/armhook/patch.h"
+
+void CRealTimeShadow::InjectHooks() {
+
+}
+
+CRealTimeShadow::~CRealTimeShadow() {
+    Destroy();
+}
+
+RwFrame* CRealTimeShadow::SetLightProperties(float angle, float unused, bool doSetCamLight) {
+    if (const auto frame = RpLightGetFrame(m_pLight)) {
+        const RwV3d yaxis{ 0.f, 1.f, 0.f };
+        RwFrameRotate(frame, &yaxis, angle, rwCOMBINEREPLACE);
+
+        const RwV3d xaxis{ 1.f, 0.f, 0.f };
+        RwFrameRotate(frame, &xaxis, angle, rwCOMBINEPOSTCONCAT);
+
+        if (doSetCamLight) {
+            m_camera->SetLight(m_pLight);
+        }
+
+        return frame;
+    }
+    return nullptr;
+}
+
+void CRealTimeShadow::Destroy() {
+    m_pOwner = nullptr;
+    m_nRwObjectType = (uint32)-1;
+    if (m_pLight) {
+        // This is so convoluted... Do we actually have to do it like this? Wouldnt a simple `RwFrameDestroy(RpLightGetFrame(m_pLight))` work?
+        const auto frame = RpLightGetFrame(m_pLight);
+        rwObjectHasFrameSetFrame(m_pLight, nullptr);
+        RwFrameDestroy(frame);
+
+        RpLightDestroy(m_pLight);
+
+        m_pLight = nullptr;
+    }
+}
+
+bool CRealTimeShadow::Create(bool isBlurred, int32 blurPasses, bool drawMoreBlur) {
+    m_pLight = RpLightCreate(rpLIGHTDIRECTIONAL);
+    if (!m_pLight) {
+        return false;
+    }
+
+    const RwRGBAReal lightColor{ 0.8f, 0.8f, 0.8f, 0.f };
+    RpLightSetColor(m_pLight, &lightColor);
+
+    rwObjectHasFrameSetFrame(m_pLight, RwFrameCreate());
+
+    if (m_camera->Create(7)) {
+        m_nBlurPasses = blurPasses;
+        m_bBlurred = isBlurred;
+        m_bDrawMoreBlur = drawMoreBlur;
+//        if (!isBlurred || m_blurCamera.Create(6)) {
+//            m_camera.SetLight(m_pLight);
+//            return true;
+//        }
+    }
+
+    Destroy();
+    return false;
+}
+
+RwTexture* CRealTimeShadow::GetShadowRwTexture() {
+    return GetCurrentCamera().GetRwRenderTexture();
+}
+
+bool CRealTimeShadow::SetShadowedObject(CPhysical *physical) {
+    return CHook::CallFunction<bool>(g_libGTASA + (VER_x32 ? 0x5B7DD0 + 1 : 0x6DC400), this, physical);
+}

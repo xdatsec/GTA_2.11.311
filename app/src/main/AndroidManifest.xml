@@ -1,72 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- This is a modified version of AXMLPrinter2(By Google) library. Check out how many changes are made at https://github.com/developer-krushna/AXMLPrinter by (@developer-krushna) -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:versionCode="3782367"
-    android:versionName="2.11.277"
-    android:compileSdkVersion="34"
-    android:compileSdkVersionCodename="14"
-    package="com.rockstargames.gtasa">
+    package="com.kurdish.roleplay">
+
     <uses-sdk
         android:minSdkVersion="28"
         android:targetSdkVersion="36" />
-    <uses-feature
-        android:glEsVersion="0x20000"
-        android:required="true" />
+
     <uses-feature
         android:name="android.hardware.touchscreen"
         android:required="false" />
     <uses-feature
         android:name="android.hardware.touchscreen.multitouch"
         android:required="false" />
-    <uses-feature
-        android:name="android.software.leanback"
-        android:required="false" />
-    <uses-permission android:name="com.android.vending.CHECK_LICENSE" />
-    <supports-screens
-        android:anyDensity="true"
-        android:smallScreens="false"
-        android:normalScreens="true"
-        android:largeScreens="true"
-        android:xlargeScreens="true"
-        android:requiresSmallestWidthDp="320" />
-    <!-- Prevent the phone from going to sleep -->
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <!-- Control vibration -->
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <!-- View network connections -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!-- Access Wi-Fi network state information -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-
-    <!-- Have full internet access -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!-- Allows an app to access audio data from media files. -->
-    <uses-permission-sdk-23
-        android:name="android.permission.READ_MEDIA_AUDIO" />
-    <!-- Read the contents of your shared storage space -->
-    <uses-permission
-        android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" />
-    <!-- Allows the app to conduct sales through Google Play's In-app Billing Service. -->
-    <uses-permission android:name="com.android.vending.BILLING" />
-    <!-- Measure application storage space -->
-    <uses-permission android:name="android.permission.GET_PACKAGE_SIZE" />
-    <queries>
-        <intent>
-            <action
-                android:name="com.rockstar.sdkfilter" />
-        </intent>
-        <intent>
-            <action
-                android:name="com.android.vending.billing.InAppBillingService.BIND" />
-        </intent>
-    </queries>
     <!-- Run foreground service. -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <!-- Allows the app to synchronize data with other services while its foreground service is running. -->
@@ -77,44 +24,90 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <!-- Allows apps to access information about how they were installed onto your device. -->
     <uses-permission android:name="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE" />
-    <!-- Allows the app to access the advertising ID. -->
-    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
-    <permission
-        android:name="com.rockstargames.gtasa.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
-        android:protectionLevel="signature" />
-    <uses-permission android:name="com.rockstargames.gtasa.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+
+    <!-- Permissions گرنگ -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
+
+    <uses-permission-sdk-23
+        android:name="android.permission.READ_MEDIA_AUDIO" />
+    <!-- Read the contents of your shared storage space -->
+    <!-- Storage (API 29 → legacy OK, API 30 → MANAGE_EXTERNAL_STORAGE OK) -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-permission
+        android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:targetApi="30" />
+
+    <!-- Voice permissions -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <!-- Bluetooth -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"
+        tools:targetApi="31"/>
+
+    <!-- Notifications + Firebase -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"
+        tools:targetApi="33" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission
+    android:name="com.rockstargames.gtasa.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+    android:protectionLevel="signature" />
+    <!-- OpenGL for SAMP -->
+    <uses-feature android:glEsVersion="0x00020000" android:required="true"/>
 
     <application
-        android:label="GTA: SA"
         android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:isGame="true"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:hardwareAccelerated="true"
+        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
-        android:banner="@drawable/leanbacktvlauncher"
-        android:isGame="true"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:appCategory="game"
-        android:appComponentFactory="androidx.core.app.CoreComponentFactory">
+        <meta-data
+            android:name="firebase_sessions_enabled"
+            android:value="false" />
+
+        <!-- FileProvider for update/install -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
+
+        <!-- Update Service -->
+        <service
+            android:name=".launcher.UpdateService"
+            android:enabled="true"
+            android:exported="false" />
+
         <activity
             android:theme="@style/GameActivity"
             android:name="com.rockstargames.gtasa.DownloaderActivity"
             android:exported="true"
             android:screenOrientation="userLandscape"
             android:resizeableActivity="false">
-            <intent-filter>
-                <action
-                    android:name="android.intent.action.MAIN" />
-                <category
-                    android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            <intent-filter>
-                <action
-                    android:name="android.intent.action.MAIN" />
-                <category
-                    android:name="android.intent.category.LEANBACK_LAUNCHER" />
-            </intent-filter>
         </activity>
+
         <activity
             android:theme="@style/GameActivity"
             android:name="com.rockstargames.gtasa.GameActivity"
@@ -122,124 +115,47 @@
             android:screenOrientation="userLandscape"
             android:configChanges="fontScale|layoutDirection|smallestScreenSize|screenSize|uiMode|screenLayout|orientation|keyboardHidden|keyboard|locale"
             android:documentLaunchMode="never"
+            android:exported="true"
             android:resizeableActivity="false" />
-        <meta-data
-            android:name="APP_NAME"
-            android:value="com.rockstargames.gtasa" />
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-        <meta-data
-            android:name="io.sentry.auto-init"
-            android:value="false" />
-        <meta-data
-            android:name="google_analytics_automatic_screen_reporting_enabled"
-            android:value="false" />
-        <meta-data
-            android:name="io.sentry.auto-init"
-            android:value="false" />
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="GameClub" />
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_launcher_background" />
+        <!-- Launcher Activity -->
         <activity
-            android:name="androidx.appcompat.app.AppCompatActivity"
+            android:name=".launcher.SplashActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
             android:exported="true">
             <intent-filter>
-                <action
-                    android:name="com.rockstar.sdkfilter" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
-        <meta-data
-            android:name="flutterProjectType"
-            android:value="module" />
-        <meta-data
-            android:name="flutterEmbedding"
-            android:value="2" />
-        <service
-            android:name="com.google.android.play.core.assetpacks.AssetPackExtractionService"
-            android:enabled="false"
-            android:exported="true">
-            <meta-data
-                android:name="com.google.android.play.core.assetpacks.versionCode"
-                android:value="20202" />
-        </service>
-        <service
-            android:name="com.google.android.play.core.assetpacks.ExtractionForegroundService"
-            android:enabled="false"
-            android:exported="false"
-            android:foregroundServiceType="dataSync" />
-        <meta-data
-            android:name="com.google.android.play.billingclient.version"
-            android:value="6.2.1" />
+        <!-- Update Activity -->
         <activity
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:name="com.android.billingclient.api.ProxyBillingActivity"
-            android:exported="false"
-            android:configChanges="screenSize|screenLayout|orientation|keyboardHidden|keyboard"
-            tools:replace="android:configChanges"/>
-        <activity
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:name="com.android.billingclient.api.ProxyBillingActivityV2"
-            android:exported="false"
-            android:configChanges="screenSize|screenLayout|orientation|keyboardHidden|keyboard"
-            tools:replace="android:configChanges"/>
+            android:name=".launcher.UpdateActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
+            android:windowSoftInputMode="adjustPan"
+            android:exported="true"/>
 
+        <!-- Main UI -->
         <activity
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:name="com.google.android.gms.common.api.GoogleApiActivity"
-            android:exported="false" />
-        <uses-library
-            android:name="androidx.window.extensions"
-            android:required="false" />
-        <uses-library
-            android:name="androidx.window.sidecar"
-            android:required="false" />
-        <provider
-            android:name="androidx.startup.InitializationProvider"
-            android:exported="false"
-            android:authorities="com.rockstargames.gtasa.androidx-startup">
-            <meta-data
-                android:name="androidx.emoji2.text.EmojiCompatInitializer"
-                android:value="androidx.startup" />
-            <meta-data
-                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
-                android:value="androidx.startup" />
-        </provider>
+            android:name=".launcher.MainActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
+            android:windowSoftInputMode="adjustPan"
+            android:exported="true"/>
 
-        <service
-            android:name="com.google.android.datatransport.runtime.backends.TransportBackendDiscovery"
-            android:exported="false">
-            <meta-data
-                android:name="backend:com.google.android.datatransport.cct.CctBackendFactory"
-                android:value="cct" />
-        </service>
-        <service
-            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="false" />
-        <receiver
-            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver"
-            android:exported="false" />
+        <!-- SAMP Game Activity -->
         <activity
-            android:theme="@style/Theme.PlayCore.Transparent"
-            android:name="com.google.android.play.core.common.PlayCoreDialogWrapperActivity"
-            android:exported="false"
-            android:stateNotNeeded="true" />
-        <meta-data
-            android:name="com.android.stamp.source"
-            android:value="https://play.google.com/store" />
-        <meta-data
-            android:name="com.android.stamp.type"
-            android:value="STAMP_TYPE_DISTRIBUTION_APK" />
-        <meta-data
-            android:name="com.android.vending.derived.apk.id"
-            android:value="3" />
-        <meta-data
-            android:name="com.android.dynamic.apk.fused.modules"
-            android:value="base,data_main,data_sfx1,data_sfx2,data_streams" />
+            android:name=".game.SAMP"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustPan"
+            android:exported="true" />
+
     </application>
+
 </manifest>

@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.rockstargames.gtasa.R;
+import com.kurdish.roleplay.R;
 
 import java.util.ArrayList;
 import java.util.List;

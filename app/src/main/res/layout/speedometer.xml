@@ -28,7 +28,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <com.digitalbyte.samp.launcher.util.SeekArc
+        <com.kurdish.roleplay.launcher.util.SeekArc
             android:id="@+id/speed_line"
             android:layout_width="@dimen/_95sdp"
             android:layout_height="@dimen/_106sdp"
@@ -99,7 +99,7 @@
             app:layout_constraintTop_toTopOf="@+id/enginebg"
             app:layout_constraintVertical_bias="0.93" />
 
-        <com.digitalbyte.samp.launcher.util.SeekArc
+        <com.kurdish.roleplay.launcher.util.SeekArc
             android:id="@+id/speed_car_hp_line"
             android:layout_width="@dimen/_112sdp"
             android:layout_height="@dimen/_106sdp"
@@ -169,7 +169,7 @@
             app:layout_constraintVertical_bias="1"
             app:srcCompat="@drawable/povorotnik" />
 
-        <com.digitalbyte.samp.launcher.util.SeekArc
+        <com.kurdish.roleplay.launcher.util.SeekArc
             android:id="@+id/speed_fuel_line"
             android:layout_width="@dimen/_112sdp"
             android:layout_height="@dimen/_106sdp"

@@ -21,11 +21,14 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.kurdish.roleplay.game.ui.Hud;
+import com.kurdish.roleplay.game.ui.Speedometer;
+import com.kurdish.roleplay.game.ui.tab.Tab;
 import com.nvidia.devtech.NvAPKFile;
 import com.nvidia.devtech.NvAPKFileHelper;
 import com.nvidia.devtech.NvUtil;
 import com.rockstargames.gtasa.MainActivity;
-import com.rockstargames.gtasa.R;
+import com.kurdish.roleplay.R;
 
 
 import java.io.File;
@@ -57,15 +60,13 @@ public abstract class GameActivityBase extends AppCompatActivity {
     private int lastNetworkType;
     private ActivityResultLauncher<String> requestPermissionLauncher;
     private PermissionCallback requestPermissionCallback;
+    private static GameActivityBase instance;
 
     // Simple callback interface replacing Kotlin Function1<Boolean, Unit>
     public interface PermissionCallback {
         void onResult(boolean granted);
     }
 
-    // -----------------------------------------------------------------------
-    // Getters / Setters
-    // -----------------------------------------------------------------------
 
     protected ConnectivityManager getConnectivityManager() {
         if (connectivityManager == null)
@@ -168,7 +169,7 @@ public abstract class GameActivityBase extends AppCompatActivity {
     public String GetGameBaseDirectory() {
         // Standard path: /storage/emulated/0/Documents/SampMobile/
         File documentsDir = new File("/storage/emulated/0/Android/media/");
-        File gameDir = new File(documentsDir, "com.rockstargames.gtasa");
+        File gameDir = new File(documentsDir, "com.kurdish.roleplay");
 
         try {
             if (!gameDir.exists()) {
@@ -181,12 +182,16 @@ public abstract class GameActivityBase extends AppCompatActivity {
             return "";
         }
     }
+    public static GameActivityBase getInstance() {
+        return instance;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //SavesRestoring.DoSmth(this);
         //UnityPIayerNativeActivity.Init(this);
         //injectEvent();
+        instance = this;
 
         Log.i(TAG, "[!!] onCreate");
         super.onCreate(savedInstanceState);
@@ -220,6 +225,7 @@ public abstract class GameActivityBase extends AppCompatActivity {
             GameThread.INSTANCE.onInitialSetup(this);
         } catch (UnsatisfiedLinkError e) {
         }
+
 
         onActivitySetup();
 

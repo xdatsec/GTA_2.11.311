@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <declare-styleable name="SeekArc">
         <attr name="thumb" format="reference" />
         <attr name="thumbOffset" format="dimension" />
@@ -21,26 +21,4 @@
     <declare-styleable name="SeekArcTheme">
         <attr name="seekArcStyle" format="reference"></attr>
     </declare-styleable>
-    <declare-styleable name="FadingEdgeLayout">
-        <attr name="fel_edge" format="integer">
-            <flag name="top" value="1"/>
-            <flag name="bottom" value="2"/>
-            <flag name="left" value="4"/>
-            <flag name="right" value="8"/>
-        </attr>
-        <attr name="fel_size_top" format="dimension"/>
-        <attr name="fel_size_bottom" format="dimension"/>
-        <attr name="fel_size_left" format="dimension"/>
-        <attr name="fel_size_right" format="dimension"/>
-    </declare-styleable>
-
-
-
-    <declare-styleable name="StrokedTextAttrs" tools:ignore="DuplicateDefinition">
-        <attr name="textStrokeColor" format="color"/>
-        <attr name="textStrokeWidth" format="float"/>
-        <attr name="textHintStrokeColor" format="color"/>
-        <attr name="textHintStrokeWidth" format="float"/>
-    </declare-styleable>
-
 </resources>

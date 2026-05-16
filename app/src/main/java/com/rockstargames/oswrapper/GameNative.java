@@ -14,7 +14,7 @@ public class GameNative {
                 .setMode(ShadowHook.Mode.UNIQUE)
                 .build());
         System.loadLibrary("Game");
-        System.loadLibrary("multi");
+        System.loadLibrary("samp");
     }
 
     private GameNative() {

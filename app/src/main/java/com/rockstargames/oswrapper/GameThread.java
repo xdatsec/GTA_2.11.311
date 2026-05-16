@@ -7,6 +7,9 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
+import com.kurdish.roleplay.game.ui.Hud;
+import com.kurdish.roleplay.game.ui.Speedometer;
+import com.kurdish.roleplay.game.ui.tab.Tab;
 import com.rockstargames.oswrapper.view.InputHandler;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -579,6 +582,8 @@ public final class GameThread {
 
             /* JADX INFO: renamed from: invoke, reason: avoid collision after fix types in other method */
             public final void invoke2() {
+
+
                 GameNative.implOnActivityCreated(new GamePlatformServices(activity, view), firstInit);
             }
         });
