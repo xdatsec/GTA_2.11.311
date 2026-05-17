@@ -51,7 +51,7 @@ void CFirstPersonCamera::ProcessCameraOnFoot(uintptr_t pCam, CPlayerPed* pPed)
     pVec->y = vecOut.y;
     pVec->z = vecOut.z;
 
-    ((RwCamera*(*)(RwCamera*, float))(g_libGTASA + (VER_x32 ? 0x001D5A38 + 1 : 0x26CF8C)))(Scene.m_pRwCamera, 0.2f);
+    ((RwCamera*(*)(RwCamera*, float))(g_libGTASA + 0x7656B8))(Scene.m_pRwCamera, 0.2f);
 }
 
 CVector vecAtSaved;
@@ -80,11 +80,11 @@ void CFirstPersonCamera::ProcessCameraInVeh(uintptr_t pCam, CPlayerPed* pPed, CV
         vecOffset.x = 0.05f;
         vecOffset.y = 0.3f;
         vecOffset.z = 0.45f;
-        ((RwCamera * (*)(RwCamera*, float))(g_libGTASA + (VER_x32 ? 0x001D5A38 + 1 : 0x26CF8C)))(Scene.m_pRwCamera, 0.3f);
+        ((RwCamera * (*)(RwCamera*, float))(g_libGTASA + 0x7656B8))(Scene.m_pRwCamera, 0.3f);
     }
     else
     {
-        ((RwCamera * (*)(RwCamera*, float))(g_libGTASA + (VER_x32 ? 0x001D5A38 + 1 : 0x26CF8C)))(Scene.m_pRwCamera, 0.01f);
+        ((RwCamera * (*)(RwCamera*, float))(g_libGTASA + 0x7656B8))(Scene.m_pRwCamera, 0.01f);
     }
 
     CVector vecOut;

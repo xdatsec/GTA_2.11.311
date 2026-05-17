@@ -46,7 +46,7 @@ void CMobileMenu__0CMobileMenu_hook(uintptr* thiz) {
 }
 
 void CMobileMenu::InjectHooks() {
-    gMobileMenu = (CMobileMenu*)(g_libGTASA + (VER_x32 ? 0x006E0074 : 0x8BE780));
+    gMobileMenu = (CMobileMenu*)(g_libGTASA + 0xD0DB20);
 
     CHook::InlineHook("_ZN10MobileMenu12InitForPauseEv", &InitForPause_hook, &InitForPause);
     CHook::InlineHook("_ZN10MobileMenu6UnloadEv", &CMobileMenu__Unload_hook, &CMobileMenu__Unload);

@@ -45,7 +45,7 @@ void CAnimManager::Initialise() {
 
 // 0x5BC910
 void CAnimManager::ReadAnimAssociationDefinitions() {
-    return CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x0047459C + 1 : 0x560CC4));
+    return CHook::CallFunction<void>(g_libGTASA + 0x560804);
     // return plugin::Call<0x5BC910>();
 
 //    char name[32], block[32], type[32];
@@ -190,7 +190,7 @@ CAnimBlendStaticAssociation* CAnimManager::GetAnimAssociation(AssocGroupId group
 
 // 0x4D3AA0
 CAnimBlendAssociation* CAnimManager::AddAnimation(RpClump* clump, AssocGroupId groupId, AnimationId animId) {
-    return CHook::CallFunction<CAnimBlendAssociation*>(g_libGTASA + (VER_x32 ? 0x0038E068 + 1 : 0x466B64), clump, groupId, animId);
+    return CHook::CallFunction<CAnimBlendAssociation*>(g_libGTASA + 0x37253C, clump, groupId, animId);
 
     CAnimBlendAssociation* anim = CreateAnimAssociation(groupId, animId);
     CAnimBlendClumpData* clumpData = RpClumpGetAnimBlendClumpData(clump);
@@ -216,7 +216,7 @@ CAnimBlendAssociation* CAnimManager::AddAnimation(RpClump* clump, AssocGroupId g
 
 // 0x4D4330
 CAnimBlendAssociation* CAnimManager::AddAnimation(RpClump* clump, CAnimBlendHierarchy* hier, int32 clumpAssocFlag) {
-    return CHook::CallFunction<CAnimBlendAssociation*>(g_libGTASA + (VER_x32 ? 0x38E0E0 + 1 : 0x466C14), clump, hier, clumpAssocFlag);
+    return CHook::CallFunction<CAnimBlendAssociation*>(g_libGTASA + 0x3725F0, clump, hier, clumpAssocFlag);
 
     CAnimBlendAssociation* anim = new CAnimBlendAssociation(clump, hier);
     anim->m_nFlags |= clumpAssocFlag;
@@ -245,7 +245,7 @@ CAnimBlendAssociation* CAnimManager::AddAnimation(RpClump* clump, CAnimBlendHier
 
 // 0x4D3B30
 CAnimBlendAssociation* CAnimManager::AddAnimationAndSync(RpClump* clump, CAnimBlendAssociation* animBlendAssoc, AssocGroupId groupId, AnimationId animId) {
-    return CHook::CallFunction<CAnimBlendAssociation*>(g_libGTASA + (VER_x32 ? 0x0038E168 + 1 : 0x466CE0), clump, animBlendAssoc, groupId, animId);
+    return CHook::CallFunction<CAnimBlendAssociation*>(g_libGTASA + 0x3726D4, clump, animBlendAssoc, groupId, animId);
 
     CAnimBlendAssociation* anim = CreateAnimAssociation(groupId, animId);
     CAnimBlendClumpData* clumpData = RpClumpGetAnimBlendClumpData(clump);
@@ -261,7 +261,7 @@ CAnimBlendAssociation* CAnimManager::AddAnimationAndSync(RpClump* clump, CAnimBl
 
 // 0x4D3BA0
 AnimAssocDefinition* CAnimManager::AddAnimAssocDefinition(const char* groupName, const char* blockName, uint32 modelIndex, uint32 animsCount, AnimDescriptor* descriptor) {
-    return CHook::CallFunction<AnimAssocDefinition*>(g_libGTASA + (VER_x32 ? 0x0038E84C + 1 : 0x467500), groupName, blockName, modelIndex, animsCount, descriptor);
+    return CHook::CallFunction<AnimAssocDefinition*>(g_libGTASA + 0x372F5C, groupName, blockName, modelIndex, animsCount, descriptor);
 
     /*
     auto* def = &ms_aAnimAssocDefinitions[ms_numAnimAssocDefinitions++];
@@ -354,7 +354,7 @@ int32 CAnimManager::RegisterAnimBlock(const char* name) {
 
 // 0x4D3ED0
 void CAnimManager::RemoveLastAnimFile() {
-    return CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x0038F774 + 1 : 0x468710));
+    return CHook::CallFunction<void>(g_libGTASA + 0x374078);
 
     ms_numAnimBlocks--;
     ms_numAnimations = ms_aAnimBlocks[ms_numAnimBlocks].startAnimation;
@@ -367,7 +367,7 @@ void CAnimManager::RemoveLastAnimFile() {
 
 // 0x4D3F40
 void CAnimManager::RemoveAnimBlock(int32 index) {
-    return CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x38F840 + 1 : 0x4687D4), index);
+    return CHook::CallFunction<void>(g_libGTASA + 0x374120, index);
 
     CAnimBlock* block = &ms_aAnimBlocks[index];
     for (auto i = 0; i < ms_numAnimAssocDefinitions; i++) {
@@ -411,12 +411,12 @@ int32 CAnimManager::GetNumRefsToAnimBlock(int32 index) {
 
 // 0x4D41C0
 void CAnimManager::UncompressAnimation(CAnimBlendHierarchy* hier) {
-    return CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x0038DD54 + 1 : 0x466740), hier);
+    return CHook::CallFunction<void>(g_libGTASA + 0x372158, hier);
 }
 
 // 0x4D42A0
 void CAnimManager::RemoveFromUncompressedCache(CAnimBlendHierarchy* hier) {
-    return CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x0038DE60 + 1 : 0x4668AC), hier);
+    return CHook::CallFunction<void>(g_libGTASA + 0x3722A0, hier);
 }
 
 // 0x4D4410
@@ -476,7 +476,7 @@ CAnimBlendAssociation* CAnimManager::BlendAnimation(RpClump* clump, CAnimBlendHi
 
 // 0x4D4610
 CAnimBlendAssociation* CAnimManager::BlendAnimation(RpClump* clump, AssocGroupId groupId, AnimationId animId, float clumpAssocBlendData) {
-    return CHook::CallFunction<CAnimBlendAssociation*>(g_libGTASA + (VER_x32 ? 0x0038E340 + 1 : 0x466F3C), clump, groupId, animId, clumpAssocBlendData);
+    return CHook::CallFunction<CAnimBlendAssociation*>(g_libGTASA + 0x372958, clump, groupId, animId, clumpAssocBlendData);
 
     /*
     auto removePrevAnim = false;
@@ -857,16 +857,16 @@ CAnimBlendStaticAssociation* CAnimManager__GetAnimAssociation2(AssocGroupId grou
 }
 
 void CAnimManager::InjectHooks() {
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x00678508 : 0x84EA38), &ms_numAnimAssocDefinitions);
+    CHook::Write(g_libGTASA + 0x837AD8, &ms_numAnimAssocDefinitions);
 
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x006793AC : 0x850780), &ms_aAnimBlocks);
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x00678A44 : 0x84F4B0), &ms_numAnimBlocks);
+    CHook::Write(g_libGTASA + 0x837AC8, &ms_aAnimBlocks);
+    CHook::Write(g_libGTASA + 0x837AC0, &ms_numAnimBlocks);
 
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x00677F80 : 0x84DF30), &ms_aAnimAssocGroups);
+    CHook::Write(g_libGTASA + 0x837AB8, &ms_aAnimAssocGroups);
 
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x006771C8 : 0x84C3D8), &ms_aAnimations);
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x00677EE8 : 0x84DE00), &ms_numAnimations);
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x00678BD8 : 0x84F7E0), &ms_animCache);
+    CHook::Write(g_libGTASA + 0x837A70, &ms_aAnimations);
+    CHook::Write(g_libGTASA + 0x837AA8, &ms_numAnimations);
+    CHook::Write(g_libGTASA + 0x837AB0, &ms_animCache);
 
     CHook::Redirect("_ZN12CAnimManager18GetAnimAssociationE12AssocGroupId11AnimationId", &CAnimManager__GetAnimAssociation1);
     CHook::Redirect("_ZN12CAnimManager18GetAnimAssociationE12AssocGroupIdPKc", &CAnimManager__GetAnimAssociation2);

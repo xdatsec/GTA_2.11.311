@@ -53,26 +53,26 @@ void CPools::Initialise()
     // 15104 / 64 = 236
     CPools::ms_pPedAttractorPool = PoolAllocator::Allocate(200, (VER_x32 ? 0xEC : 0xEC));
 
-    *(PoolAllocator::Pool**)(g_libGTASA + (VER_x32 ? 0x0095AC58 : 0xBC3BE0)) = CPools::ms_pColModelPool;
-    *(PoolAllocator::Pool**)(g_libGTASA + (VER_x32 ? 0x0095AC60 : 0xBC3BF0)) = CPools::ms_pEventPool;
-    *(PoolAllocator::Pool**)(g_libGTASA + (VER_x32 ? 0x0095AC64 : 0xBC3BF8)) = CPools::ms_pPointRoutePool;
-    *(PoolAllocator::Pool**)(g_libGTASA + (VER_x32 ? 0x0095AC68 : 0xBC3C00)) = CPools::ms_pPatrolRoutePool;
-    *(PoolAllocator::Pool**)(g_libGTASA + (VER_x32 ? 0x0095AC6C : 0xBC3C08)) = CPools::ms_pNodeRoutePool;
-    *(PoolAllocator::Pool**)(g_libGTASA + (VER_x32 ? 0x0095AC70 : 0xBC3C10)) = CPools::ms_pTaskAllocatorPool;
-    *(PoolAllocator::Pool**)(g_libGTASA + (VER_x32 ? 0x0095AC74 : 0xBC3C18)) = CPools::ms_pPedIntelligencePool;
-    *(PoolAllocator::Pool**)(g_libGTASA + (VER_x32 ? 0x0095AC78 : 0xBC3C20)) = CPools::ms_pPedAttractorPool;
+    *(PoolAllocator::Pool**)(g_libGTASA + 0xA019F0) = CPools::ms_pColModelPool;
+    *(PoolAllocator::Pool**)(g_libGTASA + 0xA01A00) = CPools::ms_pEventPool;
+    *(PoolAllocator::Pool**)(g_libGTASA + 0xA01A08) = CPools::ms_pPointRoutePool;
+    *(PoolAllocator::Pool**)(g_libGTASA + 0xA01A10) = CPools::ms_pPatrolRoutePool;
+    *(PoolAllocator::Pool**)(g_libGTASA + 0xA01A18) = CPools::ms_pNodeRoutePool;
+    *(PoolAllocator::Pool**)(g_libGTASA + 0xA01A20) = CPools::ms_pTaskAllocatorPool;
+    *(PoolAllocator::Pool**)(g_libGTASA + 0xA01A28) = CPools::ms_pPedIntelligencePool;
+    *(PoolAllocator::Pool**)(g_libGTASA + 0xA01A30) = CPools::ms_pPedAttractorPool;
 }
 
 void CPools::InjectHooks() {
     CHook::Redirect("_ZN6CPools10InitialiseEv", &CPools::Initialise);
 
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x00678EC4 : 0x84FDB8), &CPools::ms_pBuildingPool);
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x00676B1C : 0x84B698), &CPools::ms_pDummyPool);
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x00679C1C : 0x851850), &CPools::ms_pEntryInfoNodePool);
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x00677F0C : 0x84DE48), &CPools::ms_pPtrNodeSingleLinkPool);
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x00678364 : 0x84E6F0), &CPools::ms_pPtrNodeDoubleLinkPool);
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x00676C84 : 0x84B968), &CPools::ms_pPedPool);
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x00678534 : 0x84EA90), &CPools::ms_pVehiclePool);
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x00676BB0 : 0x84B7C0), &CPools::ms_pObjectPool);
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x00676158 : 0x84A330), &CPools::ms_pTaskPool);
+    CHook::Write(g_libGTASA + 0x838210, &CPools::ms_pBuildingPool);
+    CHook::Write(g_libGTASA + 0x838230, &CPools::ms_pDummyPool);
+    CHook::Write(g_libGTASA + 0x839D78, &CPools::ms_pEntryInfoNodePool);
+    CHook::Write(g_libGTASA + 0x83A3A0, &CPools::ms_pPtrNodeSingleLinkPool);
+    CHook::Write(g_libGTASA + 0x83A3A8, &CPools::ms_pPtrNodeDoubleLinkPool);
+    CHook::Write(g_libGTASA + 0x838268, &CPools::ms_pPedPool);
+    CHook::Write(g_libGTASA + 0x838270, &CPools::ms_pVehiclePool);
+    CHook::Write(g_libGTASA + 0x838238, &CPools::ms_pObjectPool);
+    CHook::Write(g_libGTASA + 0x83A3B0, &CPools::ms_pTaskPool);
 }

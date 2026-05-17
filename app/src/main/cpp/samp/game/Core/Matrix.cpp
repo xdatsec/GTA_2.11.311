@@ -15,7 +15,7 @@ CMatrix gDummyMatrix;
 
 void CMatrix::InjectHooks()
 {
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x00677C70 : 0x84D910), &numMatrices);
+    CHook::Write(g_libGTASA + 0x83A380, &numMatrices);
 }
 
 CMatrix::CMatrix(const CMatrix& matrix) {

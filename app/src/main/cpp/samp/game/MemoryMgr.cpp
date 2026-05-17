@@ -16,7 +16,7 @@ void CMemoryMgr::Free(void* memory) {
 }
 
 void* CMemoryMgr::MoveMemory(void* memory) {
-    return CHook::CallFunction<void*>(g_libGTASA + (VER_x32 ? 0x005D3032 + 1 : 0x6F7C90), memory);
+    return CHook::CallFunction<void*>(g_libGTASA + 0x60151C, memory);
 }
 
 void* CMemoryMgr::Malloc(uint32 size, uint32 nHint) {

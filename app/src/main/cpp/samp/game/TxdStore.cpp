@@ -6,11 +6,11 @@
 #include "../vendor/armhook/patch.h"
 
 int32 CTxdStore::GetNumRefs(int32 index){
-    return CHook::CallFunction<int32>(g_libGTASA + (VER_x32 ? 0x5D3E34 + 1 : 0x6F8DF4), index);
+    return CHook::CallFunction<int32>(g_libGTASA + 0x602AC8, index);
 }
 
 void CTxdStore::RemoveTxd(int32 index) {
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x5D40B8 + 1 : 0x6F9130), index);
+    CHook::CallFunction<void>(g_libGTASA + 0x602E7C, index);
 }
 
 void CTxdStore::InjectHooks() {
@@ -18,7 +18,7 @@ void CTxdStore::InjectHooks() {
 }
 
 int32 CTxdStore::FindTxdSlot(const char *name) {
-    return CHook::CallFunction<int32>(g_libGTASA + (VER_x32 ? 0x005D3EB0 + 1 : 0x6F8EA0), name);
+    return CHook::CallFunction<int32>(g_libGTASA + 0x602BA0, name);
 }
 
 int32 CTxdStore::FindTxdSlot(uint32 hash) {
@@ -26,22 +26,22 @@ int32 CTxdStore::FindTxdSlot(uint32 hash) {
 }
 
 int32 CTxdStore::AddTxdSlot(const char *name, const char *dbName, bool keepCPU) {
-    return CHook::CallFunction<int32>(g_libGTASA + (VER_x32 ? 0x005D3B84 + 1 : 0x6F8A68), name, dbName, keepCPU);
+    return CHook::CallFunction<int32>(g_libGTASA + 0x6026FC, name, dbName, keepCPU);
 }
 
 void CTxdStore::Initialise() {
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x005D3A90 + 1 : 0x6F8928));
+    CHook::CallFunction<void>(g_libGTASA + 0x6025C4);
 }
 
 void CTxdStore::PushCurrentTxd() {
 
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x005D41D4 + 1 : 0x6F92A8));
+    CHook::CallFunction<void>(g_libGTASA + 0x603020);
 }
 
 void CTxdStore::PopCurrentTxd() {
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x005D4214 + 1 : 0x6F92D4));
+    CHook::CallFunction<void>(g_libGTASA + 0x603050);
 }
 
 void CTxdStore::SetCurrentTxd(int32 index) {
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x5D4144 + 1 : 0x6F91EC), index, nullptr);
+    CHook::CallFunction<void>(g_libGTASA + 0x602F60, index, nullptr);
 }

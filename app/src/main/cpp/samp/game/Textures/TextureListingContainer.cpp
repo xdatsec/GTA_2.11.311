@@ -6,5 +6,5 @@
 #include "../vendor/armhook/patch.h"
 
 RwRaster *TextureListingContainer::CreateRaster(const TextureDatabaseEntry *forEntry) {
-    return CHook::CallFunction<RwRaster*>(g_libGTASA + (VER_x32 ? 0x1E8CF8 + 1 : 0x2851DC), this, forEntry);
+    return CHook::CallFunction<RwRaster*>(g_libGTASA + 0x7950F4, this, forEntry);
 }

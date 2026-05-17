@@ -165,7 +165,7 @@ void CPlayerBubblePool::Draw(ImGuiRenderer* renderer)
                                 //(( void (*)(CVector*, CVector*, float*, float*, bool, bool))(g_GTASAAdr+0x54EEC0+1))(&TagPos, &Out, 0, 0, 0, 0);
                                 // CSprite::CalcScreenCoors
                                 ((void (*)(CVector *, CVector *, float *, float *, bool, bool)) (
-                                        g_libGTASA + (VER_x32 ? 0x005C57E8 + 1 : 0x6E9DF8)))(&TagPos, &Out, 0, 0, 0, 0);
+                                        g_libGTASA + 0x5F449C))(&TagPos, &Out, 0, 0, 0, 0);
 
                                 if (Out.z < 1.0f) {
                                     return;

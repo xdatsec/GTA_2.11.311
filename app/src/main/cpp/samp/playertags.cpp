@@ -28,7 +28,7 @@ void CPlayerTags::Render(ImGuiRenderer* renderer)
 	int dwHitEntity;
 	char szNickBuf[64];
 
-    static CCamera& TheCamera = *reinterpret_cast<CCamera*>(g_libGTASA + (VER_x32 ? 0x00951FA8 : 0xBBA8D0));
+    static CCamera& TheCamera = *reinterpret_cast<CCamera*>(g_libGTASA + 0x9F86F8);
 
 	if (pNetGame && pNetGame->m_pNetSet->bShowNameTags)
 	{
@@ -102,7 +102,7 @@ void CPlayerTags::Draw(ImGuiRenderer* renderer, CVector* vec, const char* szNick
 
 	CVector vecOut;
 	// CSprite::CalcScreenCoors
-	((void (*)(CVector*, CVector*, float*, float*, bool, bool))(g_libGTASA + (VER_x32 ? 0x005C57E8 + 1 : 0x6E9DF8)))(&vecTagPos, &vecOut, 0, 0, 0, 0);
+	((void (*)(CVector*, CVector*, float*, float*, bool, bool))(g_libGTASA + 0x5F449C))(&vecTagPos, &vecOut, 0, 0, 0, 0);
 
 	if (vecOut.z < 1.0f) return;
 

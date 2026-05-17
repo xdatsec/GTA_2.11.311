@@ -31,7 +31,7 @@ void CBuilding::operator delete(void* data)
 
 void CBuilding::ReplaceWithNewModel(int32 newModelIndex)
 {
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x00280198 + 1 : 0x33ABCC), this, newModelIndex);
+    CHook::CallFunction<void>(g_libGTASA + 0x3AA5F0, this, newModelIndex);
 }
 
 bool IsBuildingPointerValid(CBuilding* building)

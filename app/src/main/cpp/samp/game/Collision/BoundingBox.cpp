@@ -19,5 +19,5 @@ void CBoundingBox::SetMinMax(CVector min, CVector max) {
 }
 
 void CBoundingBox::InjectHooks() {
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x00678A9C : 0x84F568), &numBBFailed);
+    CHook::Write(g_libGTASA + 0x839D60, &numBBFailed);
 }

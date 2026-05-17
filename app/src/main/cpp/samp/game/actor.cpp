@@ -31,7 +31,7 @@ CActor::~CActor()
 
     if (IsValidGamePed(m_pPed))
     {
-        ((void (*)(CPedGTA*))(g_libGTASA + (VER_x32 ? 0x004CE6A0 + 1 : 0x5CDC64)))(m_pPed);
+        ((void (*)(CPedGTA*))(g_libGTASA + 0x5C1B10))(m_pPed);
     }
 
     m_pPed = nullptr;

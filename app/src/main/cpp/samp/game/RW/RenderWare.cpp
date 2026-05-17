@@ -64,7 +64,7 @@ void InitRenderWareFunctions()
 	FLog("Initializing RenderWare..");
 
 	/* skeleton.h */
-	RsGlobal = (RsGlobalType*)(g_libGTASA + (VER_x32 ? 0x009FC8FC : 0xC9B320));
+	RsGlobal = (RsGlobalType*)(g_libGTASA + 0xCD0818);
 
 	/* rwCore.h */
 	*(void**)(&RwCameraBeginUpdate) 			= (void*)(CHook::getSym("_Z19RwCameraBeginUpdateP8RwCamera"));

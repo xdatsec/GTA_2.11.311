@@ -12,7 +12,7 @@ void CLines::RenderLineNoClipping(float startX, float startY, float startZ, floa
             { .objVertex = { endX,   endY,   endZ   }, .color =   endColor >> 8 | endColor   << 24 }
     };
 
-    ((void(__cdecl *)())(g_libGTASA + (VER_x32 ? 0x3FCAF0 + 1 : 0x4E0224)))();
+    ((void(__cdecl *)())(g_libGTASA + 0x4A05D8))();
     if (RwIm3DTransform(vertices, 2u, nullptr, 0)) {
         RwIm3DRenderLine(0, 1);
         RwIm3DEnd();
@@ -20,7 +20,8 @@ void CLines::RenderLineNoClipping(float startX, float startY, float startZ, floa
 }
 
 void CLines::RenderLineWithClipping(float startX, float startY, float startZ, float endX, float endY, float endZ, uint32 startColor, uint32 endColor) {
-    CHook::CallFunction<void>(g_libGTASA + 0x5ADBD8 + 1, startX, startY, startZ, endX, endY, endZ, startColor, endColor);
+   //dangerous 32bit code
+    // CHook::CallFunction<void>(g_libGTASA + 0x5ADBD8 + 1, startX, startY, startZ, endX, endY, endZ, startColor, endColor);
 }
 
 void CLines::ImmediateLine2D(int32 startX, int32 startY, int32 endX, int32 endY, uint8 startR, uint8 startG, uint8 startB, uint8 startA, uint8 endR, uint8 endG, uint8 endB, uint8 endA) {

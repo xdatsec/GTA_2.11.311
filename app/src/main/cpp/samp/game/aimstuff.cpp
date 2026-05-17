@@ -26,7 +26,7 @@ float fLocalSkillLevel[11];
 // 0.3.7
 CAMERA_AIM* GameGetInternalAim()
 {
-    CCamera& origCam = *reinterpret_cast<CCamera*>(g_libGTASA + (VER_x32 ? 0x00951FA8 : 0xBBA8D0));
+    CCamera& origCam = *reinterpret_cast<CCamera*>(g_libGTASA + 0x9F86F8);
     return reinterpret_cast<CAMERA_AIM *>(&origCam.m_aCams[0].Front);
 }
 // 0.3.7
@@ -73,7 +73,7 @@ void GameAimSyncInit()
 	memset(&caRemotePlayerAim, 0, sizeof(caRemotePlayerAim));
 	memset(byteCameraMode, 4, sizeof(byteCameraMode));
 
-    CCamera& TheCamera = *reinterpret_cast<CCamera*>(g_libGTASA + (VER_x32 ? 0x00951FA8 : 0xBBA8D0));
+    CCamera& TheCamera = *reinterpret_cast<CCamera*>(g_libGTASA + 0x9F86F8);
 
 	for(int i = 0; i < MAX_PLAYERS; i++)
 	{
@@ -86,12 +86,12 @@ void GameAimSyncInit()
 
 	pcaInternalAim = GameGetInternalAim();
 	pbyteCameraMode = (uint8_t *) &TheCamera.m_aCams[0].m_nMode;
-	pfAspectRatio = (float*)(g_libGTASA + (VER_x32 ? 0x00A26A90 : 0xCC7F00));
+	pfAspectRatio = (float*)(g_libGTASA + 0xC6DC70);
 	pfCameraExtZoom = &TheCamera.m_aCams[0].FOV;
 	wCameraMode2 = &TheCamera.PlayerWeaponMode.m_nMode;
-	pPlayerStats = (float*)(g_libGTASA+(VER_x32 ? 0x9647E4:0xBD585C));
+	pPlayerStats = (float*)(g_libGTASA+0xA13644);
 
-	pbyteCurrentPlayer = (uint8_t*)(g_libGTASA + (VER_x32 ? 0x96B9C4 : 0xBDCAE8));
+	pbyteCurrentPlayer = (uint8_t*)(g_libGTASA + 0xA1A8D0);
 }
 // 0.3.7
 void GameSetPlayerCameraExtZoomAndAspect(uint8_t bytePlayerNumber, float fExtZoom, float fAspectRatio)

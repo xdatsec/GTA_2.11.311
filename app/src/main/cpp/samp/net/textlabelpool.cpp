@@ -75,7 +75,7 @@ void C3DTextLabelPool::Render(ImGuiRenderer* renderer)
 	CPlayerPed *pPlayerPed = pGame->FindPlayerPed();
 	if(!pPlayerPed) return;
 
-    static CCamera& TheCamera = *reinterpret_cast<CCamera*>(g_libGTASA + (VER_x32 ? 0x00951FA8 : 0xBBA8D0));
+    static CCamera& TheCamera = *reinterpret_cast<CCamera*>(g_libGTASA + 0x9F86F8);
 
 	for (int i = 0; i < MAX_TEXT_LABELS; i++)
 	{
@@ -141,7 +141,7 @@ void C3DTextLabelPool::Draw(ImGuiRenderer* renderer, TEXT_LABEL* label, CVector 
 	vPos.y = vecPos.y;
 	vPos.z = vecPos.z;
 
-    static CCamera& TheCamera = *reinterpret_cast<CCamera*>(g_libGTASA + (VER_x32 ? 0x00951FA8 : 0xBBA8D0));
+    static CCamera& TheCamera = *reinterpret_cast<CCamera*>(g_libGTASA + 0x9F86F8);
 
 	int hitEntity = 0;
     if (label->bTestLOS) {
@@ -172,7 +172,7 @@ void C3DTextLabelPool::Draw(ImGuiRenderer* renderer, TEXT_LABEL* label, CVector 
 		if (pNetGame->GetPlayerPool()->GetLocalPlayer()->GetPlayerPed()->m_pPed->GetDistanceFromPoint(vecPos.x, vecPos.y, vecPos.z) <= label->fDistance) {
 			CVector vecOut;
 			// CSprite::CalcScreenCoors
-			((void (*)(CVector *, CVector *, float *, float *, bool, bool)) (g_libGTASA + (VER_x32 ? 0x005C57E8 + 1 : 0x6E9DF8)))(
+			((void (*)(CVector *, CVector *, float *, float *, bool, bool)) (g_libGTASA + 0x5F449C))(
 					&vPos, &vecOut, 0, 0, 0, 0);
 			if (vecOut.z < 1.0f) return;
 

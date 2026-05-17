@@ -3,6 +3,8 @@
 #include "../vendor/armhook/patch.h"
 #include "vehicleColoursTable.h"
 #include "../settings.h"
+
+///skip for now later if above is already converted
 extern CSettings* pSettings;
 
 VehicleAudioPropertiesStruct VehicleAudioProperties[20000];

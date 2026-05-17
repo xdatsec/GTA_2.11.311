@@ -27,7 +27,7 @@ uintptr_t GetModelRWObject(uint modelID);
 
 //uintptr_t LoadTexture(const char* texname);
 
-RwTexture* LoadTextureFromTxd(const char* txdname, const char* texturename);
+//RwTexture* LoadTextureFromTxd(const char* txdname, const char* texturename);
 int FindTxdSlot(const char* txdname);
 void PushCurrentTxd();
 void SetCurrentTxd(int slot);
@@ -80,7 +80,7 @@ const char* getGameDataFolderDirectory();
 int LineOfSight(RwV3d* start, RwV3d* end, void* colpoint, uintptr_t ent, char buildings, char vehicles, char peds, char objects, char dummies, bool seeThrough, bool camera, bool unk);
 void RwMatrixInvert(RwMatrix *matOut, RwMatrix *matIn);
 
-int GetTaskTypeFromTask(uint32_t *task);
+int GetTaskTypeFromTask(uintptr_t *task);
 int Game_PedStatPrim(int model_id);
 
 uint32_t GetUpperCaseKey(const char* szUpper);

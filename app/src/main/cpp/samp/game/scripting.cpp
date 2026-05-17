@@ -1,6 +1,6 @@
 #include "../main.h"
 #include "scripting.h"
-
+//this later to be changed
 GAME_SCRIPT_THREAD* gst;
 char ScriptBuf[0xFF];
 uintptr_t *pdwParamVars[18];
@@ -8,7 +8,7 @@ uintptr_t *pdwParamVars[18];
 uint8_t ExecuteScriptBuf()
 {
     gst->dwScriptIP = (uintptr_t)ScriptBuf;
-    (( void (*)(GAME_SCRIPT_THREAD*))(g_libGTASA + (VER_x32 ? 0x0032B708 + 1 : 0x3F445C)))(gst);
+    (( void (*)(GAME_SCRIPT_THREAD*))(g_libGTASA + 0x412F00))(gst);
 
     return gst->condResult;
 }

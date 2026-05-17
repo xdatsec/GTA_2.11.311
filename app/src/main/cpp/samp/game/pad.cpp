@@ -5,7 +5,7 @@
 #include "../vendor/armhook/patch.h"
 #include "World.h"
 #include "scoreboard.h"
-
+///skip for now later if above is already converted
 extern UI* pUI;
 extern CGame* pGame;
 extern CNetGame* pNetGame;

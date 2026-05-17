@@ -18,7 +18,7 @@ CEvent::~CEvent() {
 
 // 0x4B2850
 float CEvent::GetSoundLevel(const CEntityGTA* entity, CVector& position) {
-    return CHook::CallFunction<float>(g_libGTASA + (VER_x32 ? 0x0036FC18 + 1 : 0x441438), this, entity, position);
+    return CHook::CallFunction<float>(g_libGTASA + 0x4E2E7C, this, entity, position);
 //    if ((entity && entity != GetSourceEntity()) || GetLocalSoundLevel() == 0.0f)
 //        return 0.0f;
 //

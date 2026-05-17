@@ -494,7 +494,7 @@ void CLocalPlayer::ProcessSpectating()
 
 	uint16_t lrAnalog, udAnalog;
 	uint16_t wKeys = m_pPlayerPed->GetKeys(&lrAnalog, &udAnalog);
-    CCamera& TheCamera = *reinterpret_cast<CCamera*>(g_libGTASA + (VER_x32 ? 0x00951FA8 : 0xBBA8D0));
+    CCamera& TheCamera = *reinterpret_cast<CCamera*>(g_libGTASA + 0x9F86F8);
     matPos = TheCamera.GetMatrix().ToRwMatrix();
 
 	CPlayerPool* pPlayerPool = pNetGame->GetPlayerPool();
@@ -566,7 +566,7 @@ void CLocalPlayer::ProcessSpectating()
 			if (pPlayerPed)
 			{
 				dwGTAId = pPlayerPed->m_dwGTAId;
-                CCamera& TheCamera = *reinterpret_cast<CCamera*>(g_libGTASA + (VER_x32 ? 0x00951FA8 : 0xBBA8D0));
+                CCamera& TheCamera = *reinterpret_cast<CCamera*>(g_libGTASA + 0x9F86F8);
 
                 TheCamera.TakeControl(pPlayerPed->m_pPed, static_cast<eCamMode>(m_byteSpectateMode), eSwitchType::JUMPCUT, 1);
 				//pGame->GetCamera()->AttachToEntity(m_pPlayerPed);
@@ -583,7 +583,7 @@ void CLocalPlayer::ProcessSpectating()
 		if (pVehicle)
 		{
 			dwGTAId = pVehicle->m_dwGTAId;
-            CCamera &TheCamera = *reinterpret_cast<CCamera *>(g_libGTASA + (VER_x32 ? 0x00951FA8 : 0xBBA8D0));
+            CCamera &TheCamera = *reinterpret_cast<CCamera *>(g_libGTASA + 0x9F86F8);
 
             TheCamera.TakeControl(pVehicle->m_pVehicle, static_cast<eCamMode>(m_byteSpectateMode), eSwitchType::JUMPCUT, 1);
 			//pGame->GetCamera()->AttachToEntity(pVehicle);
@@ -598,7 +598,7 @@ bool CLocalPlayer::Spawn()
 		return false;
 	}
 
-    *(uint8_t*)(g_libGTASA + (VER_x32 ? 0x00819D88 + 1 : 0x009ff3A8)) = 0;
+    *(uint8_t*)(g_libGTASA + 0x9F13E8) = 0;
     pJavaWrapper->ShowHud();
     pJavaWrapper->ShowSpeed();
 

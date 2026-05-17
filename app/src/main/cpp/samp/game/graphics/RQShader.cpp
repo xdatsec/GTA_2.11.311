@@ -26,9 +26,10 @@ bool RQShader::BuildSource(uint32 flags, const char **pixelSource, const char **
 }
 
 void RQShader::InjectHooks() {
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x679320 : 0x850668), &curShaderStateFlags);
+    //co we need this?
+    //CHook::Write(g_libGTASA + (VER_x32 ? 0x679320 : 0x850668), &curShaderStateFlags);
 
-    CHook::Redirect("_ZN8RQShader11BuildSourceEjPPKcS2_", &BuildSource);
+   // CHook::Redirect("_ZN8RQShader11BuildSourceEjPPKcS2_", &BuildSource);
 }
 
 int OS_SystemChip(){

@@ -32,7 +32,7 @@ bool CTask::IsGoToTask(CTask* task) {
 }
 
 bool CTask::IsTaskPtr(CTask* task) {
-    return CHook::CallFunction<bool>(g_libGTASA + (VER_x32 ? 0x004D69F0 + 1 : 0x5D7350), task);
+    return CHook::CallFunction<bool>(g_libGTASA + 0x60E0E4, task);
 }
 
 void CTask::Serialize() {

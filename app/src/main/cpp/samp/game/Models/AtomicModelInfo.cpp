@@ -6,5 +6,5 @@
 #include "../vendor/armhook/patch.h"
 
 void SetAtomicModelInfoFlags(CAtomicModelInfo* modelInfo, uint32 dwFlags) {
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x0046AD34 + 1 : 0x556530), modelInfo, dwFlags);
+    CHook::CallFunction<void>(g_libGTASA + 0x55478C, modelInfo, dwFlags);
 }

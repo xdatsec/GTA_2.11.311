@@ -37,7 +37,7 @@
 #include "graphics/RQShader.h"
 #include "Mobile/MobileMenu/MobileMenu.h"
 #include "Mobile/MobileSettings/MobileSettings.h"
-
+///skip for now later if above is already converted
 extern UI* pUI;
 extern CGame* pGame;
 extern CNetGame *pNetGame;
@@ -1029,7 +1029,7 @@ void CRenderer_RenderEverythingBarRoads_hook() {
 #include "game/Pipelines/CustomBuilding/CustomBuildingDNPipeline.h"
 #include "COcclusion.h"
 #include "RealTimeShadowManager.h"
-#include "Shadows.h"
+
 #include "game/Widgets/WidgetGta.h"
 
 CFPSFix g_fps;
@@ -2186,7 +2186,6 @@ void InjectHooks()
     //CPathFind::InjectHooks();
     CSprite2d::InjectHooks();
     //CFileLoader::InjectHooks();
-    //CShadows::InjectHooks();
     CPickups::InjectHooks();
     CRenderer::InjectHooks();
     CStreamingInfo::InjectHooks();

@@ -39,12 +39,9 @@ bool CBuildingRemoval::IsEntityValidForRemoval(CEntityGTA* entity) {
     auto vtable = *reinterpret_cast<uintptr_t*>(entity);
     vtable -= g_libGTASA;
 
-    // Skip if VTable matches CPlaceable (0x667D14 for x32, 0x830098 for x64)
-    #if VER_x32
-    if (vtable == 0x00667D14) return false;
-    #else
-    if (vtable == 0x830098) return false;
-    #endif
+
+    if (vtable == 0x81E628) return false;
+
 
     return true;
 }

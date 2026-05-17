@@ -54,5 +54,5 @@ RpAtomic* AtomicRemoveAnimFromSkinCB(RpAtomic* atomic, void* data) {
 }
 
 RpClump* RpClumpGetBoundingSphere(RpClump* clump, RwSphere* sphere, bool bUseLTM) {
-    return ((RpClump * (__cdecl*)(RpClump*, RwSphere*, bool))(g_libGTASA + (VER_x32 ? 0x5D0E3C + 1 : 0x6F51F8)))(clump, sphere, bUseLTM);
+    return ((RpClump * (__cdecl*)(RpClump*, RwSphere*, bool))(g_libGTASA + 0x5FF7F4))(clump, sphere, bUseLTM);
 }

@@ -11,29 +11,29 @@ void CCamera::InjectHooks() {
 }
 
 CCam& CCamera::GetActiveCamera() {
-    CCamera& TheCamera = *reinterpret_cast<CCamera*>(g_libGTASA + (VER_x32 ? 0x00951FA8 : 0xBBA8D0));
+    CCamera& TheCamera = *reinterpret_cast<CCamera*>(g_libGTASA + 0x9F86F8);
 
     return TheCamera.m_aCams[TheCamera.m_nActiveCam];
 }
 
 void CCamera::Init() {
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x0046F8C0 + 1 : 0x55BA30), this);
+    CHook::CallFunction<void>(g_libGTASA + 0x55B6D0, this);
 }
 
 void CCamera::SetRwCamera(RwCamera *pCamera) {
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x003E161C + 1 : 0x4BF318), this, pCamera);
+    CHook::CallFunction<void>(g_libGTASA + 0x47567C, this, pCamera);
 }
 
 void CCamera::TakeControl(CEntityGTA *target, eCamMode modeToGoTo, eSwitchType switchType, int32 whoIsInControlOfTheCamera) {
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x003E1714 + 1 : 0x4BF474), this, target, modeToGoTo, switchType, whoIsInControlOfTheCamera);
+    CHook::CallFunction<void>(g_libGTASA + 0x4757D4, this, target, modeToGoTo, switchType, whoIsInControlOfTheCamera);
 }
 
 float CCamera::CalculateGroundHeight(eGroundHeightType type) {
-    return CHook::CallFunction<float>(g_libGTASA + (VER_x32 ? 0x3DC5C8 + 1 : 0x4BA958), this, type);
+    return CHook::CallFunction<float>(g_libGTASA + 0x470C64, this, type);
 }
 
 void CCamera::RestoreWithJumpCut() {
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x3DB154 + 1 : 0x4B94B4), this);
+    CHook::CallFunction<void>(g_libGTASA + 0x46F750, this);
 }
 
 void CCamera::SetBehindPlayer()
@@ -62,7 +62,7 @@ void CCamera::LookAtPoint(float fX, float fY, float fZ, int iType)
 
 void CCamera::InterpolateCameraPos(CVector *posFrom, CVector *posTo, int time, uint8_t mode)
 {
-    CCamera& TheCamera = *reinterpret_cast<CCamera*>(g_libGTASA + (VER_x32 ? 0x00951FA8 : 0xBBA8D0));
+    CCamera& TheCamera = *reinterpret_cast<CCamera*>(g_libGTASA + 0x9F86F8);
 
     ScriptCommand(&restore_camera_to_user);
     ScriptCommand(&lock_camera_position1, 1);

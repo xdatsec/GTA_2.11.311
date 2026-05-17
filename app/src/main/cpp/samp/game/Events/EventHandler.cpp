@@ -47,5 +47,5 @@ bool CEventHandler::IsTemporaryEvent(const CEvent& event) {
 }
 
 void CEventHandler::HandleEvents() {
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x0037B818 + 1 : 0x45084C), this);
+    CHook::CallFunction<void>(g_libGTASA + 0x4F1F38, this);
 }

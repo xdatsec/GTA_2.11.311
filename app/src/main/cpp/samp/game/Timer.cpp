@@ -32,23 +32,23 @@ uint32_t    CTimer::m_snPreviousTimeInMillisecondsNonClipped;
 
 void CTimer::InjectHooks()
 {
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x006794BC : 0x8509A0), &CTimer::m_CodePause);
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x0067892C : 0x84F280), &CTimer::m_FrameCounter);
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x00677674 : 0x84CD28), &CTimer::game_FPS);
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x006776A8 : 0x84CD90), &CTimer::m_UserPause);
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x0067689C : 0x84B1A8), &CTimer::ms_fTimeScale);
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x00676FF0 : 0x84C030), &CTimer::m_snTimeInMilliseconds);
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x00679248 : 0x8504B8), &CTimer::bSkipProcessThisFrame);
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x0067770C : 0x84CE50), &CTimer::ms_fTimeStep);
+    CHook::Write(g_libGTASA + 0x8373E0, &CTimer::m_CodePause);
+    CHook::Write(g_libGTASA + 0x837400, &CTimer::m_FrameCounter);
+    CHook::Write(g_libGTASA + 0x83A8A0, &CTimer::game_FPS);
+    CHook::Write(g_libGTASA + 0x8373D8, &CTimer::m_UserPause);
+    CHook::Write(g_libGTASA + 0x838178, &CTimer::ms_fTimeScale);
+    CHook::Write(g_libGTASA + 0x837318, &CTimer::m_snTimeInMilliseconds);
+    CHook::Write(g_libGTASA + 0x839E48, &CTimer::bSkipProcessThisFrame);
+    CHook::Write(g_libGTASA + 0x837478, &CTimer::ms_fTimeStep);
 
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x0067949C : 0x850960), &CTimer::m_snPPPPreviousTimeInMilliseconds);
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x00677DF0 : 0x84DC10), &CTimer::m_snPPPreviousTimeInMilliseconds);
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x00679D3C : 0x851A90), &CTimer::m_snPPreviousTimeInMilliseconds);
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x006779A8 : 0x84D388), &CTimer::m_snPreviousTimeInMilliseconds);
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x00679DBC : 0x851B90), &CTimer::m_snTimeInMillisecondsNonClipped);
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x006775F8 : 0x84CC30), &CTimer::m_snPreviousTimeInMillisecondsNonClipped);
+    CHook::Write(g_libGTASA + 0x838F98, &CTimer::m_snPPPPreviousTimeInMilliseconds);
+    CHook::Write(g_libGTASA + 0x83A878, &CTimer::m_snPPPreviousTimeInMilliseconds);
+    CHook::Write(g_libGTASA + 0x83A880, &CTimer::m_snPPreviousTimeInMilliseconds);
+    CHook::Write(g_libGTASA + 0x838688, &CTimer::m_snPreviousTimeInMilliseconds);
+    CHook::Write(g_libGTASA + 0x83A870, &CTimer::m_snTimeInMillisecondsNonClipped);
+    CHook::Write(g_libGTASA + 0x83A888, &CTimer::m_snPreviousTimeInMillisecondsNonClipped);
 
-    gTimerRunning = &*(uint8_t*)(g_libGTASA + (VER_x32 ? 0x0096B524 : 0xBDC5AC));
+    gTimerRunning = &*(uint8_t*)(g_libGTASA + 0xA1A394);
 
     CHook::Redirect("_ZN6CTimer14StartUserPauseEv", &CTimer::StartUserPause);
     CHook::Redirect("_ZN6CTimer12EndUserPauseEv", &CTimer::EndUserPause);
@@ -123,7 +123,7 @@ void CTimer::EndUserPause()
 // 0x561A40
 uint32_t CTimer::GetCyclesPerMillisecond()
 {
-    return CHook::CallFunction<uint32_t>(g_libGTASA + (VER_x32 ? 0x0042100C + 1 : 0x504858));
+    return CHook::CallFunction<uint32_t>(g_libGTASA + 0x4C4DB0);
 }
 
 // cycles per ms * 20
@@ -135,7 +135,7 @@ uint32_t CTimer::GetCyclesPerFrame()
 
 uint64_t CTimer::GetCurrentTimeInCycles()
 {
-    return CHook::CallFunction<uint64_t>(g_libGTASA + (VER_x32 ? 0x00421040 + 1 : 0x504888));
+    return CHook::CallFunction<uint64_t>(g_libGTASA + 0x4C4DE0);
 }
 
 // 0x561AD0

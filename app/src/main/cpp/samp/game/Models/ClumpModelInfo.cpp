@@ -21,7 +21,7 @@ void CClumpModelInfo::CClumpModelInfo__DeleteRwObject()
 
 RwFrame* CClumpModelInfo::GetFrameFromName(RpClump* clump, const char* name)
 {
-    return CHook::CallFunction<RwFrame*>(g_libGTASA + (VER_x32 ? 0x003856F4 + 1 : 0x45BE78), clump, name);
+    return CHook::CallFunction<RwFrame*>(g_libGTASA + 0x530F98, clump, name);
 //    auto searchInfo = tCompSearchStructByName(name, nullptr);
 //    RwFrameForAllChildren(RpClumpGetFrame(clump), FindFrameFromNameCB, &searchInfo);
 //    return searchInfo.m_pFrame;

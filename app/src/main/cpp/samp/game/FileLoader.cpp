@@ -46,7 +46,7 @@ bool CFileMgr::ReadLine(FILESTREAM file, char *str, int32 num)
 * @addr 0x536FE0
 */
 char* CFileLoader::LoadLine(char*& bufferIt, int32& buffSize) {
-    return ( ( char*(*)(char*, int32) )(g_libGTASA + (VER_x32 ? 0x003EEFD8 + 1 : 0x4D0108)) )(bufferIt, buffSize);
+    return ( ( char*(*)(char*, int32) )(g_libGTASA + 0x48F9CC) )(bufferIt, buffSize);
 }
 
 char* CFileLoader::FindFirstNonNullOrWS(char* it) {
@@ -143,5 +143,5 @@ void CFileLoader::InjectHooks() {
 }
 
 CEntityGTA *CFileLoader::LoadObjectInstance(CFileObjectInstance *objInstance, const char *modelName) {
-    return CHook::CallFunction<CEntityGTA*>(g_libGTASA + (VER_x32 ? 0x003F059C + 1: 0x4D20FC), objInstance, modelName);
+    return CHook::CallFunction<CEntityGTA*>(g_libGTASA + 0x491984, objInstance, modelName);
 }

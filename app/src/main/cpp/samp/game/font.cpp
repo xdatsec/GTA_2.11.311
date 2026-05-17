@@ -3,73 +3,74 @@
 #include "../vendor/armhook/patch.h"
 
 void CFont::Initialise() {
-	CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x0046FD8C + 1 : 0x55BFEC));
+	CHook::CallFunction<void>(g_libGTASA + 0x55BC78);
 }
 
 void CFont::AsciiToGxtChar(const char* ascii, uint16_t* gxt)
 {
-	return ((void(*)(const char*, uint16_t*))(g_libGTASA + (VER_x32 ? 0x005A83C0 + 1 : 0x6CBEF0)))(ascii, gxt);
+	return ((void(*)(const char*, uint16_t*))(g_libGTASA + 0x5D5254))(ascii, gxt);
 }
 
 void CFont::SetScale(float x, float y)
 {
-	*(float*)(g_libGTASA + (VER_x32 ? 0xA297B8 : 0xCCC324 + 0x4)) = x;
-	*(float*)(g_libGTASA + (VER_x32 ? 0xA297BC : 0xCCC324 + 0x8)) = y;
+	*(float*)(g_libGTASA + 0xC72090 + 0x4) = x;
+	*(float*)(g_libGTASA + 0xC72090 + 0x8) = y;
 }
 
 void CFont::SetColor(uint32_t* dwColor)
 {
-	return ((void(*)(uint32_t*))(g_libGTASA + (VER_x32 ? 0x005AB038 + 1 : 0x6CEE0C)))(dwColor);
+	return ((void(*)(uint32_t*))(g_libGTASA + 0x5D7E54))(dwColor);
 }
 
 void CFont::SetJustify(uint8_t justify)
 {
-	return ((void(*)(uint8_t))(g_libGTASA + (VER_x32 ? 0x005AB364 + 1 : 0x6CF1CC)))(justify);
+	return ((void(*)(uint8_t))(g_libGTASA + 0x5D823C))(justify);
 }
 
 void CFont::SetOrientation(uint8_t orientation)
 {
-	return ((void(*)(uint8_t))(g_libGTASA + (VER_x32 ? 0x005AB374 + 1 : 0x6CF1DC)))(orientation);
+	return ((void(*)(uint8_t))(g_libGTASA + 0x5D824C))(orientation);
 }
 
 void CFont::SetWrapX(float wrapX)
 {
-	return ((void(*)(float))(g_libGTASA + (VER_x32 ? 0x005AB248 + 1 : 0x6CF0B0)))(wrapX);
+	return ((void(*)(float))(g_libGTASA + 0x6CF0B0))(wrapX);
 }
 
 void CFont::SetCentreSize(float size)
 {
-	return ((void(*)(float))(g_libGTASA + (VER_x32 ? 0x005AB258 + 1 : 0x6CF0C0)))(size);
+	return ((void(*)(float))(g_libGTASA + 0x5D8118))(size);
 }
 void Font_SetRightJustifyWrap(float wrap)
 {
-	((int (*)(float))(g_libGTASA + (VER_x32 ? 0x05AB268 + 1 : 0x0053384C)))(wrap);
+	//?wrong address
+	//((int (*)(float))(g_libGTASA + (VER_x32 ? 0x05AB268 + 1 : 0x0053384C)))(wrap);
 	//0053384C
 }
 
 void CFont::SetBackground(uint8_t bBackground, uint8_t bOnlyText)
 {
-	return ((void(*)(uint8_t, uint8_t))(g_libGTASA + (VER_x32 ? 0x005AB330 + 1 : 0x6CF18C)))(bBackground, bOnlyText);
+	return ((void(*)(uint8_t, uint8_t))(g_libGTASA + 0x5D81FC))(bBackground, bOnlyText);
 }
 
 void CFont::SetBackgroundColor(uint32_t* dwColor)
 {
-	return ((void(*)(uint32_t*))(g_libGTASA + (VER_x32 ? 0x005AB340 + 1 : 0x6CF1A0)))(dwColor);
+	return ((void(*)(uint32_t*))(g_libGTASA + 0x5D8210))(dwColor);
 }
 
 void CFont::SetProportional(uint8_t prop)
 {
-	return ((void(*)(uint8_t))(g_libGTASA + (VER_x32 ? 0x005AB320 + 1 : 0x6CF17C)))(prop);
+	return ((void(*)(uint8_t))(g_libGTASA + 0x5D81EC))(prop);
 }
 
 void CFont::SetDropColor(uint32_t* dwColor)
 {
-	return ((void(*)(uint32_t*))(g_libGTASA + (VER_x32 ? 0x005AB320 + 1 : 0x6CF0F0)))(dwColor);
+	return ((void(*)(uint32_t*))(g_libGTASA + 0x5D8148))(dwColor);
 }
 
 void CFont::SetDropShadowPosition(uint8_t pos)
 {
-	return ((void(*)(uint8_t))(g_libGTASA + (VER_x32 ? 0x005A8ADC + 1 : 0x6CC8E8)))(pos);
+	return ((void(*)(uint8_t))(g_libGTASA + 0x5D5A50))(pos);
 }
 
 /*
@@ -83,17 +84,17 @@ void CFont::PrintString(float posX, float posY, const char* string)
 {
 	uint16_t* gxt_string = new uint16_t[0xFF];
 	CFont::AsciiToGxtChar(string, gxt_string);
-	((void (*)(float, float, uint16_t*))(g_libGTASA + (VER_x32 ? 0x005AA200 + 1 : 0x6CDEB0)))(posX, posY, gxt_string);
+	((void (*)(float, float, uint16_t*))(g_libGTASA + 0x5D6EC4))(posX, posY, gxt_string);
 	delete gxt_string;
-	((void (*)())(g_libGTASA + (VER_x32 ? 0x005A9120 + 1 : 0x6CCEA0)))();//53411C ; _DWORD CFont::RenderFontBuffer(CFont *__hidden this)
+	((void (*)())(g_libGTASA + 0x5D6090))();//53411C ; _DWORD CFont::RenderFontBuffer(CFont *__hidden this)
 }
 
 void CFont::SetFontStyle(uint8_t style)
 {
-	return ((void(*)(uint8_t))(g_libGTASA + (VER_x32 ? 0x005AB1BC + 1 : 0x6CEFF8)))(style);
+	return ((void(*)(uint8_t))(g_libGTASA + 0x5D8054))(style);
 }
 
 void CFont::SetEdge(uint8_t edge)
 {
-	return ((void(*)(uint8_t))(g_libGTASA + (VER_x32 ? 0x005AB2EC + 1 : 0x6CF148)))(edge);
+	return ((void(*)(uint8_t))(g_libGTASA + 0x5D81B4))(edge);
 }

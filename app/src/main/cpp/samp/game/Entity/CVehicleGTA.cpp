@@ -16,13 +16,13 @@ void CVehicleGTA::RenderDriverAndPassengers() {
         return;
 
     if (pDriver && pDriver->m_nPedState == PEDSTATE_DRIVING) {
-        CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x4A6964 + 1 : 0x59D3B8), pDriver);
+        CHook::CallFunction<void>(g_libGTASA + 0x58F948, pDriver);
         // pDriver->Render();
     }
 
     for (auto& passenger : m_apPassengers) {
         if (passenger && passenger->m_nPedState == PEDSTATE_DRIVING) {
-            CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x4A6964 + 1 : 0x59D3B8), passenger);
+            CHook::CallFunction<void>(g_libGTASA + 0x58F948, passenger);
             // passenger->Render();
         }
     }
@@ -103,11 +103,11 @@ int CVehicleGTA::GetPassengerIndex(const CPedGTA* passenger) {
 }
 
 void CVehicleGTA::AddVehicleUpgrade(int32 modelId) {
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x0058C66C + 1 : 0x6AFF4C), this, modelId);
+    CHook::CallFunction<void>(g_libGTASA + 0x6E42B4, this, modelId);
 }
 
 void CVehicleGTA::RemoveVehicleUpgrade(int32 upgradeModelIndex) {
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x58CC2C + 1 : 0x6B0718), this, upgradeModelIndex);
+    CHook::CallFunction<void>(g_libGTASA + 0x6E4C8C, this, upgradeModelIndex);
 }
 
 // 0x6D3000
@@ -220,7 +220,7 @@ bool CVehicle__DoTailLightEffect(CVehicleGTA* thisVehicle, int32_t lightId, CMat
 
 void CVehicleGTA::InjectHooks() {
     // var
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x675F10 : 0x849EA8), &CVehicleGTA::m_aSpecialColModel);
+    CHook::Write(g_libGTASA + 0x839D68, &CVehicleGTA::m_aSpecialColModel);
 
     CHook::Redirect("_ZN8CVehicle25RenderDriverAndPassengersEv", &RenderDriverAndPassengers_hook);
     CHook::Redirect("_ZN8CVehicle9SetDriverEP4CPed", &SetDriver_hook);

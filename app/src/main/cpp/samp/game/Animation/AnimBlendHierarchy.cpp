@@ -184,7 +184,7 @@ void CAnimBlendHierarchy::RemoveUncompressedData() {
 
 // 0x4CF800
 void CAnimBlendHierarchy::MoveMemory() {
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x0038A862 + 1 : 0x462C28), this);
+    CHook::CallFunction<void>(g_libGTASA + 0x36E610, this);
 }
 
 // 0x4CF8A0

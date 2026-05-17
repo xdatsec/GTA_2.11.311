@@ -49,21 +49,21 @@ void RtQuatConvertToMatrix(const RtQuat* const qpQuat, RwMatrix* const mpMatrix)
 }
 
 RwBool RtQuatConvertFromMatrix(RtQuat* qpQuat, const RwMatrix* const mpMatrix) {
-    return CHook::CallFunction<RwBool>(g_libGTASA + (VER_x32 ? 0x210ED0 + 1 : 0x2B6854), qpQuat, mpMatrix);
+    return CHook::CallFunction<RwBool>(g_libGTASA + 0x78A1E0, qpQuat, mpMatrix);
 }
 
 RtQuat* RtQuatRotate(RtQuat* quat, const RwV3d* axis, RwReal angle, RwOpCombineType combineOp) {
-    return CHook::CallFunction<RtQuat*>(g_libGTASA + (VER_x32 ? 0x211134 + 1 : 0x2B6AF8), quat, axis, angle, combineOp);
+    return CHook::CallFunction<RtQuat*>(g_libGTASA + 0x78A478, quat, axis, angle, combineOp);
 }
 
 const RtQuat* RtQuatQueryRotate(const RtQuat* quat, RwV3d* unitAxis, RwReal* angle) {
-    return CHook::CallFunction<const RtQuat*>(g_libGTASA + (VER_x32 ? 0x2113C0 + 1 : 0x2B6D20), quat, unitAxis, angle);
+    return CHook::CallFunction<const RtQuat*>(g_libGTASA + 0x78A6E0, quat, unitAxis, angle);
 }
 
 RwV3d* RtQuatTransformVectors(RwV3d* vectorsOut, const RwV3d* vectorsIn, const RwInt32 numPoints, const RtQuat* quat) {
-    return CHook::CallFunction<RwV3d*>(g_libGTASA + (VER_x32 ? 0x2114D0 + 1 : 0x2B6E3C), vectorsOut, vectorsIn, numPoints, quat);
+    return CHook::CallFunction<RwV3d*>(g_libGTASA + 0x78A828, vectorsOut, vectorsIn, numPoints, quat);
 }
 
 RwReal RtQuatModulus(RtQuat* q) {
-    return CHook::CallFunction<RwReal>(g_libGTASA + (VER_x32 ? 0x2115DA + 1 : 0x2B7044), q);
+    return CHook::CallFunction<RwReal>(g_libGTASA + 0x78A9D8, q);
 }

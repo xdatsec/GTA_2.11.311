@@ -12,7 +12,7 @@
 
 // Delete pickup's object (CObject)
 void CPickup::GetRidOfObjects() {
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x0031D790 + 1 : 0x3E4A20), this);
+    CHook::CallFunction<void>(g_libGTASA + 0x4035DC, this);
 
     // Need destructor :c
 //    if (m_pObject) {
@@ -24,12 +24,12 @@ void CPickup::GetRidOfObjects() {
 
 // Creates an object (CObject) for pickup. slotIndex - object to replace; use -1 (or any negative value) to create a new object
 void CPickup::GiveUsAPickUpObject(CObjectGta** obj, int32 slotIndex) {
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x0031D510 + 1 : 0x3E46D4), this, obj, slotIndex);
+    CHook::CallFunction<void>(g_libGTASA + 0x4032AC, this, obj, slotIndex);
 }
 
 // Is pickup visible (checks if distance between pickup and camera is shorter than 100 units)
 bool CPickup::IsVisible() {
-    CCamera& TheCamera = *reinterpret_cast<CCamera*>(g_libGTASA + (VER_x32 ? 0x00951FA8 : 0xBBA8D0));
+    CCamera& TheCamera = *reinterpret_cast<CCamera*>(g_libGTASA + 0x9F86F8);
 
     return DistanceBetweenPoints2D(GetPosn2D(), TheCamera.GetPosition()) < 100.0f;
 }
@@ -71,5 +71,5 @@ bool CPickup::Update() {
 
 
 void CPickup::Remove() {
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x002D7DC8 + 1 : 0x3E427C), this);
+    CHook::CallFunction<void>(g_libGTASA + 0x402E34, this);
 }

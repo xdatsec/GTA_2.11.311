@@ -3,8 +3,8 @@
 #include "../vendor/armhook/patch.h"
 
 void CReferences::InjectHooks() {
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x676DC0 : 0x84BBE0), &CReferences::pEmptyList);
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x67901C : 0x850068), &CReferences::aRefs);
+    CHook::Write(g_libGTASA + 0x83A418, &CReferences::pEmptyList);
+    CHook::Write(g_libGTASA + 0x83A420, &CReferences::aRefs);
 }
 
 // 0x5719B0

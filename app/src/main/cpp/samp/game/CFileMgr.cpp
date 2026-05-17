@@ -7,7 +7,7 @@
 #include "../vendor/armhook/patch.h"
 
 void CFileMgr::SetDir(const char *path) {
-    ( ( void(*)(const char *path) )(g_libGTASA + (VER_x32 ? 0x003F0C54 + 1 : 0x4D293C)) )(path);
+    ( ( void(*)(const char *path) )(g_libGTASA + 0x4921C4) )(path);
 }
 
 FILE* CFileMgr::OpenFile(const char *path, const char *mode) {

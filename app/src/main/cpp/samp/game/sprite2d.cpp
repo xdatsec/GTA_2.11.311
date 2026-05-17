@@ -7,7 +7,7 @@
 
 void CSprite2d::Draw(float x, float y, float width, float height, CRGBA* color)
 {
-	CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x005C8F20 + 1 : 0x6ED440), this, x, y, width, height, color);
+	CHook::CallFunction<void>(g_libGTASA + 0x5F714C, this, x, y, width, height, color);
 }
 
 void CSprite2d::Draw(const CRect& posn, const CRGBA& color)
@@ -136,8 +136,8 @@ void CSprite2d::SetTexture(const char* name)
 }
 
 void CSprite2d::InjectHooks() {
-	CHook::Write(g_libGTASA + (VER_x32 ? 0x006766AC : 0x84ADC8), &CSprite2d::RecipNearClip);
-	CHook::Write(g_libGTASA + (VER_x32 ? 0x00675F8C : 0x849FA0), &CSprite2d::NearScreenZ);
+	CHook::Write(g_libGTASA + 0x8375B8, &CSprite2d::RecipNearClip);
+	CHook::Write(g_libGTASA + 0x8375B0, &CSprite2d::NearScreenZ);
 }
 
 void CSprite2d::SetRecipNearClip() {

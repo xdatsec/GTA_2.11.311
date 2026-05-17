@@ -160,7 +160,7 @@ void CWidgetButton__Update_hook(CWidgetButton* thiz) {
 }
 
 void CWidgetGta::InjectHooks() {
-    CHook::InstallPLT(g_libGTASA + (VER_x32 ? 0x00671424 : 0x842408), &CWidgetButton__Update_hook, &CWidgetButton__Update);
+    CHook::InstallPLT(g_libGTASA + 0x83EEA8, &CWidgetButton__Update_hook, &CWidgetButton__Update);
     CHook::InlineHook("_ZN13CWidgetButtonC2EPKcRK14WidgetPositionjj10HIDMapping", &CWidget_hook, &CWidget);
     CHook::InlineHook("_ZN7CWidget10SetEnabledEb", &CWidget__SetEnabled_hook, &CWidget__SetEnabled);
 }
@@ -170,11 +170,11 @@ void CWidgetGta::SetTexture(const char *name) {
 }
 
 bool CWidgetGta::IsReleased(CVector2D *pVecOut) {
-    return CHook::CallFunction<bool>(g_libGTASA + (VER_x32 ? 0x002B3484 + 1 : 0x372794), this, pVecOut);
+    return CHook::CallFunction<bool>(g_libGTASA + 0x5046FC, this, pVecOut);
 }
 
 bool CWidgetGta::IsTouched(CVector2D *pVecOut) {
-    return CHook::CallFunction<bool>(g_libGTASA + (VER_x32 ? 0x002B3324 + 1 : 0x3725D0), this, pVecOut);
+    return CHook::CallFunction<bool>(g_libGTASA + 0x504408, this, pVecOut);
 }
 
 

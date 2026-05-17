@@ -17,7 +17,7 @@ CAnimBlendStaticAssociation::CAnimBlendStaticAssociation() {
 
 // 0x4CEF60
 CAnimBlendStaticAssociation::CAnimBlendStaticAssociation(RpClump* clump, CAnimBlendHierarchy* hier) {
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x00389940 + 1 : 0x461758), this, clump, hier);
+    CHook::CallFunction<void>(g_libGTASA + 0x36D1BC, this, clump, hier);
 }
 
 //// 0x4CDF50 virtual
@@ -28,7 +28,7 @@ CAnimBlendStaticAssociation::CAnimBlendStaticAssociation(RpClump* clump, CAnimBl
 // 0x4CEC20
 void CAnimBlendStaticAssociation::Init(RpClump* clump, CAnimBlendHierarchy* hier) {
     if(!clump)
-        CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x0038998C + 1 : 0x46177C), this, clump, hier);
+        CHook::CallFunction<void>(g_libGTASA + 0x36D1E0, this, clump, hier);
 }
 
 // 0x4CE960

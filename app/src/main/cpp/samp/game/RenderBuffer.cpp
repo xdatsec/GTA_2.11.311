@@ -79,11 +79,11 @@ bool RenderBuffer::CanFitVertices(int32 nVtxNeeded) {
 }
 
 void RenderBuffer::InjectHooks() {
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x679AD0 : 0x8515C0), &TempBufferVertices);
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x675ED4 : 0x849E30), &aTempBufferIndices);
+    CHook::Write(g_libGTASA + 0x838FA8, &TempBufferVertices);
+    CHook::Write(g_libGTASA + 0x838FA0, &aTempBufferIndices);
 
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x679D04 : 0x851A20), &uiTempBufferVerticesStored);
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x676504 : 0x84AA78), &uiTempBufferIndicesStored);
+    CHook::Write(g_libGTASA + 0x83C1A0, &uiTempBufferVerticesStored);
+    CHook::Write(g_libGTASA + 0x83C198, &uiTempBufferIndicesStored);
 }
 
 // notsa

@@ -69,7 +69,7 @@ void CEntityGTA::ResolveReferences()
 
 void CEntityGTA::Add()
 {
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x3ED8D8 + 1 : 0x4CD574), this);
+    CHook::CallFunction<void>(g_libGTASA + 0x48DCE0, this);
 }
 
 void CEntityGTA::SetInterior(int interiorId, bool needRefresh)
@@ -84,7 +84,7 @@ void CEntityGTA::SetInterior(int interiorId, bool needRefresh)
         CColStore::RequestCollision(&pos, m_nAreaCode);
 
         if(interiorId == 0) {
-            CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x00420898 + 1 : 0x504194), false);
+            CHook::CallFunction<void>(g_libGTASA + 0x4C4600, false);
             // CTimeCycle::StopExtraColour(0);
         }
 
@@ -104,7 +104,7 @@ float CEntityGTA::GetDistanceFromCamera()
     if(!this)
         return 0;
 
-    CCamera& TheCamera = *reinterpret_cast<CCamera*>(g_libGTASA + (VER_x32 ? 0x00951FA8 : 0xBBA8D0));
+    CCamera& TheCamera = *reinterpret_cast<CCamera*>(g_libGTASA + 0x9F86F8);
     return DistanceBetweenPoints(GetPosition(), TheCamera.GetPosition());
 }
 
@@ -167,11 +167,11 @@ CBaseModelInfo* CEntityGTA::GetModelInfo() const {
 }
 
 void CEntityGTA::Add(const CRect* rect) {
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x3ED8FC + 1 : 0x4CD5C0), this, rect);
+    CHook::CallFunction<void>(g_libGTASA + 0x48DD4C, this, rect);
 }
 
 void CEntityGTA::Remove() {
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x3EDBE8 + 1 : 0x4CD888), this);
+    CHook::CallFunction<void>(g_libGTASA + 0x48E024, this);
 }
 
 void CEntityGTA::SetModelIndex(uint32 index) {

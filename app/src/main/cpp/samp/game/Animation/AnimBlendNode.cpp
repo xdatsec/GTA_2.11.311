@@ -107,17 +107,17 @@ void CAnimBlendNode::GetEndTranslationCompressed(CVector& trans, float weight) {
 }
 
 bool CAnimBlendNode::NextKeyFrame() {
-    return CHook::CallFunction<bool> (g_libGTASA + (VER_x32 ? 0x0038AC1C + 1 : 0x463114), this);
+    return CHook::CallFunction<bool> (g_libGTASA + 0x36EACC, this);
 }
 
 // 0x4D0570
 bool CAnimBlendNode::NextKeyFrameCompressed() {
-    return CHook::CallFunction<bool>(g_libGTASA + (VER_x32 ? 0x0038B3FC + 1 : 0x463954), this);
+    return CHook::CallFunction<bool>(g_libGTASA + 0x36F390, this);
 }
 
 // 0x4CFB90
 bool CAnimBlendNode::NextKeyFrameNoCalc() {
-    return CHook::CallFunction<bool>(g_libGTASA + (VER_x32 ? 0x0038A9EE + 1 : 0x462E90), this);
+    return CHook::CallFunction<bool>(g_libGTASA + 0x36E84C, this);
 }
 
 // 0x4D0650
@@ -141,12 +141,12 @@ bool CAnimBlendNode::SetupKeyFrameCompressed() {
 
 // 0x4D06C0
 bool CAnimBlendNode::Update(CVector& trans, CQuaternion& rot, float weight) {
-    return CHook::CallFunction<bool>(g_libGTASA + (VER_x32 ? 0x0038AA94 + 1 : 0x462F74), this, trans, rot, weight);
+    return CHook::CallFunction<bool>(g_libGTASA + 0x36E91C, this, trans, rot, weight);
 }
 
 // 0x4D08D0
 bool CAnimBlendNode::UpdateCompressed(CVector& trans, CQuaternion& rot, float weight) {
-    return CHook::CallFunction<bool>(g_libGTASA + (VER_x32 ? 0x0038B1D8 + 1 : 0x4636D0), this, trans, rot, weight);
+    return CHook::CallFunction<bool>(g_libGTASA + 0x36F0A8, this, trans, rot, weight);
 }
 
 // 0x4D0160

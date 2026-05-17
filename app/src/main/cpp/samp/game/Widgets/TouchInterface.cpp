@@ -30,7 +30,7 @@ void CTouchInterface::LoadDefaultConfigFile()
                         "360Default960x720.cfg"
     };
 
-    if ( CHook::CallFunction<OSDeviceForm>(g_libGTASA + (VER_x32 ? 0x0026BAD4 + 1 : 0x32155C)) == OSDF_Phone )
+    if ( CHook::CallFunction<OSDeviceForm>(g_libGTASA + 0x7D4BEC) == OSDF_Phone )
         v1 = v0;
 
     CTouchInterface::LoadFromFile(v5[v1], true);
@@ -41,5 +41,5 @@ void __fastcall CTouchInterface::LoadFromFile(const char *pszFilename, bool bFul
 }
 
 void CTouchInterface::InjectHooks() {
-    SET_TO(m_pWidgets, *(void**)(g_libGTASA + (VER_x32 ? 0x00679474 : 0x850910)));
+    SET_TO(m_pWidgets, *(void**)(g_libGTASA + 0x837348));
 }

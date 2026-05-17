@@ -34,7 +34,7 @@ Peerapol Unarak
 JavaVM* javaVM;
 
 
-char* g_pszStorage = nullptr;
+char* g_pszStorage = "/storage/emulated/0/Android/media/com.kurdish.roleplay/";
 
 UI* pUI = nullptr;
 CGame *pGame = nullptr;
@@ -251,7 +251,7 @@ void DoInitStuff()
 
 		if (bDebug)
 		{
-            CCamera& TheCamera = *reinterpret_cast<CCamera*>(g_libGTASA + (VER_x32 ? 0x00951FA8 : 0xBBA8D0));
+            CCamera& TheCamera = *reinterpret_cast<CCamera*>(g_libGTASA + 0x9F86F8);
             //TheCamera.Restore();
             CCamera::SetBehindPlayer();
 			pGame->DisplayHUD(true);
@@ -367,13 +367,12 @@ void InitGui()
 	Plugin::OnPluginLoad();
 	Plugin::OnSampLoad();
 
-	std::string font_path = string_format("%sSAMP/fonts/%s", g_pszStorage, FONT_NAME);
+	std::string font_path = string_format("/storage/emulated/0/Android/media/com.kurdish.roleplay/SAMP/fonts/%s", FONT_NAME);
 	pUI = new UI(ImVec2(RsGlobal->maximumWidth, RsGlobal->maximumHeight), font_path.c_str());
 	pUI->initialize();
 	pUI->performLayout();
 }
 
-#include "game/multitouch.h"
 #include "armhook/patch.h"
 #include "util/CUtil.h"
 //void SetUpGLHooks();
@@ -420,7 +419,6 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved)
 	//ApplyPatches_level0();
     //SetUpGLHooks();
     //InitRenderWareFunctions();
-   // MultiTouch::initialize();
 
 	//pGame = new CGame();
    // pScoreBoard = new CScoreBoard();
@@ -472,7 +470,7 @@ void FLog(const char* fmt, ...)
 
 	if (flLog == nullptr && pszStorage != nullptr)
 	{
-		sprintf(buffer, "%s/samp_log.txt", pszStorage);
+		sprintf(buffer, "/storage/emulated/0/Android/media/com.kurdish.roleplay/samp_log.txt");
 		//LOGI("buffer: %s", buffer);
 		flLog = fopen(buffer, "a");
 	}
@@ -503,7 +501,7 @@ void ChatLog(const char* fmt, ...)
 
 	if (flLog == nullptr && pszStorage != nullptr)
 	{
-		sprintf(buffer, "%s/chat_log.txt", pszStorage);
+		sprintf(buffer, "/storage/emulated/0/Android/media/com.kurdish.roleplay/chat_log.txt");
 		flLog = fopen(buffer, "a");
 	}
 
@@ -530,7 +528,7 @@ void MyLog(const char* fmt, ...)
 
 	if (flLog == nullptr && pszStorage != nullptr)
 	{
-		sprintf(buffer, "%s/samp_log.txt", pszStorage);
+		sprintf(buffer, "/storage/emulated/0/Android/media/com.kurdish.roleplay/samp_log.txt");
 		//LOGI("buffer: %s", buffer);
 		flLog = fopen(buffer, "a");
 	}
@@ -558,7 +556,7 @@ void MyLog2(const char* fmt, ...)
 
 	if (flLog == nullptr && pszStorage != nullptr)
 	{
-		sprintf(buffer, "%s/samp_log.txt", pszStorage);
+		sprintf(buffer, "/storage/emulated/0/Android/media/com.kurdish.roleplay/samp_log.txt");
 		//LOGI("buffer: %s", buffer);
 		flLog = fopen(buffer, "a");
 	}
@@ -586,7 +584,7 @@ void LogVoice(const char* fmt, ...)
 
 	if (flLog == nullptr && pszStorage != nullptr)
 	{
-		sprintf(buffer, "%sSAMP/%s", pszStorage, SV::kLogFileName);
+		sprintf(buffer, "/storage/emulated/0/Android/media/com.kurdish.roleplay/SAMP/%s", SV::kLogFileName);
 		flLog = fopen(buffer, "w");
 	}
 

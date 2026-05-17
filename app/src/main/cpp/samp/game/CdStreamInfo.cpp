@@ -10,7 +10,7 @@ void CdStreamInit(int32 streamCount) {
 }
 
 int32 CdStreamOpen(const char* lpFileName) {
-    return CHook::CallFunction<int32_t>(g_libGTASA + (VER_x32 ? 0x002C9D38 + 1 : 0x38AF9C), lpFileName);
+    return CHook::CallFunction<int32_t>(g_libGTASA + 0x3AD5D8, lpFileName);
 }
 
 // This function halts the caller thread if CdStreamThread is still reading the file to "sync" it.
@@ -28,11 +28,11 @@ int32 CdStreamOpen(const char* lpFileName) {
 // 3. When CdStreamThread is done reading the file, it signals `stream.sync.hSemaphore`, so the main thread can
 //    continue executing code and continue the gameplay.
 eCdStreamStatus CdStreamSync(int32 streamId) {
-    return CHook::CallFunction<eCdStreamStatus>(g_libGTASA + (VER_x32 ? 0x2C9C3C + 1 : 0x38AE10), streamId);
+    return CHook::CallFunction<eCdStreamStatus>(g_libGTASA + 0x3AD46C, streamId);
 }
 
 eCdStreamStatus CdStreamGetStatus(int32 streamId) {
-    return CHook::CallFunction<eCdStreamStatus>(g_libGTASA + (VER_x32 ? 0x2C9BFC + 1 : 0x38ADA4), streamId);
+    return CHook::CallFunction<eCdStreamStatus>(g_libGTASA + 0x3AD410, streamId);
 }
 
 // When CdStreamRead is called, it will update CdStream information for the channel and
@@ -42,5 +42,5 @@ eCdStreamStatus CdStreamGetStatus(int32 streamId) {
 // When CdStreamThread is done reading the model, then CdStreamThread will set `stream.nSectorsToRead` and `stream.bInUse` to 0,
 // so the main thread can call CdStreamRead again to read more models.
 bool CdStreamRead(int32 streamId, void* lpBuffer, uint32 offsetAndHandle, int32 sectorCount) {
-    return CHook::CallFunction<bool>(g_libGTASA + (VER_x32 ? 0x2C9B3C + 1 : 0x38ACB8), streamId, lpBuffer, offsetAndHandle, sectorCount);
+    return CHook::CallFunction<bool>(g_libGTASA + 0x3AD334, streamId, lpBuffer, offsetAndHandle, sectorCount);
 }
