@@ -507,8 +507,8 @@ uint32_t CCamera_IsTargetingActive_hook(uintptr_t thiz, CPedGTA* pPed)
     else
     {
         /* CCamera::IsTargetingActive */
-        static CCamera& TheCamera = *reinterpret_cast<CCamera*>(g_libGTASA + (VER_x32 ? 0x00951FA8 : 0xBBA8D0));
-        uint32_t bIsTargeting = CHook::CallFunction<bool>(g_libGTASA + (VER_x32 ? 0x3D9F54 + 1 : 0x4B8154), &TheCamera);
+        static CCamera& TheCamera = *reinterpret_cast<CCamera*>(g_libGTASA + 0x9F86F8);
+        uint32_t bIsTargeting = CHook::CallFunction<bool>(g_libGTASA + 0x46DE58, &TheCamera);
 
         LocalPlayerKeys.bKeys[ePadKeys::KEY_HANDBRAKE] = bIsTargeting;
         return bIsTargeting;
@@ -710,97 +710,51 @@ void AllVehicles__ProcessControl_hook(uintptr_t thiz)
 
     switch(this_vtable)
     {
-#if VER_x32
+
         // CAutomobile
-		case 0x0066D678:
-		call_addr = 0x00553E44;
-		break;
-
-		// CBoat
-		case 0x0066DA20:
-		call_addr = 0x0056BEC0;
-		break;
-
-		// CBike
-		case 0x0066D7F0:
-		call_addr = 0x00561A90;
-		break;
-
-		// CPlane
-		case 0x0066DD84:
-		call_addr = 0x00575CF8;
-		break;
-
-		// CHeli
-		case 0x0066DB34:
-		call_addr = 0x005712A8;
-		break;
-
-		// CBmx
-		case 0x0066D908:
-		call_addr = 0x00568B84;
-		break;
-
-		// CMonsterTruck
-		case 0x0066DC5C:
-		call_addr = 0x00574864;
-		break;
-
-		// CQuadBike
-		case 0x0066DEAC:
-		call_addr = 0x0057A2F0;
-		break;
-
-		// CTrain
-		case 0x0066E0FC:
-		call_addr = 0x0057D0A0;
-		break;
-#else
-        // CAutomobile
-        case 0x83BB50:
-            call_addr = 0x67459C;
+        case 0x8304C8:
+            call_addr = 0x6A77B8;
             break;
 
             // CBoat
-        case 0x83C2A0:
-            call_addr = 0x68DCE8;
+        case 0x830C78:
+            call_addr = 0x6C180C;
             break;
 
             // CBike
-        case 0x83BE40:
-            call_addr = 0x682BC8;
+        case 0x8307E8:
+            call_addr = 0x6B6954;
             break;
 
             // CPlane
-        case 0x83C968:
-            call_addr = 0x6993B8;
+        case 0x831388:
+            call_addr = 0x6CC53C;
             break;
 
             // CHeli
-        case 0x83C4C8:
-            call_addr = 0x693978;
+        case 0x830EB8:
+            call_addr = 0x6C79EC;
             break;
 
             // CBmx
-        case 0x83C070:
-            call_addr = 0x68A9AC;
+        case 0x830A30:
+            call_addr = 0x6BE2A8;
             break;
 
             // CMonsterTruck
-        case 0x83C718:
-            call_addr = 0x698090;
+        case 0x8831120:
+            call_addr = 0x6CB314;
             break;
 
             // CQuadBike
-        case 0x83CBB8:
-            call_addr = 0x69DB44;
+        case 0x8315F0:
+            call_addr = 0x6D1098;
             break;
 
             // CTrain
-        case 0x83D058:
-            call_addr = 0x6A0A20;
+        case 0x831AC0:
+            call_addr = 0x6D4224;
             break;
-#endif
     }
 
     uint8_t saved_focus = CWorld::PlayerInFocus;
@@ -818,12 +772,12 @@ void AllVehicles__ProcessControl_hook(uintptr_t thiz)
        pVehicle->pDriver != GamePool_FindPlayerPed())
     {
         pVehicle->pDriver->m_nPedType = static_cast<ePedType>(4);
-        (( void (*)(uintptr_t))(g_libGTASA + (VER_x32 ? 0x003ACE04 + 1: 0x489B78)))(reinterpret_cast<uintptr_t>(&pVehicle->m_VehicleAudioEntity));
+        (( void (*)(uintptr_t))(g_libGTASA + 0x397150))(reinterpret_cast<uintptr_t>(&pVehicle->m_VehicleAudioEntity));
         pVehicle->pDriver->m_nPedType = static_cast<ePedType>(0);
     }
     else
     {
-        (( void (*)(uintptr_t))(g_libGTASA + (VER_x32 ? 0x003ACE04 + 1 : 0x489B78)))(reinterpret_cast<uintptr_t>(&pVehicle->m_VehicleAudioEntity));
+        (( void (*)(uintptr_t))(g_libGTASA + 0x397150))(reinterpret_cast<uintptr_t>(&pVehicle->m_VehicleAudioEntity));
     }
 
     // Tyre burst fix
@@ -845,7 +799,7 @@ void AllVehicles__ProcessControl_hook(uintptr_t thiz)
     }
 
     // VEHTYPE::ProcessControl()
-    (( void (*)(CVehicleGTA*))(g_libGTASA + call_addr + (VER_x32 ? 1 : 0)))(pVehicle);
+    (( void (*)(CVehicleGTA*))(g_libGTASA + call_addr))(pVehicle);
 
     CWorld::PlayerInFocus = saved_focus;
     byteCurPlayer = saved_cur_player;
@@ -879,7 +833,7 @@ void CPed__ProcessControl_hook(uintptr_t thiz)
             *wCameraMode2 = 0;
 
         // CPed::UpdatePosition nulled from CPed::ProcessControl
-        CHook::NOP(g_libGTASA + (VER_x32 ? 0x004A2A92 : 0x598D1C), 2);
+        CHook::NOP(g_libGTASA + 0x58AE24, 2);
 
         CWorld::PlayerInFocus = byteCurPlayer;
         // call original
@@ -887,11 +841,9 @@ void CPed__ProcessControl_hook(uintptr_t thiz)
         CPed__ProcessControl(thiz);
 
         // restore
-#if VER_x32
-        CHook::WriteMemory(g_libGTASA + 0x004A2A92, "\xFE\xF7\x81\xFF", 4);
-#else
-        CHook::WriteMemory(g_libGTASA + 0x598D1C, "\x7A\xFB\xFF\x97", 4);
-#endif
+
+        CHook::WriteMemory(g_libGTASA + 0x58AE24, "\x7A\xFB\xFF\x97", 4);
+
 
         CWorld::PlayerInFocus = 0;
         *pbyteCameraMode = byteSavedCameraMode;
@@ -932,7 +884,7 @@ uint32_t TaskUseGun(uintptr_t thiz, uintptr_t ped)
         GameSetRemotePlayerAim(byteCurPlayer);
         CWorld::PlayerInFocus = byteCurPlayer;
 
-        result = ((uint32_t(*)(uintptr_t, uintptr_t))(g_libGTASA + (VER_x32 ? 0x004DDB70 + 1 : 0x5DFCC4)))(thiz, ped);
+        result = ((uint32_t(*)(uintptr_t, uintptr_t))(g_libGTASA + 0x616C0C))(thiz, ped);
 
         // restore the camera modes, internal id and local player's aim
         *pbyteCameraMode = byteSavedCameraMode;
@@ -946,7 +898,7 @@ uint32_t TaskUseGun(uintptr_t thiz, uintptr_t ped)
     }
     else
     {
-        result = ((uint32_t(*)(uintptr_t, uintptr_t))(g_libGTASA + (VER_x32 ? 0x004DDB70 + 1 : 0x5DFCC4)))(thiz, ped);
+        result = ((uint32_t(*)(uintptr_t, uintptr_t))(g_libGTASA + 0x616C0C))(thiz, ped);
     }
 
     return result;
@@ -959,7 +911,7 @@ uint32_t CPad__TaskProcess(uintptr_t thiz, uintptr_t ped, int unk, int unk1)
     uint8_t old = CWorld::PlayerInFocus;
     CWorld::PlayerInFocus = byteCurPlayer;
 
-    uint32_t result =  ((uint32_t(*)(uintptr_t, uintptr_t, int, int))(g_libGTASA + (VER_x32 ? 0x00539F9C + 1 : 0x655E28)))(thiz, ped, unk, unk1);
+    uint32_t result =  ((uint32_t(*)(uintptr_t, uintptr_t, int, int))(g_libGTASA + 0x68BD84))(thiz, ped, unk, unk1);
     CWorld::PlayerInFocus = old;
     return result;
 }
@@ -967,23 +919,23 @@ uint32_t CPad__TaskProcess(uintptr_t thiz, uintptr_t ped, int unk, int unk1)
 void HookCPad()
 {
     memset(&LocalPlayerKeys, 0, sizeof(PAD_KEYS));
-
+  //  CHook::CallFunction<void>(g_libGTASA + 0x54F0DC);
     // CPedSamp::ProcessControl
-    CHook::InstallPLT(g_libGTASA + (VER_x32 ? 0x6692A4 : 0x833150), &CPed__ProcessControl_hook, &CPed__ProcessControl);
+    CHook::InstallPLT(g_libGTASA + 0x825E28, &CPed__ProcessControl_hook, &CPed__ProcessControl);
 
     // all vehicles ProcessControl
-    CHook::InstallPLT(g_libGTASA + (VER_x32 ? 0x66D6A4 : 0x83BBA8), &AllVehicles__ProcessControl_hook); // CAutomobile::ProcessControl
-    CHook::InstallPLT(g_libGTASA + (VER_x32 ? 0x66DA4C : 0x83C2F8), &AllVehicles__ProcessControl_hook); // CBoat::ProcessControl
-    CHook::InstallPLT(g_libGTASA + (VER_x32 ? 0x66D81C : 0x83BE98), &AllVehicles__ProcessControl_hook); // CBike::ProcessControl
-    CHook::InstallPLT(g_libGTASA + (VER_x32 ? 0x66DDB0 : 0x83C9C0), &AllVehicles__ProcessControl_hook); // CPlane::ProcessControl
-    CHook::InstallPLT(g_libGTASA + (VER_x32 ? 0x66DB60 : 0x83C520), &AllVehicles__ProcessControl_hook); // CHeli::ProcessControl
-    CHook::InstallPLT(g_libGTASA + (VER_x32 ? 0x66D934 : 0x83C0C8), &AllVehicles__ProcessControl_hook); // CBmx::ProcessControl
-    CHook::InstallPLT(g_libGTASA + (VER_x32 ? 0x66DC88 : 0x83C770), &AllVehicles__ProcessControl_hook); // CMonsterTruck::ProcessControl
-    CHook::InstallPLT(g_libGTASA + (VER_x32 ? 0x66DED8 : 0x83CC10), &AllVehicles__ProcessControl_hook); // CQuadBike::ProcessControl
-    CHook::InstallPLT(g_libGTASA + (VER_x32 ? 0x66E128 : 0x83D0B0), &AllVehicles__ProcessControl_hook); // CTrain::ProcessControl
+    CHook::InstallPLT(g_libGTASA + 0x830520, &AllVehicles__ProcessControl_hook); // CAutomobile::ProcessControl
+    CHook::InstallPLT(g_libGTASA + 0x830CD0, &AllVehicles__ProcessControl_hook); // CBoat::ProcessControl
+    CHook::InstallPLT(g_libGTASA + 0x830840, &AllVehicles__ProcessControl_hook); // CBike::ProcessControl
+    CHook::InstallPLT(g_libGTASA + 0x8313E0, &AllVehicles__ProcessControl_hook); // CPlane::ProcessControl
+    CHook::InstallPLT(g_libGTASA + 0x830F10, &AllVehicles__ProcessControl_hook); // CHeli::ProcessControl
+    CHook::InstallPLT(g_libGTASA + 0x830A88, &AllVehicles__ProcessControl_hook); // CBmx::ProcessControl
+    CHook::InstallPLT(g_libGTASA + 0x831178, &AllVehicles__ProcessControl_hook); // CMonsterTruck::ProcessControl
+    CHook::InstallPLT(g_libGTASA + 0x831648, &AllVehicles__ProcessControl_hook); // CQuadBike::ProcessControl
+    CHook::InstallPLT(g_libGTASA + 0x831B18, &AllVehicles__ProcessControl_hook); // CTrain::ProcessControl
 
-    CHook::InstallPLT(g_libGTASA + (VER_x32 ? 0x66968C : 0x833928), &TaskUseGun);
-    CHook::InstallPLT(g_libGTASA + (VER_x32 ? 0x66CF4C : 0x83ACF8), &CPad__TaskProcess);
+    CHook::InstallPLT(g_libGTASA + 0x826A88, &TaskUseGun);
+    CHook::InstallPLT(g_libGTASA + 0x82F5C0, &CPad__TaskProcess);
 
     // lr/ud (onfoot)
     CHook::InlineHook("_ZN4CPad19GetPedWalkLeftRightEv", &CPad__GetPedWalkLeftRight_hook, &CPad__GetPedWalkLeftRight);

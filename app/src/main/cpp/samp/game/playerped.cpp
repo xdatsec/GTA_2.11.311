@@ -45,38 +45,27 @@ CPlayerPed::CPlayerPed()
 
 CPlayerPed::CPlayerPed(int iNum, int iSkin, float fX, float fY, float fZ, float fRotation)
 {
-    uint32_t dwPlayerActorID;
     static int iPlayerNum;
-    iPlayerNum = iNum;
+    iPlayerNum = iNum; // ty killman <3
+
 
     m_pPed = nullptr;
     m_dwGTAId = 0;
     m_dwArrow = 0;
     m_bHaveBulletData = false;
 
-    /*if (!ScriptCommand(&create_player, &iPlayerNum, fX, fY, fZ, &m_dwGTAId)) {
-        FLog("Error: Failed to create player!");
-        return;
-    }*/
+    ScriptCommand(&create_player, &iPlayerNum, fX, fY, fZ, &m_dwGTAId);
+    ScriptCommand(&create_actor_from_player, &iPlayerNum, &m_dwGTAId);
 
-    //458FC0 ; CPlayerPed::SetupPlayerPed(int)
-    ((void (*)(int))(g_libGTASA + 0x5B5940))(iPlayerNum); // CPlayerPed::SetupPlayerPed
-    //4543D4 ; CPlayerPed::DeactivatePlayerPed
-    ((void (*)(int))(g_libGTASA + 0x5B5AB0))(iPlayerNum); // CPlayerPed::DeactivatePlayerPed
-    //3AC5DC ; FindPlayerPed(int)
-    m_pPed = FindPlayerPed(iNum); // CPlayerPed::FindPlayerPed
+    m_pPed = GamePool_Ped_GetAt(m_dwGTAId);
 
-    CVector posn = {fX, fY, fZ};
-    ((void (*)(const CVector&, CEntityGTA*))(g_libGTASA + 0x423758))(posn, m_pPed); // CTheScripts::ClearSpaceForMissionEntity
-    //4543F8 ; CPlayerPed::ReactivatePlayerPed
-    ((void (*)(int))(g_libGTASA+0x5B5AC8))(iPlayerNum); // CPlayerPed::ReactivatePlayerPed
-    //((void (*)(ENTITY_TYPE*))(SA_ADDR(0x3C14B0 + 1)))((ENTITY_TYPE*)m_pPed); // CWorld::Add
-    CWorld::Add(m_pPed);
+    m_bytePlayerNumber = iNum;
 
-    //ScriptCommand(&create_actor_from_player, &iPlayerNum, &m_dwGTAId);
+    SetPlayerPedPtrRecord(m_bytePlayerNumber,m_pPed);
+
+    m_pPed->bNeverEverTargetThisPed = true;
 
     m_dwGTAId = GamePool_Ped_GetIndex(m_pPed);
-
     m_pPed = GamePool_Ped_GetAt(m_dwGTAId);
     if (!m_pPed) {
         FLog("Error: Invalid m_pPed after GamePool_Ped_GetAt!");
@@ -84,12 +73,10 @@ CPlayerPed::CPlayerPed(int iNum, int iSkin, float fX, float fY, float fZ, float 
     }
     m_bytePlayerNumber = iPlayerNum;
 
-    SetPlayerPedPtrRecord(iPlayerNum, m_pPed);
 
     m_pPed->bDoesntDropWeaponsWhenDead = true;
     ScriptCommand(&set_actor_immunities, m_dwGTAId, 0, 0, 1, 0, 0);
     ScriptCommand(&set_actor_can_be_decapitated, m_dwGTAId, 0);
-    m_pPed->bNeverEverTargetThisPed = true;
 
     if (pNetGame)
     {

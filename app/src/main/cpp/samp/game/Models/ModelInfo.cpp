@@ -61,12 +61,12 @@ void CModelInfo::Initialise() {
 
 void CModelInfo::injectHooks()
 {
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x676A34 : 0xA76CF0), &CModelInfo::ms_atomicModelInfoStore);
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x6773CC : 0x83B180), &CModelInfo::ms_pedModelInfoStore);
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x678C8C : 0xB719E8), &CModelInfo::ms_vehicleModelInfoStore);
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x6796CC : 0x8373A8), &CModelInfo::ms_modelInfoPtrs);
+    CHook::Write(g_libGTASA +  0xA76CF0, &CModelInfo::ms_atomicModelInfoStore);
+    CHook::Write(g_libGTASA +  0x83B180, &CModelInfo::ms_pedModelInfoStore);
+    CHook::Write(g_libGTASA +  0xB719E8, &CModelInfo::ms_vehicleModelInfoStore);
+    CHook::Write(g_libGTASA + 0x8373A8, &CModelInfo::ms_modelInfoPtrs);
 
     CHook::Redirect("_ZN10CModelInfo11AddPedModelEi", &CModelInfo::AddPedModel);
-    CHook::Redirect("_ZN10CModelInfo15AddVehicleModelEi", &CModelInfo::AddVehicleModel);
-    CHook::Redirect("_ZN10CModelInfo14AddAtomicModelEi", &CModelInfo::AddAtomicModel);
+    //CHook::Redirect("_ZN10CModelInfo15AddVehicleModelEi", &CModelInfo::AddVehicleModel);
+    //CHook::Redirect("_ZN10CModelInfo14AddAtomicModelEi", &CModelInfo::AddAtomicModel);
 }

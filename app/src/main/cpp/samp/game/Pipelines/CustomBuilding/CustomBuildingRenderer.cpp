@@ -10,5 +10,5 @@ bool CCustomBuildingRenderer::Initialise() {
 }
 
 void CCustomBuildingRenderer::Update() {
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x2CA3A4 + 1 : 0x38B6DC));
+    CHook::CallFunction<void>(g_libGTASA + 0x35DF68);
 }

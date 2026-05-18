@@ -258,7 +258,7 @@ public:
     static void InlineHook(const char* sym, Func func, Orig orig)
     {
         shadowhook_hook_sym_name(
-                "libGTASA.so",
+                "libGame.so",
                 sym,
                 (void *)func,
                 (void **)orig);

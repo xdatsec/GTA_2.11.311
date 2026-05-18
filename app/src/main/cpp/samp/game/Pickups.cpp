@@ -15,7 +15,7 @@ void CPickups::InjectHooks() {
 }
 
 void CPickups::Update() {
-    static std::array<CPickup, MAX_NUM_PICKUPS>& aPickUps = *(std::array<CPickup, MAX_NUM_PICKUPS>*)(g_libGTASA + (VER_x32 ? 0x007AFD70 : 0x991AB8));
+    static std::array<CPickup, MAX_NUM_PICKUPS>& aPickUps = *(std::array<CPickup, MAX_NUM_PICKUPS>*)(g_libGTASA + 0x983B00);
 
     auto start = 620 * (CTimer::GetFrameCounter() % 32) / 32;
     auto end   = 620 * (CTimer::GetFrameCounter() % 32 + 1) / 32;

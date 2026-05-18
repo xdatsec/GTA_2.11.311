@@ -232,8 +232,12 @@ void CPlaceable_SetMatrix(CPlaceable *thiz, CMatrix& matrix) {
 }
 
 void CPlaceable::InjectHooks() {
-    CHook::Redirect("_ZN10CPlaceable15InitMatrixArrayEv", &CPlaceable::InitMatrixArray);
-    CHook::Redirect("_ZN10CPlaceable19ShutdownMatrixArrayEv", &CPlaceable::ShutdownMatrixArray);
+    //CHook::Redirect("_ZN10CPlaceable20AllocateStaticMatrixEv", &CPlaceable_AllocateStaticMatrix);
+   // CHook::Redirect("_ZN10CPlaceable15InitMatrixArrayEv", &CPlaceable::InitMatrixArray);
+  //  CHook::Redirect("_ZN10CPlaceable19ShutdownMatrixArrayEv", &CPlaceable::ShutdownMatrixArray);
+
+
+
 }
 
 CPlaceable::CPlaceable() : m_placement() {

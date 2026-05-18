@@ -1,0 +1,17 @@
+txdp
+gb_la,gb_global
+gb_laroads,gb_la
+gb_lageneric,gb_la
+gb_vegas,gb_global
+vegasroads,gb_vegas
+vegashiways,gb_vegas
+gb_country,gb_global
+gb_sf,gb_global
+sanfranroads,gb_sf
+sanfranfreeway,gb_sf
+sanfrantrains,gb_sf
+sanfranvictorian,gb_sf
+gb_generic,gb_global
+gb_interior,gb_global
+gb_vhighway,gb_global
+end

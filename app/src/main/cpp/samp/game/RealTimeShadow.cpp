@@ -75,5 +75,5 @@ RwTexture* CRealTimeShadow::GetShadowRwTexture() {
 }
 
 bool CRealTimeShadow::SetShadowedObject(CPhysical *physical) {
-    return CHook::CallFunction<bool>(g_libGTASA + (VER_x32 ? 0x5B7DD0 + 1 : 0x6DC400), this, physical);
+    return CHook::CallFunction<bool>(g_libGTASA + 0x5E53B8, this, physical);
 }

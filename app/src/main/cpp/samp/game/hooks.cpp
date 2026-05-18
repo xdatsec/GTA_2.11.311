@@ -19,7 +19,6 @@
 #include "TxdStore.h"
 #include "util/CUtil.h"
 #include "Coronas.h"
-#include "multitouch.h"
 #include "Streaming.h"
 #include "References.h"
 #include "VisibilityPlugins.h"
@@ -91,22 +90,22 @@ PLAYERID FindActorIDFromGtaPtr(CPedGTA* pPed)
 
 void RenderEffects() {
 //	RenderEffects();
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x0059DA40 + 1 : 0x6C1D6C));
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x005BE914 + 1 : 0x6E2FB4));
+    CHook::CallFunction<void>(g_libGTASA + 0x6C1D6C);
+    CHook::CallFunction<void>(g_libGTASA + 0x5EC7BC);
 //    CRopes::Render();
 //    CGlass::Render();
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x005A6BC8 + 1 : 0x6CA5D0));
+    CHook::CallFunction<void>(g_libGTASA + 0x5D32E4);
     CVisibilityPlugins::RenderReallyDrawLastObjects();
     CCoronas::Render();
 
     // FIXME
-    CCamera& TheCamera = *reinterpret_cast<CCamera*>(g_libGTASA + (VER_x32 ? 0x00951FA8 : 0xBBA8D0));
-    auto g_fx = *(uintptr_t *) (g_libGTASA + (VER_x32 ? 0x00820520 : 0xA062A8));
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x00363DF0 + 1 : 0x433F54), &g_fx, TheCamera.m_pRwCamera, false);
+    CCamera& TheCamera = *reinterpret_cast<CCamera*>(g_libGTASA + 0x9F86F8);
+    auto g_fx = *(uintptr_t *) (g_libGTASA + 0xA5BC20);
+    CHook::CallFunction<void>(g_libGTASA + 0x4D5020, &g_fx, TheCamera.m_pRwCamera, false);
 
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x005CBBAC + 1 : 0x6F054C));
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x0059BF84 + 1 : 0x6C0268));
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x005A1C38 + 1 : 0x6C552C));
+    CHook::CallFunction<void>(g_libGTASA + 0x5FA3B8);
+    CHook::CallFunction<void>(g_libGTASA + 0x6F4AA0);
+    CHook::CallFunction<void>(g_libGTASA + 0x5CD7EC);
     //   CClouds::VolumetricCloudsRender();
 ////    if (CHeli::NumberOfSearchLights || CTheScripts::NumberOfScriptSearchLights) {
 ////        CHeli::Pre_SearchLightCone();
@@ -114,15 +113,15 @@ void RenderEffects() {
 ////        CTheScripts::RenderAllSearchLights();
 ////        CHeli::Post_SearchLightCone();
 ////    }
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x005E3390 + 1 : 0x708DF0));
+    CHook::CallFunction<void>(g_libGTASA + 0x702670);
 ////    if (CReplay::Mode != MODE_PLAYBACK && !CPad::GetPad(0)->DisablePlayerControls) {
 ////        FindPlayerPed()->DrawTriangleForMouseRecruitPed();
 ////    }
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x005C0B14 + 1 : 0x6E50CC));
+    CHook::CallFunction<void>(g_libGTASA + 0x5EEFA8);
 //    //CVehicleRecording::Render();
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x005B19D0 + 1 : 0x6D6068));
+    CHook::CallFunction<void>(g_libGTASA + 0x5DE58C);
 //    //CRenderer::RenderFirstPersonVehicle();
-    CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x005B5F78 + 1 : 0x6DA2B8));
+    CHook::CallFunction<void>(g_libGTASA + 0x5E2C9C);
 
     //DebugModules::Render3D();
 }
@@ -168,7 +167,7 @@ void ShowHud()
                             (int)pPlayerPool->GetLocalPlayerID()
                     );
                 }
-                *(uint8_t*)(g_libGTASA + (VER_x32 ? 0x00819D88 + 1 : 0x009ff3A8)) = 0;
+                *(uint8_t*)(g_libGTASA + 0x9F13E8) = 0;
             }
         }
     }
@@ -178,8 +177,8 @@ void Render2dStuff()
 {
     ShowHud();
 
-    if( CHook::CallFunction<bool>(g_libGTASA + (VER_x32 ? 0x001BB7F4 + 1 : 0x24EA90)) ) // emu_IsAltRenderTarget()
-        CHook::CallFunction<void>(g_libGTASA + (VER_x32 ? 0x001BC20C + 1 : 0x24F5B8)); // emu_FlushAltRenderTarget()
+    if( CHook::CallFunction<bool>(g_libGTASA + 0x739F40) ) // emu_IsAltRenderTarget()
+        CHook::CallFunction<void>(g_libGTASA + 0x73A848); // emu_FlushAltRenderTarget()
 
     RwRenderStateSet(rwRENDERSTATEZTESTENABLE, RWRSTATE(FALSE));
     RwRenderStateSet(rwRENDERSTATEZWRITEENABLE, RWRSTATE(FALSE));
@@ -193,7 +192,7 @@ void Render2dStuff()
 #if VER_x32
     ( ( void(*)() )(g_libGTASA + 0x00437200 + 1) )(); // прицел
 #else
-    ( ( void(*)() )(g_libGTASA + 0x0051C694) )(); // прицелCHud::DrawCrossHairs(void)	000000000051C694
+    ( ( void(*)() )(g_libGTASA + 0x510D30) )(); // прицелCHud::DrawCrossHairs(void)	000000000051C694
 #endif
 
     auto radar = CTouchInterface::m_pWidgets[WIDGET_RADAR];
@@ -213,10 +212,10 @@ void Render2dStuff()
 
     CHook::CallFunction<void>("_ZN4CHud4DrawEv");
 
-    ((void(*)(bool))(g_libGTASA + (VER_x32 ? 0x002B0BD8 + 1 : 0x36FB00)))(false);
+    ((void(*)(bool))(g_libGTASA + 0x5017B0))(false);
     CHook::CallFunction<void>("_Z12emu_GammaSeth", 1);
-    ((void (*)(bool))(g_libGTASA + (VER_x32 ? 0x0054BDD4 + 1 : 0x66B678)))(1u); // CMessages::Display
-    ((void (*)(bool))(g_libGTASA + (VER_x32 ? 0x005A9120 + 1 : 0x6CCEA0)))(1u); // CFont::RenderFontBuffer
+    ((void (*)(bool))(g_libGTASA + 0x69DDB8))(1u); // CMessages::Display
+    ((void (*)(bool))(g_libGTASA + 0x5D6090))(1u); // CFont::RenderFontBuffer
     CHook::CallFunction<void>("_Z12emu_GammaSeth", 0);
 
     if(pNetGame)
@@ -277,8 +276,8 @@ void CRadar_ClearBlip_hook(uint32_t a2)
         LOGI("[CRadar::ClearBlip]: Invalid blip ID (%d) called from 0x%X", (uint16_t)a2, dwRetAddr);
         return;
     }
-
-    int32 raceBlipIndex = *(int32 *)(g_libGTASA + (VER_x32 ? 0x6E00BC : 0x8BE7E8));
+    //im not sure about this omg
+    int32 raceBlipIndex = *(int32 *)(g_libGTASA + 0xD0DB32);
     if (raceBlipIndex == a2) {
         GPS::Set(pGame->m_vecRaceCheckpointPos, pGame->m_bRaceCheckpointsEnabled);
     }
@@ -689,13 +688,10 @@ uintptr_t dwRetAddr = 0;
 GET_LR(dwRetAddr);
 
 FLog("dwRetAddr CWeapon__ProcessLineOfSight_hook 0x%llx", dwRetAddr);
-#if VER_x32
-if(dwRetAddr >= 0x005DC178 && dwRetAddr <= 0x005DD684)
-		g_bForceWorldProcessLineOfSight = true;
-#else
-if(dwRetAddr >= 0x701494 && dwRetAddr <= 0x702B18)
+
+if(dwRetAddr >= 0x6FA408 && dwRetAddr <= 0x6FBA2C)
 g_bForceWorldProcessLineOfSight = true;
-#endif
+
 
 return CWeapon__ProcessLineOfSight(vecOrigin, vecEnd, vecPos, ppEntity, pWeaponSlot, ppEntity2, b1, b2, b3, b4, b5, b6, b7);
 }
@@ -707,7 +703,7 @@ uint32_t CWorld__ProcessLineOfSight_hook(CVector* vecOrigin, CVector* vecEnd, CC
     uintptr_t dwRetAddr = 0;
     GET_LR(dwRetAddr);
 
-    if(dwRetAddr == (VER_x32 ? 0x005dd0b0 + 1 : 0x70253C) || g_bForceWorldProcessLineOfSight)
+    if(dwRetAddr == 0x6FB42C || g_bForceWorldProcessLineOfSight)
     {
     g_bForceWorldProcessLineOfSight = false;
     //LOGI("CWorld_ProcessLineOfSight iLagCompensationMode: %d", g_iLagCompensationMode);
@@ -719,7 +715,7 @@ uint32_t CWorld__ProcessLineOfSight_hook(CVector* vecOrigin, CVector* vecEnd, CC
     {
     if (g_pCurrentBulletData && g_pCurrentBulletData->pEntity)
     {
-    if (*(uintptr_t*)(g_pCurrentBulletData->pEntity) != g_libGTASA+(VER_x32 ? 0x667D18:0x8300A0)) // CPlaceable
+    if (*(uintptr_t*)(g_pCurrentBulletData->pEntity) != g_libGTASA+0x81E628) // CPlaceable
     {
     if (g_iLagCompensationMode)
     {
@@ -915,7 +911,7 @@ void CCam__Process_hook(uintptr_t thiz)
     CVector vecSavedSpeed;
     CVehicle* pVeh = nullptr;
 
-    float v6 = *(float*)(g_libGTASA + (VER_x32 ? 0x6A9FD0 : 0x8855D4));
+    float v6 = *(float*)(g_libGTASA + 0x879434);
 
     if (pNetGame && (*(uint16_t*)(thiz + 14) == 16 || *(uint16_t*)(thiz + 14) == 18)) {
         if (auto playerPool = pNetGame->GetPlayerPool()) {
@@ -936,7 +932,7 @@ void CCam__Process_hook(uintptr_t thiz)
 
                     pVeh->m_pVehicle->m_vecMoveSpeed = vecSavedSpeed;
 
-                    *(float*)(g_libGTASA + (VER_x32 ? 0x6A9FD0 : 0x8855D4)) = 200.0f;
+                    *(float*)(g_libGTASA + 0x879434) = 200.0f;
                 }
             }
         }
@@ -946,7 +942,7 @@ void CCam__Process_hook(uintptr_t thiz)
 
     if (pVeh && pVeh->m_pVehicle) {
         pVeh->m_pVehicle->m_vecMoveSpeed = vecSavedSpeed;
-        *(float*)(g_libGTASA + (VER_x32 ? 0x6A9FD0 : 0x8855D4)) = v6;
+        *(float*)(g_libGTASA + 0x879434) = v6;
     }
 
     if (*(uint16_t*)(thiz + 14) == 4 || *(uint16_t*)(thiz + 14) == 53) {
@@ -954,14 +950,10 @@ void CCam__Process_hook(uintptr_t thiz)
             if (auto localPlayer = playerPool->GetLocalPlayer()) {
                 CPlayerPed* pPed = localPlayer->GetPlayerPed();
                 if (pPed) {
-#if VER_x32
-                    *(uint32_t*)(g_libGTASA + 0x00951FA8 + 120) = 0xFFFFFFFF;
-                    *(uint32_t*)(g_libGTASA + 0x00951FA8 + 124) = 0xFFFFFFFF;
-                    *(uint8_t*)(g_libGTASA + 0x00951FA8 + 40) = 0;
-#else
-                    *(uint32_t*)(g_libGTASA + 0xBBA8D0 + 128) = 0xFFFFFFFFFFFFFFFFLL;
-                    *(uint8_t*)(g_libGTASA + 0xBBA8D0 + 48) = 0;
-#endif
+
+                    *(uint32_t*)(g_libGTASA + 0x9F86F8 + 128) = 0xFFFFFFFFFFFFFFFFLL;
+                    *(uint8_t*)(g_libGTASA + 0x9F86F8 + 48) = 0;
+
                     CFirstPersonCamera::ProcessCameraOnFoot(thiz, pPed);
                 }
             }
@@ -978,8 +970,8 @@ void CCam__Process_hook(uintptr_t thiz)
                     *(uint32_t*)(g_libGTASA + 0x00951FA8 + 124) = 0xFFFFFFFF;
                     *(uint8_t*)(g_libGTASA + 0x00951FA8 + 40) = 0;
 #else
-                    *(uint32_t*)(g_libGTASA + 0xBBA8D0 + 128) = 0xFFFFFFFFFFFFFFFFLL;
-                    *(uint8_t*)(g_libGTASA + 0xBBA8D0 + 48) = 0;
+                    *(uint32_t*)(g_libGTASA + 0x9F86F8 + 128) = 0xFFFFFFFFFFFFFFFFLL;
+                    *(uint8_t*)(g_libGTASA + 0x9F86F8 + 48) = 0;
 #endif
                     CFirstPersonCamera::ProcessCameraInVeh(thiz, pPed, pVeh);
                 }
@@ -1106,31 +1098,6 @@ int CPad__CycleCameraModeDownJustDown_hook(void* thiz)
     return 0;
 }
 
-CVector& (*FindPlayerSpeed)(int a1);
-CVector& FindPlayerSpeed_hook(int a1)
-{
-	uintptr_t dwRetAddr = 0;
-	__asm__ volatile ("mov %0, lr":"=r" (dwRetAddr));
-	dwRetAddr -= g_libGTASA;
-
-	if(dwRetAddr == 0x43E1F6 + 1)
-	{
-		if(pNetGame)
-		{
-			CPlayerPed *pPlayerPed = pGame->FindPlayerPed();
-			if(pPlayerPed &&
-			   pPlayerPed->IsInVehicle() &&
-			   pPlayerPed->IsAPassenger())
-			{
-				CVector vec = CVector(-1.0f);
-				return vec;
-			}
-		}
-	}
-
-	return FindPlayerSpeed(a1);
-}
-
 int (*RwFrameAddChild)(int a1, int a2);
 int RwFrameAddChild_hook(int a1, int a2)
 {
@@ -1168,63 +1135,7 @@ int CTextureDatabaseRuntime__GetEntry_hook(uintptr_t thiz, const char* a2, bool*
 	return CTextureDatabaseRuntime__GetEntry(thiz, a2, a3);
 }
 
-uintptr_t (*CTxdStore__TxdStoreFindCB)(const char *a1);
-uintptr_t CTxdStore__TxdStoreFindCB_hook(const char *a1)
-{
-	static char* texdbs[] = { "samp", "gta_int", "gta3" };
-	for(auto &texdb : texdbs)
-	{
-		// TextureDatabaseRuntime::GetDatabase
-		uintptr_t db_handle = ((uintptr_t (*)(const char *))(g_libGTASA+0x1EAC8C+1))(texdb);
 
-		// TextureDatabaseRuntime::registered
-		uint32_t unk_61B8D4 = *(uint32_t*)(g_libGTASA+0x6BD174+4);
-		if(unk_61B8D4)
-		{
-			// TextureDatabaseRuntime::registered
-			uintptr_t dword_61B8D8 = *(uintptr_t*)(g_libGTASA+0x6BD174+8);
-
-			int index = 0;
-			while(*(uint32_t*)(dword_61B8D8 + 4 * index) != db_handle)
-			{
-				if(++index >= unk_61B8D4)
-					goto GetTheTexture;
-			}
-
-			continue;
-		}
-
-		GetTheTexture:
-		// TextureDatabaseRuntime::Register
-		((void (*)(int))(g_libGTASA+0x1E9BC8+1))(db_handle);
-
-		// TextureDatabaseRuntime::GetTexture
-		uintptr_t tex = ((uintptr_t (*)(const char *))(g_libGTASA+0x1E9C64+1))(a1);
-
-		// TextureDatabaseRuntime::Unregister
-		((void (*)(int))(g_libGTASA+0x1E9C80+1))(db_handle);
-
-		if(tex) return tex;
-	}
-
-	// RwTexDictionaryGetCurrent
-	int current = ((int (*)(void))(g_libGTASA+0x1DBA64+1))();
-	if(current)
-	{
-		while(true)
-		{
-			// RwTexDictionaryFindNamedTexture
-			uintptr_t tex = ((int (*)(int, const char *))(g_libGTASA+0x1DB9B0+1))(current, a1);
-			if(tex) return tex;
-
-			// CTxdStore::GetTxdParent
-			current = ((int (*)(int))(g_libGTASA+0x5D428C+1))(current);
-			if(!current) return 0;
-		}
-	}
-
-	return 0;
-}
 
 int (*CCustomRoadsignMgr_RenderRoadsignAtomic)(int a1, int a2);
 int CCustomRoadsignMgr_RenderRoadsignAtomic_hook(int a1, int a2)
@@ -1327,12 +1238,6 @@ void rotate_ped_if_local(unsigned int *a1, unsigned int *a2)
 		*(uint32_t *)(a2 + 0x560) = *a1;
 }
 
-void (*player_control_zelda)(unsigned int *a2, unsigned int *a3);
-void player_control_zelda_hook(unsigned int *a2, unsigned int *a3)
-{
-	rotate_ped_if_local(a2, a3);
-}
-
 // 006778B0
 int (*rxOpenGLDefaultAllInOneRenderCB)(RwResEntry* resEntry, uintptr_t object, uint8_t type, uint32_t flags);
 int rxOpenGLDefaultAllInOneRenderCB_hook(RwResEntry* resEntry, uintptr_t object, uint8_t type, uint32_t flags)
@@ -1394,19 +1299,9 @@ void readVehiclesAudioSettings();
 
 void (*CVehicleModelInfo__SetupCommonData)();
 
-void CVehicleModelInfo__SetupCommonData_hook() {
-	CVehicleModelInfo__SetupCommonData();
-	readVehiclesAudioSettings();
-}
+
 
 extern VehicleAudioPropertiesStruct VehicleAudioProperties[20000];
-static uintptr_t addr_veh_audio = (uintptr_t) &VehicleAudioProperties[0];
-
-void (*CAEVehicleAudioEntity__GetVehicleAudioSettings)(uintptr_t thiz, int16_t a2, int a3);
-
-void CAEVehicleAudioEntity__GetVehicleAudioSettings_hook(uintptr_t dest, int16_t a2, int ID) {
-	memcpy((void *) dest, &VehicleAudioProperties[(ID - 400)], sizeof(VehicleAudioPropertiesStruct));
-}
 
 int (*CRadar__DrawRadarSprite)(unsigned int iconID, float x, float y, unsigned int alpha);
 int CRadar__DrawRadarSprite_hook(unsigned int iconID, float x, float y, unsigned int alpha)
@@ -1422,16 +1317,17 @@ bool m_bUseSquareRadar = true; // todo: move to settings.ini
 void(*DrawRadarMask)();
 void DrawRadarMask_hook()
 {
-    CHook::UnFuck(g_libGTASA + (VER_x32? 0x444510 : 0x710A20));
-    if(m_bUseSquareRadar)
-        *(float*)(g_libGTASA + (VER_x32? 0x444510 : 0x710A20)) = 0.0001f;
-    else
-        *(float*)(g_libGTASA + (VER_x32? 0x444510 : 0x710A20)) = 1.5708f;
+    //the bss for this has been detached
+    //CHook::UnFuck(g_libGTASA + (VER_x32? 0x444510 : 0x710A20));
+   // if(m_bUseSquareRadar)
+  //      *(float*)(g_libGTASA + (VER_x32? 0x444510 : 0x710A20)) = 0.0001f;
+  //  else
+  //      *(float*)(g_libGTASA + (VER_x32? 0x444510 : 0x710A20)) = 1.5708f;
 
     DrawRadarMask();
-#if !VER_x32
-    *(float*)(g_libGTASA + 0x710A20) = 1.5708f;
-#endif
+//#if !VER_x32
+ //   *(float*)(g_libGTASA + 0x710A20) = 1.5708f;
+//#endif
 }
 
 static char szLastBufferedName[40];
@@ -1591,7 +1487,7 @@ void CVehicle_DoReverseLightEffect_hook(
 void (*CAEWeatherAudioEntity__UpdateParameter)(uintptr_t thiz, uintptr_t a1, uint16_t a2);
 void CAEWeatherAudioEntity__UpdateParameter_hook(uintptr_t thiz, uintptr_t a1, uint16_t a2)
 {
-    uint32_t* pArea = (uint32_t*)(g_libGTASA + (VER_x32 ? 0x95957C : 0xBC2418));
+    uint32_t* pArea = (uint32_t*)(g_libGTASA + 0xA00238);
     uint32_t old = *pArea;
     if (pGame->m_sound.bDisableInteriorAmbient) *pArea = 1;
     CAEWeatherAudioEntity__UpdateParameter(thiz, a1, a2);
@@ -1632,85 +1528,16 @@ void InstallWeaponFireHooks()
 	//CHook::InstallPLT(g_libGTASA + 0x66EAC4, (uintptr_t)CBulletInfo_AddBullet_hook, (uintptr_t*)&CBulletInfo_AddBullet);
 }
 
-void InstallSAMPHooks()
-{
-	//CHook::InstallPLT(g_libGTASA + 0x677EA0, (uintptr_t)MainMenuScreen__OnExit_hook, (uintptr_t*)&MainMenuScreen__OnExit);
-	// samp main loop
-	//CHook::InstallPLT(g_libGTASA + 0x67589C, (uintptr_t)Render2dStuff_hook, (uintptr_t*)&Render2dStuff);
-	// imgui
-	//CHook::InstallPLT(g_libGTASA + 0x6710C4, (uintptr_t)Idle_hook, (uintptr_t*)&Idle);
-	//CHook::InstallPLT(g_libGTASA + 0x675DE4, (uintptr_t)AND_TouchEvent_hook, (uintptr_t*)&AND_TouchEvent);
-	// splashscreen
-	//ARMHook::installHook(g_libGTASA + 0x43AF28, (uintptr_t)DisplayScreen_hook, (uintptr_t*)&DisplayScreen);
-	// gangzones
-	//CHook::InstallPLT(g_libGTASA + 0x67196C, (uintptr_t)CRadar_DrawRadarGangOverlay_hook, (uintptr_t*)&CRadar_DrawRadarGangOverlay);
-	// radar
-	//CHook::InstallPLT(g_libGTASA+0x675914, (uintptr_t)CRadar__SetCoordBlip_hook, (uintptr_t*)&CRadar__SetCoordBlip);
-	// removebuilding
-	//CHook::InstallPLT(g_libGTASA + 0x675E6C, (uintptr_t)CFileLoader__LoadObjectInstance_hook, (uintptr_t*)&CFileLoader__LoadObjectInstance);
-	// obj material
-	//ARMHook::installHook(g_libGTASA + 0x454EF0, (uintptr_t)CObject_Render_hook, (uintptr_t*)& CObject_Render);
-	// textdraw models
-	//CHook::InstallPLT(g_libGTASA + 0x66FE58, (uintptr_t)CGame_Process_hook, (uintptr_t*)& CGame_Process);
-	// enter vehicle as driver
-	//ARMHook::codeInject(g_libGTASA + 0x40AC28, (uintptr_t)TaskEnterVehicle_hook, 0);
-    //CHook::InstallPLT(g_libGTASA+0x6733F0, (uintptr_t)TaskEnterVehicle_hook, (uintptr_t*)&TaskEnterVehicle);
-	// radar color
-	//CHook::InstallPLT(g_libGTASA + 0x673950, (uintptr_t)CHudColours__GetIntColour_hook, (uintptr_t*)& CHudColours__GetIntColour);
-	// exit vehicle
-	CHook::InstallPLT(g_libGTASA + 0x671984, (uintptr_t)CTaskComplexLeaveCar_hook, (uintptr_t*)& CTaskComplexLeaveCar);
-    CHook::InstallPLT(g_libGTASA + 0x675320, (uintptr_t)CTaskComplexLeaveCar_hook, (uintptr_t*)& CTaskComplexLeaveCar);
-    // attach obj to ped
-	//CHook::InstallPLT(g_libGTASA + 0x675C68, (uintptr_t)CWorld_ProcessPedsAfterPreRender_Hook, (uintptr_t*)&CWorld_ProcessPedsAfterPreRender);
-	// game pause
-	//CHook::InstallPLT(g_libGTASA + 0x672644, (uintptr_t)CTimer_StartUserPause_hook, (uintptr_t*)&CTimer_StartUserPause);
-	//CHook::InstallPLT(g_libGTASA + 0x67056C, (uintptr_t)CTimer_EndUserPause_hook, (uintptr_t*)&CTimer_EndUserPause);
-	// aim
-	// Crosshair Fix
-	//ms_fAspectRatio = (float*)(g_libGTASA+(VER_x32 ? 0xA26A90:0xCC7F00));
-	//CHook::InstallPLT(g_libGTASA + 0x672880, (uintptr_t)DrawCrosshair_hook, (uintptr_t*)&DrawCrosshair);
 
-	// fix radar in passenger
-	CHook::InstallPLT(g_libGTASA+0x671BBC, (uintptr_t)FindPlayerSpeed_hook, (uintptr_t*)&FindPlayerSpeed);
-
-	// fix texture loading
-	CHook::InstallPLT(g_libGTASA + 0x676034, (uintptr_t)CTxdStore__TxdStoreFindCB_hook, (uintptr_t*)&CTxdStore__TxdStoreFindCB);
-
-	// interpolate camera fix
-	CHook::InstallPLT(g_libGTASA + 0x6717BC, (uintptr_t)CCamera__Process_hook, (uintptr_t*)&CCamera__Process);
-
-	// for surfing
-	//CHook::InstallPLT(g_libGTASA + 0x66EAE8, (uintptr_t)CWorld_ProcessAttachedEntities_Hook, (uintptr_t*)&CWorld_ProcessAttachedEntities);
-
-	//CHook::InstallPLT(g_libGTASA + 0x67193C, (uintptr_t)player_control_zelda_hook, (uintptr_t*)&player_control_zelda);
-
-	//ARMHook::installHook(g_libGTASA + 0x4DD5E8, (uintptr_t)CTaskSimpleUseGun__SetMoveAnim_hook, (uintptr_t*)&CTaskSimpleUseGun__SetMoveAnim);
-
-    // hueta ne rabotaet no pust budet (tipo ne kak v 1.08)
-	CHook::InstallPLT(g_libGTASA + 0x674280, (uintptr_t) CVehicleModelInfo__SetupCommonData_hook, (uintptr_t*)&CVehicleModelInfo__SetupCommonData);
-	CHook::InstallPLT(g_libGTASA + 0x06D008, (uintptr_t) CAEVehicleAudioEntity__GetVehicleAudioSettings_hook, (uintptr_t*)&CAEVehicleAudioEntity__GetVehicleAudioSettings);
-
-	CHook::InstallPLT(g_libGTASA + 0x66FF0C, (uintptr_t)CRadar_ClearBlip_hook, (uintptr_t*)&CRadar_ClearBlip);
-
-	// skills
-	CHook::InstallPLT(g_libGTASA + 0x6749D0, (uintptr_t)CPed__GetWeaponSkill_hook, (uintptr_t*)&CPed__GetWeaponSkill);
-
-    //InstallHuaweiCrashFixHooks();
-	InstallCrashFixHooks();
-	InstallWeaponFireHooks();
-	HookCPad();
-}
-
-void ReadSettingFile();
 void ApplyFPSPatch(uint8_t fps);
 void (*NvUtilInit)();
 void NvUtilInit_hook() {
     FLog("NvUtilInit");
-    g_pszStorage = "/storage/emulated/0/Android/media/com.rockstargames.gtasa/";
+    g_pszStorage = "/storage/emulated/0/Android/media/com.kurdish.roleplay/";
 
     LOGI("Storage located at %s", g_pszStorage);
     NvUtilInit();
-    //ReadSettingFile();
+    ApplyFPSPatch(120);
 
 
 }
@@ -1741,7 +1568,72 @@ stFile* NvFOpen(const char *r1)
         sprintf(path, "%s%s", g_pszStorage, r1);
     }
 
+    if(!strncmp(r1+12, "mainV1.scm", 10))
+    {
+        sprintf(path, "%sSAMP/main.scm", g_pszStorage);
+        FLog("Loading %s", path);
+    }
     // ----------------------------
+    if(!strncmp(r1+12, "SCRIPTV1.IMG", 12))
+    {
+        sprintf(path, "%sSAMP/script.img", g_pszStorage);
+        FLog("Loading script.img..");
+    }
+    // ----------------------------
+    if(!strncmp(r1, "DATA/PEDS.IDE", 13))
+    {
+        sprintf(path, "%sSAMP/peds.ide", g_pszStorage);
+        FLog("Loading peds.ide..");
+    }
+    // ----------------------------
+    if(!strncmp(r1, "DATA/VEHICLES.IDE", 17))
+    {
+        sprintf(path, "%sSAMP/vehicles.ide", g_pszStorage);
+        FLog("Loading vehicles.ide..");
+    }
+
+    if (!strncmp(r1, "DATA/GTA.DAT", 12))
+    {
+        sprintf(path, "%sSAMP/gta.dat", g_pszStorage);
+        FLog("Loading gta.dat..");
+    }
+
+    if (!strncmp(r1, "DATA/HANDLING.CFG", 17))
+    {
+        sprintf(path, "%sSAMP/handling.cfg", g_pszStorage);
+        FLog("Loading handling.cfg..");
+    }
+
+    if (!strncmp(r1, "DATA/WEAPON.DAT", 15))
+    {
+        sprintf(path, "%sSAMP/weapon.dat", g_pszStorage);
+        FLog("Loading weapon.dat..");
+    }
+
+    if (!strncmp(r1, "DATA/FONTS.DAT", 15))
+    {
+        sprintf(path, "%sdata/fonts.dat", g_pszStorage);
+        FLog("Loading weapon.dat..");
+    }
+
+    if (!strncmp(r1, "DATA/PEDSTATS.DAT", 15))
+    {
+        sprintf(path, "%sdata/pedstats.dat", g_pszStorage);
+        FLog("Loading weapon.dat..");
+    }
+
+    if (!strncmp(r1, "DATA/TIMECYC.DAT", 15))
+    {
+        sprintf(path, "%sdata/timecyc.dat", g_pszStorage);
+        FLog("Loading weapon.dat..");
+    }
+
+    if (!strncmp(r1, "DATA/POPCYCLE.DAT", 15))
+    {
+        sprintf(path, "%sdata/popcycle.dat", g_pszStorage);
+        FLog("Loading weapon.dat..");
+    }
+
 
 
 #if VER_x32
@@ -1772,13 +1664,14 @@ bool g_bPlaySAMP = false;
 void MainMenu_OnStartSAMP()
 {
     if(g_bPlaySAMP) return;
-
     //InitInMenu();
     pGame->StartGame();
 
-    // StartGameScreen::OnNewGameCheck()
-    (( void (*)())(g_libGTASA + (VER_x32 ? 0x002A7270 + 1 : 0x365EA0)))();
+    CHook::CallFunction<void>(g_libGTASA + 0x718FCC); //  Menu_NewGame();
 
+
+
+   // CHook::CallFunction<void>(g_libGTASA + 0x5509AC);
     g_bPlaySAMP = true;
 }
 
@@ -1973,7 +1866,7 @@ static uint32_t dwRLEDecompressSourceSize = 0;
 size_t (*OS_FileRead)(OSFile a1, void *buffer, size_t numBytes);
 size_t OS_FileRead_hook(OSFile a1, void *buffer, size_t numBytes)
 {
-    dwRLEDecompressSourceSize = numBytes;
+    //dwRLEDecompressSourceSize = numBytes;
 
     return OS_FileRead(a1, buffer, numBytes);
 }
@@ -2105,9 +1998,9 @@ void CGame_Process_hook()
 float (*CDraw__SetFOV)(float thiz, float a2);
 float CDraw__SetFOV_hook(float thiz, float a2)
 {
-    float tmp = (float)((float)((float)(*(float *)&*(float *)(g_libGTASA + (VER_x32 ? 0x00A26A90 : 0xCC7F00)) - 1.3333) * 11.0) / 0.44444) + thiz;
+    float tmp = (float)((float)((float)(*(float *)&*(float *)(g_libGTASA + 0xC6DC70) - 1.3333) * 11.0) / 0.44444) + thiz;
     if(tmp > 100) tmp = 100.0;
-    *(float *)(g_libGTASA + (VER_x32 ? 0x006B1CB8 : 0x88E6BC)) = tmp;
+    *(float *)(g_libGTASA + 0x88309C) = tmp;
     return thiz;
 }
 
@@ -2132,7 +2025,7 @@ int mpg123_param_hook(void* mh, int key, long val, int ZERO, double fval)
 void InjectHooks()
 {
     FLog("InjectHooks");
-    CHook::Write(g_libGTASA + (VER_x32 ? 0x678954 : 0x84F2D0), &Scene);
+    CHook::Write(g_libGTASA + 0xCD0868, &Scene);
 
 #if !VER_x32 // mb all.. wtf crash x64?
     CHook::RET("_ZN11CPlayerInfo14LoadPlayerSkinEv");
@@ -2160,7 +2053,7 @@ void InjectHooks()
     CWidgetGta::InjectHooks();
     CEntityGTA::InjectHooks(); //
     CPhysical::InjectHooks(); //
-    CAnimManager::InjectHooks(); //
+   // CAnimManager::InjectHooks(); //
     //CCarEnterExit::InjectHooks();
     CPlayerPedGta::InjectHooks(); //
     CTaskManager::InjectHooks(); //
@@ -2168,7 +2061,7 @@ void InjectHooks()
     CWorld::InjectHooks(); //
     CGame::InjectHooks();
     ES2VertexBuffer::InjectHooks();
-    CRQ_Commands::InjectHooks();
+    //CRQ_Commands::InjectHooks();
     CTxdStore::InjectHooks();
     CVisibilityPlugins::InjectHooks();
     //CAdjustableHUD::InjectHooks();
@@ -2209,45 +2102,37 @@ void InjectHooks()
 
 void InstallUrezHooks()
 {
-    CHook::UnFuck(g_libGTASA + (VER_x32 ? 0x1E87A0 : 0x714003 ));
-    *(char*)(g_libGTASA + (VER_x32 ? 0x1E87A0 : 0x714003 ) + 12) = 'd';
-    *(char*)(g_libGTASA + (VER_x32 ? 0x1E87A0 : 0x714003 ) + 13) = 'x';
-    *(char*)(g_libGTASA + (VER_x32 ? 0x1E87A0 : 0x714003 ) + 14) = 't';
+    CHook::UnFuck(g_libGTASA + 0x24E4C4);
+    *(char*)(g_libGTASA + 0x24E4C4 + 12) = 'd';
+    *(char*)(g_libGTASA + 0x24E4C4 + 13) = 'x';
+    *(char*)(g_libGTASA + 0x24E4C4 + 14) = 't';
 
-    CHook::UnFuck(g_libGTASA + (VER_x32 ? 0x1E8C04 : 0x71406F));
-    *(char*)(g_libGTASA + (VER_x32 ? 0x1E8C04 : 0x71406F) + 12) = 'd';
-    *(char*)(g_libGTASA + (VER_x32 ? 0x1E8C04 : 0x71406F) + 13) = 'x';
-    *(char*)(g_libGTASA + (VER_x32 ? 0x1E8C04 : 0x71406F) + 14) = 't';
+    CHook::UnFuck(g_libGTASA + 0x246D17);
+    *(char*)(g_libGTASA + 0x246D17 + 12) = 'd';
+    *(char*)(g_libGTASA + 0x246D17+ 13) = 'x';
+    *(char*)(g_libGTASA + 0x246D17 + 14) = 't';
 }
-void InstallSpecialHooks()
+
+void (*CPlaceable_InitMatrixArray)(CMatrixLinkList *thiz, int32 size);
+void CPlaceable_InitMatrixArray_hook(CMatrixLinkList *thiz, int32 size)
 {
-    CHook::InstallPLT(g_libGTASA + 0x83DE90, &StartGameScreen__OnNewGameCheck_hook, &StartGameScreen__OnNewGameCheck);
-    CHook::InlineHook("_Z10NvUtilInitv", &NvUtilInit_hook, &NvUtilInit);
-    // CHook::InlineHook("_ZN14MainMenuScreen6UpdateEf", &MainMenuScreen__Update_hook, &MainMenuScreen__Update);
-    CHook::Redirect(g_libGTASA+0x7D624C, &NvFOpen);
-    // CHook::InlineHook(g_libGTASA + 0x7BF280, &OS_FileOpen_hook, &OS_FileOpen);
+    // CMatrixLinkList::Init
+    CHook::CallFunction<void>(g_libGTASA + 0x4AC048, thiz, 10000);
 }
-/*
 void InstallSpecialHooks()
 {
     InjectHooks();
 
     InstallUrezHooks();
 
-    //CHook::InlineHook(g_libGTASA + (VER_x32 ? 0x002B6A14 : 0x3761B4), (uintptr_t)CWidgetButtonSprint_Constructor_hook, (uintptr_t*)&CWidgetButtonSprint_Constructor);
-    //CHook::InlineHook(g_libGTASA + (VER_x32 ? 0x002B6B44 : 0x376364), (uintptr_t)CWidgetButtonSprint_Destructor_hook, (uintptr_t*)&CWidgetButtonSprint_Destructor);
-    //CHook::InlineHook(g_libGTASA + (VER_x32 ? 0x002B420C : 0x373698), (uintptr_t)CWidgetButton_Draw_hook, (uintptr_t*)&CWidgetButton_Draw);
-    //CHook::InlineHook(g_libGTASA + (VER_x32 ? 0x002B6A60 : 0x37620C), (uintptr_t)CWidgetButtonSprint_Update_hook, (uintptr_t*)&CWidgetButtonSprint_Update);
-
     CHook::Redirect("_ZN5CGame20InitialiseRenderWareEv", &CGame::InitialiseRenderWare);
-    CHook::InstallPLT(g_libGTASA + (VER_x32 ? 0x6785FC : 0x84EC20), &StartGameScreen__OnNewGameCheck_hook, &StartGameScreen__OnNewGameCheck);
-
+    CHook::InstallPLT(g_libGTASA + 0x83DE90, &StartGameScreen__OnNewGameCheck_hook, &StartGameScreen__OnNewGameCheck);
     CHook::InlineHook("_Z10NvUtilInitv", &NvUtilInit_hook, &NvUtilInit);
 
     CHook::RET("_ZN12CCutsceneMgr16LoadCutsceneDataEPKc"); // LoadCutsceneData
     CHook::RET("_ZN12CCutsceneMgr10InitialiseEv");			// CCutsceneMgr::Initialise
 
-    CHook::Redirect("_Z7NvFOpenPKcS0_bb", &NvFOpen);
+    CHook::Redirect(g_libGTASA+0x7D624C, &NvFOpen);
 
     CHook::InlineHook("_ZN14MainMenuScreen6UpdateEf", &MainMenuScreen__Update_hook, &MainMenuScreen__Update);
 
@@ -2255,15 +2140,17 @@ void InstallSpecialHooks()
 
     //CHook::InstallPLT(g_libGTASA + (VER_x32 ? 0x6701D4 : 0x840708), &RLEDecompress_hook, &RLEDecompress);
 
-    CHook::InlineHook("_Z11OS_FileReadPvS_i", &OS_FileRead_hook, &OS_FileRead);
+   // CHook::InlineHook("_Z11OS_FileReadPvS_i", &OS_FileRead_hook, &OS_FileRead);
 
 	CHook::InlineHook("_Z32_rxOpenGLDefaultAllInOneRenderCBP10RwResEntryPvhj", &rxOpenGLDefaultAllInOneRenderCB_hook, &rxOpenGLDefaultAllInOneRenderCB);
 	CHook::InlineHook("_ZN25CCustomBuildingDNPipeline18CustomPipeRenderCBEP10RwResEntryPvhj", &CCustomBuildingDNPipeline__CustomPipeRenderCB_hook, &CCustomBuildingDNPipeline__CustomPipeRenderCB);
 
     CHook::InlineHook("_Z27AtomicDefaultRenderCallBackP8RpAtomic", &AtomicDefaultRenderCallBack_hook, &AtomicDefaultRenderCallBack_orig);
     CHook::InlineHook("_ZN18CVisibilityPlugins12RenderEntityEPvf", &CVisibilityPlugins_RenderEntity_hook, &CVisibilityPlugins_RenderEntity_orig);
+    CHook::InlineHook("_ZN15CMatrixLinkList4InitEi", &CPlaceable_InitMatrixArray_hook, & CPlaceable_InitMatrixArray);
+
 }
-*/
+
 #include <EGL/egl.h>
 #include <GLES2/gl2.h>   // If using OpenGL ES 2.0 or 3.0
 
@@ -2281,9 +2168,8 @@ void InstallHooks()
 
     CHook::Redirect("_Z10GetTexturePKc", &CUtil::GetTexture);
 
-    //CHook::InstallPLT(g_libGTASA + (VER_x32 ? 0x00428410:0x50CDC8), (uintptr_t)CWorld_ProcessPedsAfterPreRender_hook, (uintptr_t*)&CWorld_ProcessPedsAfterPreRender);
-
-    CHook::InlineHook("_ZN14MainMenuScreen6OnExitEv", &MainMenuScreen__OnExit_hook, &MainMenuScreen__OnExit);
+    //?they removef the exit button
+    //CHook::InlineHook("_ZN14MainMenuScreen6OnExitEv", &MainMenuScreen__OnExit_hook, &MainMenuScreen__OnExit);
 
     CHook::InlineHook("_ZN17CTaskSimpleUseGun17RemoveStanceAnimsEP4CPedf", &CTaskSimpleUseGun__RemoveStanceAnims_hook, &CTaskSimpleUseGun__RemoveStanceAnims);
 
@@ -2310,7 +2196,7 @@ void InstallHooks()
     CHook::InlineHook("_ZN4CCam7ProcessEv", CCam__Process_hook, &CCam__Process);
 
     CHook::Redirect("_Z19PlayerIsEnteringCarv", &PlayerIsEnteringCar);
-    if(*(uint8_t *)(g_libGTASA + (VER_x32 ? 0x6B8B9C:0x896135)))
+    if(*(uint8_t *)(g_libGTASA + 0xD13C60))
     {
         CHook::Redirect("_ZNK14TextureListing11GetMipCountEv", &getmip);
     }
@@ -2320,7 +2206,7 @@ void InstallHooks()
 
         if (eglGetProcAddress("glAlphaFunc")) {
             // If "glAlphaFunc" is found, store the address in the global library
-            *((void**)(g_libGTASA + (VER_x32 ? 0x6BCBF8:0x89A1B0))) = (void*)eglGetProcAddress("glAlphaFunc");
+            *((void**)(g_libGTASA + 0xD13CD8)) = (void*)eglGetProcAddress("glAlphaFunc");
         } else {
             // If neither function is available, hook the fallback symbol
             CHook::Redirect("_Z25RQ_Command_rqSetAlphaTestRPc", &RQCommand_rqSetAlphaTest);
@@ -2341,21 +2227,18 @@ void InstallHooks()
     CHook::InlineHook("_Z23RwResourcesFreeResEntryP10RwResEntry", &RwResourcesFreeResEntry_hook,
                       &RwResourcesFreeResEntry);
 
-    ms_fAspectRatio = (float *) (g_libGTASA + (VER_x32 ? 0xA26A90 : 0xCC7F00));
+    ms_fAspectRatio = (float *) (g_libGTASA + 0xC6DC70);
     CHook::InlineHook("_ZN4CHud14DrawCrossHairsEv", &DrawCrosshair_hook, &DrawCrosshair);
 
     // retexture
     //CHook::InlineHook("_ZN7CEntity6RenderEv", &CEntity_Render_hook, &CEntity_Render);
-    CHook::InstallPLT(g_libGTASA + (VER_x32 ? 0x66F76C : 0x83F610), &CEntity_Render_hook, &CEntity_Render);
+    CHook::InstallPLT(g_libGTASA + 0x841A88, &CEntity_Render_hook, &CEntity_Render);
 
     //CHook::InlineHook("_ZN26CAEGlobalWeaponAudioEntity21ServiceAmbientGunFireEv", &TaskEnterVehicleHook, &TaskEnterVehicle);
-#if VER_x32
-    CHook::UnFuck(g_libGTASA + 0x4DD9E8);
-    *(float*)(g_libGTASA + 0x4DD9E8) = 0.015f;
-#else
-    CHook::Write(g_libGTASA + 0x5DF790, 0x90000AA9);
-    CHook::Write(g_libGTASA + 0x5DF794, 0xBD48D521);
-#endif
+    //idk what uses of this but skip for now
+   // CHook::Write(g_libGTASA + 0x5DF790, 0x90000AA9);
+    //CHook::Write(g_libGTASA + 0x5DF794, 0xBD48D521);
+
 
     CHook::InlineHook("_ZN5CDraw6SetFOVEfb", &CDraw__SetFOV_hook, &CDraw__SetFOV);
     CHook::InlineHook("_ZN10CStreaming5Init2Ev", &CStreaming__Init2_hook, &CStreaming__Init2);
@@ -2367,11 +2250,9 @@ void InstallHooks()
 
     //CHook::InlineHook("_ZN4CCam7ProcessEv", CCam__Process_hook, &CCam__Process);
 
-#if VER_x32
-    CHook::NOP(g_libGTASA + 0x002A4A62, 2); // Game - SocialClub
-#else
-    CHook::NOP(g_libGTASA + 0x003634A4, 1); // Game - SocialClub
-#endif
+
+    CHook::NOP(g_libGTASA + 0x716AD0, 1); // Game - SocialClub
+
     //CHook::InlineHook("_ZN6CRadar9ClearBlipEi", CRadar__ClearBlip_hook, &CRadar__ClearBlip);
     CHook::InlineHook("_ZN6CRadar13DrawRadarMaskEv", &DrawRadarMask_hook, &DrawRadarMask);
     CHook::InlineHook("_ZN6CRadar15LimitRadarPointER9CVector2D", &CRadar__LimitRadarPoint_hook, &CRadar__LimitRadarPoint);

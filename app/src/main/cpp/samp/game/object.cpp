@@ -32,10 +32,10 @@ CObject::CObject(int iModel, CVector vecPos, CVector vecRot, float fDrawDistance
 	m_vecAttachedRot.z = 0.0f;
 	m_bSyncRotation = true;
 
-	ScriptCommand(&create_object, iModel, vecPos.x, vecPos.y, vecPos.z, &m_dwGTAId);
+	//ScriptCommand(&create_object, iModel, vecPos.x, vecPos.y, vecPos.z, &m_dwGTAId);
     if(!m_dwGTAId) return;
 
-    ScriptCommand(&put_object_at, m_dwGTAId, vecPos.x, vecPos.y, vecPos.z);
+    //ScriptCommand(&put_object_at, m_dwGTAId, vecPos.x, vecPos.y, vecPos.z);
 
 	m_pEntity = GamePool_Object_GetAt(m_dwGTAId);
 
@@ -93,7 +93,7 @@ CObject::~CObject()
 }
 
 void CObject::Process(float fElapsedTime)
-{
+{/*
 	if (m_AttachedVehicleID != INVALID_VEHICLE_ID)
 	{
 		if (pNetGame)
@@ -242,6 +242,7 @@ void CObject::Process(float fElapsedTime)
 
         m_pEntity->Add();
 	}
+ */
 }
 
 // 0.3.7

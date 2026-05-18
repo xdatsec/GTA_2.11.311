@@ -47,6 +47,7 @@ CNetGame::CNetGame(const char* szHostOrIp, int iPort, const char *szPlayerName, 
 {
 	FLog("CNetGame initializing..");
 
+
 	// voice
 	//Network::OnRaknetConnect(szHostOrIp, iPort);
 

@@ -1,32 +1,172 @@
 #pragma once
 
-#define MAX_SCRIPT_VARS	16
+inline uint16_t LastScriptingOpcode = 0;
 
-struct GAME_SCRIPT_THREAD
-{
-    uintptr_t *pNext;
-    uintptr_t *pPrevious;
-    char ScriptName[8];
-    uint8_t *BaseAddressOfThisScript;
-    uintptr dwScriptIP;
-    uint8_t *PCStack[8];
-    uint16_t StackDepth;
-    int32_t dwLocalVar[42];
-    bool bActive;
-    bool condResult;
-    bool IsThisAMissionScript;
-    bool bIsThisAStreamedScript;
-    bool bIsThisAMiniGameScript;
-    uint8_t ScriptBrainType;
-    uint32_t ActivateTime;
-    uint16_t AndOrState;
-    bool NotForLatestExpression;
-    bool DeatharrestCheckEnabled;
-    bool DoneDeatharrest;
-    int32_t EndOfScriptedCutscenePC;
-    bool ThisMustBeTheOnlyMissionRunning;
+enum {
+    GAME_SCRIPT_IP_SIZE         = 255,
+    GAME_SCRIPT_MAX_REFS        = 18,
+    GAME_SCRIPT_MAX_PARAMS      = 16,
 };
-VALIDATE_SIZE(GAME_SCRIPT_THREAD, (VER_x32 ? 0x100 : 0x130));
+
+class ScriptIP_t {
+public:
+    ScriptIP_t() {
+        memset(this, 0, sizeof(ScriptIP_t));
+    }
+
+    void Reset() {
+        current_offset = 0;
+    }
+
+    uint8_t *GetIP() {
+        return buffer;
+    }
+
+    template<typename T>
+    void Write(T value) {
+        memcpy(&buffer[current_offset], &value, sizeof(T));
+        current_offset += sizeof(T);
+        assert(current_offset < GAME_SCRIPT_IP_SIZE);
+    }
+
+    template<typename T>
+    void Write(T *value, uint32_t size) {
+        if (value && size) {
+            memcpy(&buffer[current_offset], value, size);
+            current_offset += size;
+        }
+    }
+
+private:
+    uint8_t buffer[GAME_SCRIPT_IP_SIZE];
+    uint8_t current_offset;
+};
+VALIDATE_SIZE(ScriptIP_t, GAME_SCRIPT_IP_SIZE + 1);
+
+class CRunningScript {
+public:
+    enum eParameter : uint8_t {
+        PARAMETER_INTEGER       = 0x1,
+        PARAMETER_FLOAT         = 0x6,
+        PARAMETER_REF           = 0x3,
+        PARAMETER_STRING        = 0xE,
+        PARAMETER_EOP           = 0x0
+    };
+
+public:
+    static inline ScriptIP_t        IP{};
+    static inline uintptr           *Refs[GAME_SCRIPT_MAX_REFS];
+    static inline uint16_t          ref_pos;
+
+public:
+    CRunningScript() {
+        memset(this, 0, sizeof(CRunningScript));
+
+        for (auto i = 0; i < GAME_SCRIPT_MAX_REFS; i++) {
+            Refs[i] = nullptr;
+        }
+
+        ref_pos = 0;
+    }
+
+    void ResetForNewCommand() {
+        IP.Reset();
+
+        for (auto i = 0; i < GAME_SCRIPT_MAX_REFS; i++) {
+            m_Refs[i] = 0;
+        }
+
+        ref_pos = 0;
+    }
+
+    void SetOpcode(uint16_t opcode) {
+        LastScriptingOpcode = opcode;
+        ResetForNewCommand();
+        IP.Write(opcode);
+    }
+
+    void AddIntParam(int param) {
+        IP.Write(PARAMETER_INTEGER);
+        IP.Write(param);
+    }
+
+    void AddFloatParam(float param) {
+        IP.Write(PARAMETER_FLOAT);
+        IP.Write(param);
+    }
+
+    void AddRefParam(uintptr *ref) {
+        IP.Write(PARAMETER_REF);
+
+        Refs[ref_pos] = ref;
+        m_Refs[ref_pos] = *ref;
+
+        IP.Write(ref_pos);
+
+        ref_pos++;
+        assert(ref_pos < GAME_SCRIPT_MAX_REFS);
+    }
+
+    void AddStringParam(const char *str, uint8_t len) {
+        IP.Write(PARAMETER_STRING);
+        IP.Write(len);
+        IP.Write(str, len);
+    }
+
+    void AddZeroTerminator() {
+        IP.Write(PARAMETER_EOP);
+    }
+
+    auto ProcessCommand() {
+        PCPointer = IP.GetIP();
+
+        //  CRunningScript::ProcessOneCommand
+        (( int8_t (*)(CRunningScript*))(g_libGTASA + 0x412F00))(this);
+//        CallFunction<int8_t, GameScript_t *>(GAMEADDR(_text::_ZN14CRunningScript17ProcessOneCommandEv + 1), this);
+
+        return m_CmpFlag;
+    }
+
+    void RetrieveRefs() {
+        for (auto i = 0; i < ref_pos; i++) {
+            *Refs[i] = m_Refs[i];
+        }
+    }
+
+private:
+    uintptr                 *pNext;
+    uintptr                 *pPrevious;
+    char                    ScriptName[8];
+    uint8                   *BaseAddressOfThisScript;
+    uint8                   *PCPointer;
+    uint8                   *PCStack[8];
+    uint16                  StackDepth;
+    int32                   m_Refs[42];
+    bool8 bActive;
+    bool8 m_CmpFlag;
+    bool8 IsThisAMissionScript;
+    bool8 bIsThisAStreamedScript;
+    bool8 bIsThisAMiniGameScript;
+    int8 ScriptBrainType;
+    uint32 ActivateTime;
+    uint16 AndOrState;
+    bool8 NotForLatestExpression;
+    bool8 DeatharrestCheckEnabled;
+    bool8 DoneDeatharrest;
+    int32 EndOfScriptedCutscenePC;
+    bool8 ThisMustBeTheOnlyMissionRunning;
+
+//    [[maybe_unused]] uint8_t         _pad3[97];
+//    [[maybe_unused]] uint8_t         m_CmpFlag;
+//    [[maybe_unused]] uint8_t         _pad4[26];
+};
+VALIDATE_SIZE(CRunningScript, (VER_x32 ? 0x100 : 0x130));
+
+struct SCRIPT_COMMAND {
+    uint16_t    Opcode;
+    char        Params[GAME_SCRIPT_MAX_PARAMS];
+};
+
 
 //struct GAME_SCRIPT_THREAD
 //{
@@ -43,14 +183,6 @@ VALIDATE_SIZE(GAME_SCRIPT_THREAD, (VER_x32 ? 0x100 : 0x130));
 //	uint8_t Pad5[13];			// +243
 //	// STRUCT SIZE = 256
 //};
-
-#pragma pack(push, 1)
-struct SCRIPT_COMMAND
-{
-    uint16_t OpCode;
-    char Params[MAX_SCRIPT_VARS];
-};
-#pragma pack(pop)
 
 int ScriptCommand(const SCRIPT_COMMAND *pScriptCommand, ...);
 
@@ -177,3 +309,14 @@ const SCRIPT_COMMAND clear_mission_audio 				= { 0x040D, "i" };
 const SCRIPT_COMMAND load_mission_audio 				= { 0x03CF, "ii" };
 const SCRIPT_COMMAND play_mission_audio 				= { 0x03D1, "i" };
 const SCRIPT_COMMAND set_mission_audio_position 		= { 0x03D7, "ifff" };
+const SCRIPT_COMMAND clear_char_tasks_immediately 		= { 0x0792, "i" }; // actor handle
+const SCRIPT_COMMAND task_jetpack						= { 0x07A7, "i" }; // actor handle
+const SCRIPT_COMMAND disembark_instantly_actor			= { 0x0792, "i"};
+
+//skills
+const SCRIPT_COMMAND change_stat = { 0x0629, "ii" };
+const SCRIPT_COMMAND set_char_weapon_skill = { 0x081A, "ii" };
+//jetpack baby
+const SCRIPT_COMMAND is_actor_using_jetpack = {0x0A0C, "i"};
+
+const SCRIPT_COMMAND is_car_wrecked						= { 0x0119, "i" };

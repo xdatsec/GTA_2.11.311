@@ -1,0 +1,19 @@
+objs
+16700, androm_des_obj, andr_ldX, 100, 0
+16701, china_town_gateb, chGatedes, 100, 2097156
+16702, cargo_stuff, cargo_stfX, 100, 0
+16705, cargo_test, cargo_plA, 50, 4
+16706, carge_barrels, cgo_barls, 40, 128
+16707, cargo_netting, car_bla, 100, 2097156
+16708, cargo_store, cargo_net, 100, 0
+end
+tobj
+end
+path
+end
+2dfx
+end
+anim
+end
+txdp
+end

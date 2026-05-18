@@ -352,7 +352,9 @@ public abstract class GameActivityBase extends AppCompatActivity {
        // } catch (UnsatisfiedLinkError e5) {
        //     Log.e(TAG, e5.getMessage());
        // }
-
+        //GameThread.INSTANCE.onRockstarGateComplete(1, true);
+       // GameThread.INSTANCE.onRockstarGateComplete(2, true);
+        //GameThread.INSTANCE.onRockstarGateComplete(3, true);
     }
 
 

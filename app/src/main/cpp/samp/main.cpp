@@ -266,7 +266,7 @@ void DoInitStuff()
 	{
 		//ReadSettingFile();
 
-		pNetGame = new CNetGame("play.uifserver.net", 7776, pSettings->Get().szNickName, pSettings->Get().szPassword);
+		pNetGame = new CNetGame("play.uifserver.net", 7776, "John_Doe", "");
 		bNetworkInited = true;
 
         FLog("DoInitStuff end");
@@ -416,12 +416,12 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved)
 
 	CHook::InitHookStuff();
 	InstallSpecialHooks();
-	//ApplyPatches_level0();
+	ApplyPatches_level0();
     //SetUpGLHooks();
-    //InitRenderWareFunctions();
+    InitRenderWareFunctions();
 
-	//pGame = new CGame();
-   // pScoreBoard = new CScoreBoard();
+	pGame = new CGame();
+    pScoreBoard = new CScoreBoard();
 
 	//pVoice = new CVoice();
 	//pVoice->Initialize(VOICE_FREQUENCY, CODEC_FREQUENCY, VOICE_SENDRRATE);

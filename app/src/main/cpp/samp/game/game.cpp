@@ -200,8 +200,8 @@ void CGame::DisplayHUD(bool bDisp)
 	}
 	else
 	{
-		*(uint8_t*)(g_libGTASA + (VER_x32 ? 0x819D88 : 0x9F13E8)) = 0;
-		*(uint8_t*)(g_libGTASA + (VER_x32 ? 0x991FD8 : 0xA65E5C)) = 1;
+		*(uint8_t*)(g_libGTASA +  0x9F13E8) = 0;
+		*(uint8_t*)(g_libGTASA + 0xA65E5C) = 1;
 	}
 }
 // 0.3.7
@@ -738,8 +738,9 @@ void InitGui();
 
 bool CGame::InitialiseRenderWare() {
     FLog("InitialiseRenderWare ..");
+	CScene& Scences = *reinterpret_cast<CScene*>(g_libGTASA + 0xCD0868);
 
-    CCamera& TheCamera = *reinterpret_cast<CCamera*>(g_libGTASA + 0x9F86F8);
+	CCamera& TheCamera = *reinterpret_cast<CCamera*>(g_libGTASA + 0x9F86F8);
 
     CTxdStore::Initialise();
     CVisibilityPlugins::Initialise();
@@ -767,25 +768,25 @@ bool CGame::InitialiseRenderWare() {
         CameraDestroy(camera);
         return false;
     }
-    Scene.m_pRwCamera = camera;
+	Scences.m_pRwCamera = camera;
     TheCamera.Init();
-    TheCamera.SetRwCamera(Scene.m_pRwCamera);
-    RwCameraSetFarClipPlane(Scene.m_pRwCamera, 2000.0f);
-    RwCameraSetNearClipPlane(Scene.m_pRwCamera, 0.9f);
-    CameraSize(Scene.m_pRwCamera, nullptr, 0.7f, 4.0f / 3.0f);
+    TheCamera.SetRwCamera(Scences.m_pRwCamera);
+    RwCameraSetFarClipPlane(Scences.m_pRwCamera, 2000.0f);
+    RwCameraSetNearClipPlane(Scences.m_pRwCamera, 0.9f);
+    CameraSize(Scences.m_pRwCamera, nullptr, 0.7f, 4.0f / 3.0f);
 
     RwBBox bb;
     bb.sup = { 10'000.0f,  10'000.0f,  10'000.0f};
     bb.inf = {-10'000.0f, -10'000.0f, -10'000.0f};
 
-    if (Scene.m_pRpWorld = RpWorldCreate(&bb); !Scene.m_pRpWorld) {
-        CameraDestroy(Scene.m_pRwCamera);
-        Scene.m_pRwCamera = nullptr;
+    if (Scences.m_pRpWorld = RpWorldCreate(&bb); !Scences.m_pRpWorld) {
+        CameraDestroy(Scences.m_pRwCamera);
+		Scences.m_pRwCamera = nullptr;
 
         return false;
     }
-    RpWorldAddCamera(Scene.m_pRpWorld, Scene.m_pRwCamera);
-    LightsCreate(Scene.m_pRpWorld);
+    RpWorldAddCamera(Scences.m_pRpWorld, Scences.m_pRwCamera);
+    LightsCreate(Scences.m_pRpWorld);
 //	CreateDebugFont();
     CFont::Initialise();
     CHook::CallFunction<void>(g_libGTASA + 0x55BE74); // CHud::Initialise();
