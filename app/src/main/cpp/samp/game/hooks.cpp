@@ -90,7 +90,7 @@ PLAYERID FindActorIDFromGtaPtr(CPedGTA* pPed)
 
 void RenderEffects() {
 //	RenderEffects();
-    CHook::CallFunction<void>(g_libGTASA + 0x6C1D6C);
+    CHook::CallFunction<void>(g_libGTASA + 0x5C9E04);
     CHook::CallFunction<void>(g_libGTASA + 0x5EC7BC);
 //    CRopes::Render();
 //    CGlass::Render();
@@ -172,13 +172,16 @@ void ShowHud()
         }
     }
 }
-
+void MainLoop();
 void Render2dStuff()
 {
     ShowHud();
 
     if( CHook::CallFunction<bool>(g_libGTASA + 0x739F40) ) // emu_IsAltRenderTarget()
         CHook::CallFunction<void>(g_libGTASA + 0x73A848); // emu_FlushAltRenderTarget()
+
+    CHook::CallFunction<void>("_Z25RwTexDictionarySetCurrentP15RwTexDictionary", (uintptr_t)NULL);
+
 
     RwRenderStateSet(rwRENDERSTATEZTESTENABLE, RWRSTATE(FALSE));
     RwRenderStateSet(rwRENDERSTATEZWRITEENABLE, RWRSTATE(FALSE));
@@ -189,11 +192,8 @@ void Render2dStuff()
     RwRenderStateSet(rwRENDERSTATECULLMODE, RWRSTATE(rwCULLMODECULLNONE));
 
 
-#if VER_x32
-    ( ( void(*)() )(g_libGTASA + 0x00437200 + 1) )(); // прицел
-#else
-    ( ( void(*)() )(g_libGTASA + 0x510D30) )(); // прицелCHud::DrawCrossHairs(void)	000000000051C694
-#endif
+
+    ( ( void(*)() )(g_libGTASA + 0x510D30))(); // прицелCHud::DrawCrossHairs(void)	000000000051C694
 
     auto radar = CTouchInterface::m_pWidgets[WIDGET_RADAR];
     if (radar) {
@@ -225,6 +225,7 @@ void Render2dStuff()
     }
 
     if (pUI) pUI->render();
+    MainLoop();
 }
 
 /* =============================================================================== */
@@ -277,10 +278,10 @@ void CRadar_ClearBlip_hook(uint32_t a2)
         return;
     }
     //im not sure about this omg
-    int32 raceBlipIndex = *(int32 *)(g_libGTASA + 0xD0DB32);
-    if (raceBlipIndex == a2) {
-        GPS::Set(pGame->m_vecRaceCheckpointPos, pGame->m_bRaceCheckpointsEnabled);
-    }
+    //int32 raceBlipIndex = *(int32 *)(g_libGTASA + 0xD0DB32);
+  //  if (raceBlipIndex == a2) {
+    //    GPS::Set(pGame->m_vecRaceCheckpointPos, pGame->m_bRaceCheckpointsEnabled);
+   // }
 
     CRadar_ClearBlip(a2);
 }
@@ -1528,7 +1529,7 @@ void InstallWeaponFireHooks()
 	//CHook::InstallPLT(g_libGTASA + 0x66EAC4, (uintptr_t)CBulletInfo_AddBullet_hook, (uintptr_t*)&CBulletInfo_AddBullet);
 }
 
-
+void ReadSettingFile();
 void ApplyFPSPatch(uint8_t fps);
 void (*NvUtilInit)();
 void NvUtilInit_hook() {
@@ -1538,7 +1539,7 @@ void NvUtilInit_hook() {
     LOGI("Storage located at %s", g_pszStorage);
     NvUtilInit();
     ApplyFPSPatch(120);
-
+    ReadSettingFile();
 
 }
 
@@ -1552,7 +1553,7 @@ char lastFile[123];
 
 stFile* NvFOpen(const char *r1)
 {
-
+    LOGI("NvFOpen %s", r1);
     strcpy(lastFile, r1);
     g_pszStorage = "/storage/emulated/0/Android/media/com.kurdish.roleplay/";
     static char path[255]{};
@@ -1568,71 +1569,56 @@ stFile* NvFOpen(const char *r1)
         sprintf(path, "%s%s", g_pszStorage, r1);
     }
 
-    if(!strncmp(r1+12, "mainV1.scm", 10))
+    if(!strncmp(r1, "data/script/mainv1.scm", 22))
     {
         sprintf(path, "%sSAMP/main.scm", g_pszStorage);
+        FLog("Loading mainv1", path);
         FLog("Loading %s", path);
     }
     // ----------------------------
-    if(!strncmp(r1+12, "SCRIPTV1.IMG", 12))
+    if(!strncmp(r1, "data/script/scriptv1.img", 24))
     {
         sprintf(path, "%sSAMP/script.img", g_pszStorage);
         FLog("Loading script.img..");
+        FLog("Loading %s", path);
     }
     // ----------------------------
-    if(!strncmp(r1, "DATA/PEDS.IDE", 13))
+    if(!strncmp(r1, "data/peds.ide", 13))
     {
         sprintf(path, "%sSAMP/peds.ide", g_pszStorage);
         FLog("Loading peds.ide..");
+        FLog("Loading %s", path);
     }
     // ----------------------------
-    if(!strncmp(r1, "DATA/VEHICLES.IDE", 17))
+    if(!strncmp(r1, "data/vehicles.ide", 17))
     {
         sprintf(path, "%sSAMP/vehicles.ide", g_pszStorage);
         FLog("Loading vehicles.ide..");
+        FLog("Loading %s", path);
     }
 
-    if (!strncmp(r1, "DATA/GTA.DAT", 12))
+    if (!strncmp(r1, "data/gta.dat", 12))
     {
         sprintf(path, "%sSAMP/gta.dat", g_pszStorage);
         FLog("Loading gta.dat..");
+        FLog("Loading %s", path);
     }
 
-    if (!strncmp(r1, "DATA/HANDLING.CFG", 17))
+    if (!strncmp(r1, "data/handling.cfg", 17))
     {
         sprintf(path, "%sSAMP/handling.cfg", g_pszStorage);
         FLog("Loading handling.cfg..");
+        FLog("Loading %s", path);
     }
 
-    if (!strncmp(r1, "DATA/WEAPON.DAT", 15))
+    if (!strncmp(r1, "data/weapon.dat", 15))
     {
         sprintf(path, "%sSAMP/weapon.dat", g_pszStorage);
         FLog("Loading weapon.dat..");
+        FLog("Loading %s", path);
     }
 
-    if (!strncmp(r1, "DATA/FONTS.DAT", 15))
-    {
-        sprintf(path, "%sdata/fonts.dat", g_pszStorage);
-        FLog("Loading weapon.dat..");
-    }
 
-    if (!strncmp(r1, "DATA/PEDSTATS.DAT", 15))
-    {
-        sprintf(path, "%sdata/pedstats.dat", g_pszStorage);
-        FLog("Loading weapon.dat..");
-    }
-
-    if (!strncmp(r1, "DATA/TIMECYC.DAT", 15))
-    {
-        sprintf(path, "%sdata/timecyc.dat", g_pszStorage);
-        FLog("Loading weapon.dat..");
-    }
-
-    if (!strncmp(r1, "DATA/POPCYCLE.DAT", 15))
-    {
-        sprintf(path, "%sdata/popcycle.dat", g_pszStorage);
-        FLog("Loading weapon.dat..");
-    }
 
 
 
@@ -2200,7 +2186,7 @@ void InstallHooks()
     {
         CHook::Redirect("_ZNK14TextureListing11GetMipCountEv", &getmip);
     }
-
+    /*
     if (!eglGetProcAddress("glAlphaFuncQCOM")) {
         // If "glAlphaFuncQCOM" is not available, try "glAlphaFunc"
 
@@ -2212,6 +2198,7 @@ void InstallHooks()
             CHook::Redirect("_Z25RQ_Command_rqSetAlphaTestRPc", &RQCommand_rqSetAlphaTest);
         }
     }
+     */
 
     CHook::Redirect("_ZN4CHID12GetInputTypeEv", &GetInputType);
 

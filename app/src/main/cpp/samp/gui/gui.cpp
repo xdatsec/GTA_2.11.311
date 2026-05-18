@@ -235,24 +235,30 @@ extern CGame *pGame;
 extern CSettings* pSettings;
 void UI::renderDebug()
 {
-    if(!pSettings->Get().iFPSCounter) return;
+    if(pSettings)
+    {
+        if(!pSettings->Get().iFPSCounter) return;
 
-    char szStr[30];
-    char szStrMem[64];
-    char szStrPos[64];
+        char szStr[30];
+        char szStrMem[64];
+        char szStrPos[64];
 
-    ImVec2 pos = ImVec2(pUI->ScaleX(40.0f), pUI->ScaleY(540.0f));
+        ImVec2 pos = ImVec2(pUI->ScaleX(40.0f), pUI->ScaleY(540.0f));
 
-    static float fps = 120.f;
-    static auto lastTick = CTimer::m_snTimeInMillisecondsNonClipped;
-    if(CTimer::m_snTimeInMillisecondsNonClipped - lastTick > 500) {
-        lastTick = CTimer::m_snTimeInMillisecondsNonClipped;
-        fps = std::clamp(CTimer::game_FPS, 10.f, (float) 120);
+        static float fps = 120.f;
+        static auto lastTick = CTimer::m_snTimeInMillisecondsNonClipped;
+        if(CTimer::m_snTimeInMillisecondsNonClipped - lastTick > 500) {
+            lastTick = CTimer::m_snTimeInMillisecondsNonClipped;
+            fps = std::clamp(CTimer::game_FPS, 10.f, (float) 120);
+        }
+        snprintf(&szStr[0], sizeof(szStr), "FPS: %.0f", fps);
+
+        label->setText(&szStr[0]);
+        label->setPosition(pos);
+
     }
-    snprintf(&szStr[0], sizeof(szStr), "FPS: %.0f", fps);
 
-    label->setText(&szStr[0]);
-    label->setPosition(pos);
+
 
     /*auto &msUsed = CStreaming::ms_memoryUsed;
     auto &msAvailable = CStreaming::ms_memoryAvailable;

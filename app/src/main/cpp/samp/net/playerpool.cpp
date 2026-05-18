@@ -221,7 +221,7 @@ void CPlayerPool::DeactivateAll()
 }
 // 0.3.7
 void CPlayerPool::ProcessAttachedObjects()
-{
+{/*
 	if (m_pLocalPlayer)
 	{
 		CPlayerPed* pPlayerPed = m_pLocalPlayer->GetPlayerPed();
@@ -247,6 +247,7 @@ void CPlayerPool::ProcessAttachedObjects()
 			}
 		}
 	}
+ */
 }
 // 0.3.7
 void CPlayerPool::ApplyCollisionChecking()

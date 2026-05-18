@@ -824,7 +824,6 @@ extern CGame* pGame;
 extern CNetGame* pNetGame;
 extern UI *pUI;
 
-void MainLoop();
 void CGame::Process() {
     if(bIsGameExiting)return;
 
@@ -848,7 +847,7 @@ void CGame::Process() {
         }
     }
 
-    MainLoop();
+
     if (pNetGame)
     {
         if(pGame && pGame->FindPlayerPed() && pUI && pUI->buttonpanel() && pUI->buttonpanel()->m_bH)

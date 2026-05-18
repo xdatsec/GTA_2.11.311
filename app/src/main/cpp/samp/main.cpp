@@ -264,7 +264,7 @@ void DoInitStuff()
 
 	if (!bNetworkInited && !bDebug)
 	{
-		//ReadSettingFile();
+		ReadSettingFile();
 
 		pNetGame = new CNetGame("play.uifserver.net", 7776, "John_Doe", "");
 		bNetworkInited = true;
