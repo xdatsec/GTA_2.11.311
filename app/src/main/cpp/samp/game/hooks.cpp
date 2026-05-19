@@ -80,7 +80,7 @@ PLAYERID FindPlayerIDFromGtaPtr(CEntityGTA* pEntity)
 PLAYERID FindActorIDFromGtaPtr(CPedGTA* pPed)
 {
 	if (pPed) {
-		return pNetGame->GetActorPool()->FindIDFromGtaPtr(pPed);
+		//return pNetGame->GetActorPool()->FindIDFromGtaPtr(pPed);
 	}
 
 	return INVALID_PLAYER_ID;
@@ -220,8 +220,8 @@ void Render2dStuff()
 
     if(pNetGame)
     {
-        CTextDrawPool* pTextDrawPool = pNetGame->GetTextDrawPool();
-        if(pTextDrawPool) pTextDrawPool->Draw();
+        //CTextDrawPool* pTextDrawPool = pNetGame->GetTextDrawPool();
+       // if(pTextDrawPool) pTextDrawPool->Draw();
     }
 
     if (pUI) pUI->render();
@@ -237,10 +237,10 @@ void CRadar_DrawRadarGangOverlay_hook(uint32_t unk)
 {
 	if (pNetGame)
 	{
-		CGangZonePool *pGangZonePool = pNetGame->GetGangZonePool();
-		if (pGangZonePool) {
-			pGangZonePool->Draw(unk);
-		}
+		//CGangZonePool *pGangZonePool = pNetGame->GetGangZonePool();
+	//	if (pGangZonePool) {
+		//	pGangZonePool->Draw(unk);
+		//}
 	}
 }
 
@@ -352,37 +352,8 @@ void CEntity_Render_hook(CEntityGTA* thiz) {
 void (*CObject_Render)(CObjectGta* thiz);
 void CObject_Render_hook(CObjectGta* thiz)
 {
-	CObjectGta *object = thiz;
-	if(pNetGame && object != 0)
-	{
-		CObject *pObject = pNetGame->GetObjectPool()->FindObjectFromGtaPtr(object);
-		if(pObject && pObject->m_pEntity)
-		{
-			RwObject* rwObject = (RwObject*)pObject->m_pEntity->m_pRwObject;
-			if(rwObject)
-			{
-				// SetObjectMaterial
-				if(pObject->m_bHasMaterial || pObject->m_bHasMaterialText)
-				{
-					RwFrameForAllObjects((RwFrame*)rwObject->parent, (RwObject *(*)(RwObject *, void *))ObjectMaterialCallBack, pObject);
-					//RpAtomic* atomic = (RpAtomic*)object->m_pRwAtomic;
-					//RpGeometryForAllMaterials(atomic->geometry, ObjectMaterialCallBack, (void*)pObject);
-				}
-				// SetObjectMaterialText
-				if(pObject->m_bHasMaterialText)
-                {
-                    RwFrameForAllObjects((RwFrame*)rwObject->parent, (RwObject *(*)(RwObject *, void *))ObjectMaterialTextCallBack, pObject);
-                    //RpAtomic* atomic = (RpAtomic*)object->m_pRwAtomic;
-                    //RpGeometryForAllMaterials(atomic->geometry, ObjectMaterialTextCallBack, (void*)pObject);
-                }
-			}
 
-
-		}
-
-        CObject_Render(object);
-	}
-
+    //CObject_Render(thiz);
     //((void (*)(void))(g_libGTASA + (VER_x32 ? 0x005D1F98 + 1 : 0x6F6664)))();
     //((void (*)(void))(g_libGTASA + 0x5D1F5C + 1))();
 }
@@ -543,12 +514,12 @@ void AND_TouchEvent_hook(int type, int num, int posX, int posY)
         }
         else
         {
-            if (pNetGame && pNetGame->GetTextDrawPool())
-            {
-                if (!pNetGame->GetTextDrawPool()->onTouchEvent(type, num, posX, posY)) {
-                    return AND_TouchEvent(1, 0, 0, 0);
-                }
-            }
+            //if (pNetGame && pNetGame->GetTextDrawPool())
+           // {
+            //    if (!pNetGame->GetTextDrawPool()->onTouchEvent(type, num, posX, posY)) {
+             //       return AND_TouchEvent(1, 0, 0, 0);
+            //    }
+           // }
         }
 	}
 
@@ -567,29 +538,9 @@ void AND_TouchEvent_hook(int type, int num, int posX, int posY)
 uint32_t (*CPed__GetWeaponSkill)(CPedGTA *thiz);
 uint32_t CPed__GetWeaponSkill_hook(CPedGTA *thiz)
 {
-	bool bWeaponSkillStored = false;
 
-	dwCurPlayerActor = thiz;
-	byteInternalPlayer = CWorld::PlayerInFocus;
-	byteCurPlayer = FindPlayerNumFromPedPtr(dwCurPlayerActor);
 
-	if(dwCurPlayerActor && byteCurPlayer != 0 && CWorld::PlayerInFocus == 0)
-	{
-		GameStoreLocalPlayerSkills();
-		GameSetRemotePlayerSkills(byteCurPlayer);
-		bWeaponSkillStored = true;
-	}
-
-	// CPed::GetWeaponSkill
-	uint32_t result = (( uint32_t (*)(CPedGTA *, uint32_t))(g_libGTASA+0x4A55E2+1))(thiz, thiz->m_aWeapons[thiz->m_nActiveWeaponSlot].dwType);
-
-	if(bWeaponSkillStored)
-	{
-		GameSetLocalPlayerSkills();
-		bWeaponSkillStored = false;
-	}
-
-	return result;
+	//return result;
 }
 
 /* =============================================================================== */
@@ -998,21 +949,20 @@ void CRenderer_RenderEverythingBarRoads_hook() {
 
 	CRenderer_RenderEverythingBarRoads();
 
-	if (pNetGame) {
-		CObjectPool* pObjectPool = pNetGame->GetObjectPool();
-		if (pObjectPool) {
-			for (OBJECTID i = 0; i < MAX_OBJECTS; i++) {
-				CObject* pObject = pObjectPool->GetAt(i);
-				if (pObject && pObject->m_bForceRender) {
-                    // CEntity::PreRender
-                    ((void (*)(CEntityGTA*))(*(void**)(pObject->m_pEntity + (VER_x32 ? 0x48:0x48*2))))(pObject->m_pEntity);
+	//if (pNetGame) {
+	//	CObjectPool* pObjectPool = pNetGame->GetObjectPool();
+	//	if (pObjectPool) {
+	//		for (OBJECTID i = 0; i < MAX_OBJECTS; i++) {
+	//			CObject* pObject = pObjectPool->GetAt(i);
+	//			if (pObject && pObject->m_bForceRender) {
+    ///                // CEntity::PreRender
+     //               ((void (*)(CEntityGTA*))(*(void**)(pObject->m_pEntity + (VER_x32 ? 0x48:0x48*2))))(pObject->m_pEntity);
 
-                    // CRenderer::RenderOneNonRoad
-                    ((void (*)(CEntityGTA*))(g_libGTASA+ (VER_x32 ? 0x41030C + 1:0x4F56E0)))(pObject->m_pEntity);
-				}
-			}
-		}
-	}
+     //               // CRenderer::RenderOneNonRoad
+     //               ((void (*)(CEntityGTA*))(g_libGTASA+ (VER_x32 ? 0x41030C + 1:0x4F56E0)))(pObject->m_pEntity);
+	//			}
+	//		}
+	//	}
 }
 
 #include "CFPSFix.h"
@@ -1968,16 +1918,16 @@ void CGame_Process_hook()
                 pUI->buttonpanel()->m_bH->setCaption("H");
         }
 
-        CObjectPool* pObjectPool = pNetGame->GetObjectPool();
-        if (pObjectPool) {
-            pObjectPool->Process();
-            pObjectPool->ProcessMaterialText();
-        }
+       // CObjectPool* pObjectPool = pNetGame->GetObjectPool();
+        //if (pObjectPool) {
+        //    pObjectPool->Process();
+         //   pObjectPool->ProcessMaterialText();
+       // }
 
-        CTextDrawPool* pTextDrawPool = pNetGame->GetTextDrawPool();
-        if (pTextDrawPool) {
-            pTextDrawPool->SnapshotProcess();
-        }
+        //CTextDrawPool* pTextDrawPool = pNetGame->GetTextDrawPool();
+        //if (pTextDrawPool) {
+        //    pTextDrawPool->SnapshotProcess();
+        //}
     }
 }
 
@@ -2057,7 +2007,7 @@ void InjectHooks()
     //CWeather::InjectHooks();
     //RenderBuffer::InjectHooks();
     CTimeCycle::InjectHooks();
-    CCoronas::InjectHooks();
+    //CCoronas::InjectHooks();
     //CDraw::InjectHooks();
     //CClock::InjectHooks();
     //CBirds::Init();
@@ -2065,21 +2015,21 @@ void InjectHooks()
     //CPathFind::InjectHooks();
     CSprite2d::InjectHooks();
     //CFileLoader::InjectHooks();
-    CPickups::InjectHooks();
-    CRenderer::InjectHooks();
-    CStreamingInfo::InjectHooks();
+    //CPickups::InjectHooks();
+    //CRenderer::InjectHooks();
+   // CStreamingInfo::InjectHooks();
     TextureDatabase::InjectHooks();
     TextureDatabaseEntry::InjectHooks();
     TextureDatabaseRuntime::InjectHooks();
-    CCustomBuildingDNPipeline::InjectHooks();
+    //CCustomBuildingDNPipeline::InjectHooks();
     //CWidgetRadar::InjectHooks();
 
-    CRealTimeShadowManager::InjectHooks();
+    //CRealTimeShadowManager::InjectHooks();
 
-    COcclusion::InjectHooks();
+    //COcclusion::InjectHooks();
 
-    CMobileMenu::InjectHooks();
-    CMobileSettings::InjectHooks();
+   // CMobileMenu::InjectHooks();
+   // CMobileSettings::InjectHooks();
 
     //CRealTimeShadowManager::InjectHooks();
     //CHook::Write(g_libGTASA+(VER_x32 ? 0xA41140 : 0xCE3EE8), &COcclusion::aOccluders);

@@ -130,12 +130,7 @@ void CNetGame::InitializePools()
 	m_pPools = new NET_POOLS;
 	m_pPools->pPlayerPool = new CPlayerPool();
 	m_pPools->pVehiclePool = new CVehiclePool();
-	m_pPools->pGangZonePool = new CGangZonePool();
-	m_pPools->pPickupPool = new CPickupPool();
-	m_pPools->pObjectPool = new CObjectPool();
-	m_pPools->pTextLabelPool = new C3DTextLabelPool();
-	m_pPools->pTextDrawPool = new CTextDrawPool();
-	m_pPools->pActorPool = new CActorPool();
+
 	m_pPools->pMenuPool = new CMenuPool();
 	m_pPools->pPlayerBubblePool = new CPlayerBubblePool();
 }
@@ -150,36 +145,6 @@ void CNetGame::UninitializePools()
 	if (m_pPools->pVehiclePool) {
 		delete m_pPools->pVehiclePool;
 		m_pPools->pVehiclePool = nullptr;
-	}
-
-	if (m_pPools->pGangZonePool) {
-		delete m_pPools->pGangZonePool;
-		m_pPools->pGangZonePool = nullptr;
-	}
-
-	if (m_pPools->pPickupPool) {
-		delete m_pPools->pPickupPool;
-		m_pPools->pPickupPool = nullptr;
-	}
-
-	if (m_pPools->pObjectPool) {
-		delete m_pPools->pObjectPool;
-		m_pPools->pObjectPool = nullptr;
-	}
-
-	if (m_pPools->pTextLabelPool) {
-		delete m_pPools->pTextLabelPool;
-		m_pPools->pTextLabelPool = nullptr;
-	}
-
-	if (m_pPools->pTextDrawPool) {
-		delete m_pPools->pTextDrawPool;
-		m_pPools->pTextDrawPool = nullptr;
-	}
-
-	if (m_pPools->pActorPool) {
-		delete m_pPools->pActorPool;
-		m_pPools->pActorPool = nullptr;
 	}
 
 	if (m_pPools->pMenuPool) {
@@ -496,9 +461,6 @@ void CNetGame::ProcessPools()
 		GetVehiclePool()->Process();
 	}
 
-	if (GetPickupPool()) {
-		GetPickupPool()->Process();
-	}
 }	
 // 0.3.7
 void CNetGame::ProcessLoadingScreen()
@@ -1055,38 +1017,22 @@ void CNetGame::ResetVehiclePool()
 // 0.3.7
 void CNetGame::ResetActorPool()
 {
-	if (m_pPools->pActorPool) {
-		delete m_pPools->pActorPool;
-	}
 
-	m_pPools->pActorPool = new CActorPool();
 }
 // 0.3.7
 void CNetGame::ResetTextDrawPool()
 {
-	if (m_pPools->pTextDrawPool) {
-		delete m_pPools->pTextDrawPool;
-	}
 
-	m_pPools->pTextDrawPool = new CTextDrawPool();
 }
 // 0.3.7
 void CNetGame::ResetGangZonePool()
 {
-	if (m_pPools->pGangZonePool) {
-		delete m_pPools->pGangZonePool;
-	}
 
-	m_pPools->pGangZonePool = new CGangZonePool();
 }
 // 0.3.7
 void CNetGame::Reset3DTextLabelPool()
 {
-	if (m_pPools->pTextLabelPool) {
-		delete m_pPools->pTextLabelPool;
-	}
 
-	m_pPools->pTextLabelPool = new C3DTextLabelPool();
 }
 // 0.3.7
 void CNetGame::ResetMapIcons()
@@ -1102,20 +1048,12 @@ void CNetGame::ResetMapIcons()
 // 0.3.7
 void CNetGame::ResetPickupPool()
 {
-	if (m_pPools->pPickupPool) {
-		delete m_pPools->pPickupPool;
-	}
 
-	m_pPools->pPickupPool = new CPickupPool();
 }
 // 0.3.7
 void CNetGame::ResetObjectPool()
 {
-	if (m_pPools->pObjectPool) {
-		delete m_pPools->pObjectPool;
-	}
 
-	m_pPools->pObjectPool = new CObjectPool();
 }
 // 0.3.7
 void CNetGame::ResetMenuPool()

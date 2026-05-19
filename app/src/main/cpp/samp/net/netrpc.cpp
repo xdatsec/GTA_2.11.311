@@ -938,91 +938,22 @@ void UpdateScoresPingsIPs(RPCParameters *rpcParams)
 // 0.3.7
 void Pickup(RPCParameters *rpcParams)
 {
-	Log::traceLastFunc("[RPC-IN] Pickup");
 
-	unsigned char * Data = reinterpret_cast<unsigned char *>(rpcParams->input);
-	int iBitLength = rpcParams->numberOfBitsOfData;
-
-	int iIndex;
-	PICKUP Pickup;
-	RakNet::BitStream bsData(Data, (iBitLength / 8) + 1, false);
-	bsData.Read(iIndex);
-	bsData.Read((char*)&Pickup, sizeof(PICKUP));
-
-	CPickupPool *pPickupPool = pNetGame->GetPickupPool();
-	if (pPickupPool) {
-		pPickupPool->New(&Pickup, iIndex);
-	}
 }
 // 0.3.7
 void DestroyPickup(RPCParameters *rpcParams)
 {
-	Log::traceLastFunc("[RPC-IN] Destroy pickup");
 
-	unsigned char * Data = reinterpret_cast<unsigned char *>(rpcParams->input);
-	int iBitLength = rpcParams->numberOfBitsOfData;
-
-	int iIndex;
-	RakNet::BitStream bsData(Data, (iBitLength / 8) + 1, false);
-	bsData.Read(iIndex);
-
-	CPickupPool *pPickupPool = pNetGame->GetPickupPool();
-	if (pPickupPool) {
-		pPickupPool->Destroy(iIndex);
-	}
 }
 // 0.3.7
 void Create3DTextLabel(RPCParameters* rpcParams)
 {
-	Log::traceLastFunc("[RPC-IN] Create 3D text label");
 
-	unsigned char* Data = reinterpret_cast<unsigned char*>(rpcParams->input);
-	int iBitLength = rpcParams->numberOfBitsOfData;
-
-	C3DTextLabelPool* pTextLabelPool = pNetGame->GetTextLabelPool();
-	if (pTextLabelPool == nullptr) return;
-
-	uint16_t wLabelId;
-	TEXT_LABEL label;
-	char szBuffer[2048 + 1];
-	memset(szBuffer, 0, sizeof(szBuffer));
-
-	RakNet::BitStream bsData(Data, (iBitLength / 8) + 1, false);
-	bsData.Read(wLabelId);
-	bsData.Read(label.dwColor);
-	bsData.Read(label.vecPos.x);
-	bsData.Read(label.vecPos.y);
-	bsData.Read(label.vecPos.z);
-	bsData.Read(label.fDistance);
-	bsData.Read(label.bTestLOS);
-	bsData.Read(label.playerId);
-	bsData.Read(label.vehicleId);
-
-	stringCompressor->DecodeString(szBuffer, sizeof szBuffer, &bsData);
-	label.text = szBuffer;
-
-	if (wLabelId < MAX_TEXT_LABELS) {
-		pTextLabelPool->NewLabel(wLabelId, &label);
-	}
 }
 // 0.3.7
 void Update3DTextLabel(RPCParameters* rpcParams)
 {
-	Log::traceLastFunc("[RPC-IN] Update 3D text label");
 
-	unsigned char* Data = reinterpret_cast<unsigned char*>(rpcParams->input);
-	int iBitLength = rpcParams->numberOfBitsOfData;
-
-	C3DTextLabelPool* pTextLabelPool = pNetGame->GetTextLabelPool();
-	if (pTextLabelPool == nullptr)  return;
-
-	uint16_t wLabelId;
-	RakNet::BitStream bsData(Data, (iBitLength / 8) + 1, false);
-	bsData.Read(wLabelId);
-	
-	if (pTextLabelPool->GetSlotState(wLabelId)) {
-			pTextLabelPool->ClearLabel(wLabelId);
-	}
 }
 // 0.3.7
 void SetCheckpoint(RPCParameters* rpcParams)
@@ -1364,39 +1295,12 @@ void VehicleParamsEx(RPCParameters* rpcParams)
 // 0.3.7
 void ShowActor(RPCParameters* rpcParams)
 {
-	Log::traceLastFunc("[RPC-IN] Show actor");
 
-	unsigned char* Data = reinterpret_cast<unsigned char*>(rpcParams->input);
-	int iBitLength = rpcParams->numberOfBitsOfData;
-
-	CActorPool* pActorPool = pNetGame->GetActorPool();
-	if (!pActorPool) return;
-
-	NEW_ACTOR newActor;
-	RakNet::BitStream bsData(Data, (iBitLength / 8) + 1, false);
-	bsData.Read((char*)& newActor, sizeof(NEW_ACTOR));
-
-	if (IsValidPedModel(newActor.iSkin))
-	{
-		pActorPool->New(&newActor);
-	}
 }
 // 0.3.7
 void HideActor(RPCParameters* rpcParams)
 {
-	Log::traceLastFunc("[RPC-IN] Hide actor");
 
-	unsigned char* Data = reinterpret_cast<unsigned char*>(rpcParams->input);
-	int iBitLength = rpcParams->numberOfBitsOfData;
-
-	CActorPool* pActorPool = pNetGame->GetActorPool();
-	if (!pActorPool) return;
-
-	PLAYERID ActorID;
-	RakNet::BitStream bsData(Data, (iBitLength / 8) + 1, false);
-	bsData.Read(ActorID);
-
-	pActorPool->Delete(ActorID);
 }
 
 void ChatBubble(RPCParameters* rpcParams)
@@ -1466,35 +1370,11 @@ void SetPlayerSkillLevel(RPCParameters *rpcParams)
 
 #include "../java/editobject.h"
 void EditAttachedObject(RPCParameters *rpcParams) {
-	unsigned char * Data = reinterpret_cast<unsigned char *>(rpcParams->input);
-	int iBitLength = rpcParams->numberOfBitsOfData;
 
-	RakNet::BitStream bsData(Data,(iBitLength/8)+1,false);
-
-	uint32_t index;
-
-	bsData.Read(index);
-
-	CObjectEditor::startEditPlayerAttach(index);
-
-	FLog("RPC: EditAttachedObject %d", index);
 }
 
 void EditObject(RPCParameters *rpcParams) {
-	unsigned char * Data = reinterpret_cast<unsigned char *>(rpcParams->input);
-	int iBitLength = rpcParams->numberOfBitsOfData;
 
-	RakNet::BitStream bsData(Data,(iBitLength/8)+1,false);
-
-	bool bPlayerObj;
-	uint16_t objectId;
-
-	bsData.Read(bPlayerObj);
-	bsData.Read(objectId);
-
-	CObjectEditor::startEditObject(objectId);
-
-	FLog("RPC: EditObject %d", objectId);
 }
 
 void RegisterRPCs(RakClientInterface *pRakClient)

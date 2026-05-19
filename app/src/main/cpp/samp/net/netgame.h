@@ -47,12 +47,6 @@ typedef unsigned short OBJECTID;
 #include "remoteplayer.h"
 #include "playerpool.h"
 #include "vehiclepool.h"
-#include "gangzonepool.h"
-#include "pickuppool.h"
-#include "objectpool.h"
-#include "textlabelpool.h"
-#include "textdrawpool.h"
-#include "actorpool.h"
 #include "menupool.h"
 #include "playerbubblepool.h"
 
@@ -110,12 +104,7 @@ public:
 	RakClientInterface* GetRakClient() { return m_pRakClient; }
 	CPlayerPool* GetPlayerPool() { return m_pPools->pPlayerPool; }
 	CVehiclePool* GetVehiclePool() { return m_pPools->pVehiclePool; }
-	CGangZonePool* GetGangZonePool() { return m_pPools->pGangZonePool; }
-	CPickupPool* GetPickupPool() { return m_pPools->pPickupPool; }
-	CObjectPool* GetObjectPool() { return m_pPools->pObjectPool; }
-	C3DTextLabelPool* GetTextLabelPool() { return m_pPools->pTextLabelPool; }
-	CTextDrawPool* GetTextDrawPool() { return m_pPools->pTextDrawPool; }
-	CActorPool* GetActorPool() { return m_pPools->pActorPool; }
+
 	CMenuPool* GetMenuPool() { return m_pPools->pMenuPool; }
 	CPlayerBubblePool* GetPlayerBubblePool() { return m_pPools->pPlayerBubblePool; }
 
@@ -179,12 +168,6 @@ private:
 	{
 		CPlayerPool			*pPlayerPool;
 		CVehiclePool		*pVehiclePool;
-		CGangZonePool		*pGangZonePool;
-		CPickupPool			*pPickupPool;
-		CObjectPool			*pObjectPool;
-		C3DTextLabelPool	*pTextLabelPool;
-		CTextDrawPool		*pTextDrawPool;
-		CActorPool			*pActorPool;
 		CMenuPool			*pMenuPool;
 		CPlayerBubblePool	*pPlayerBubblePool;
 	} *m_pPools;

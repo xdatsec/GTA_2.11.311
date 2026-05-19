@@ -1100,82 +1100,7 @@ bool CRemotePlayer::IsVoiceActive()
 
 void CRemotePlayer::ProcessSurfing()
 {
-	if(!m_pPlayerPed || GetState() != PLAYER_STATE_ONFOOT || m_ofSync.wSurfID == INVALID_VEHICLE_ID)
-		return;
 
-	CVehicle *pVehicleSurfing = 0;
-	CObject* pObjectSurfing = 0;
-	
-	if(SurfingOnVehicle())
-	{
-		CVehiclePool *pVehiclePool = pNetGame->GetVehiclePool();
-		if(pVehiclePool)
-		{
-			CVehicle *pVehicle = pVehiclePool->GetAt(m_ofSync.wSurfID);
-			if(pVehicle) 
-				pVehicleSurfing = pVehicle;
-		}
-	}
-	else if(SurfingOnObject())
-	{
-		m_ofSync.wSurfID -= MAX_VEHICLES; // derive proper object id
-		CObjectPool *pObjectPool = pNetGame->GetObjectPool();
-		if(pObjectPool)
-		{
-			CObject *pObject = pObjectPool->GetAt((uint16_t)m_ofSync.wSurfID);
-			if(pObject)
-				pObjectSurfing = pObject;
-		}
-	}
-
-	if(pVehicleSurfing )
-	{
-		RwMatrix matEntity, matPlayer;
-		CVector vecMoveSpeed, vecTurnSpeed;
-
-        matEntity = pVehicleSurfing->m_pVehicle->GetMatrix().ToRwMatrix();
-
-		/* unused ? */
-		vecMoveSpeed = m_pCurrentVehicle->m_pVehicle->GetMoveSpeed();
-		vecTurnSpeed = m_pCurrentVehicle->m_pVehicle->GetTurnSpeed();
-		/* unused ? */
-
-        matPlayer = m_pPlayerPed->m_pPed->GetMatrix().ToRwMatrix();
-
-		ProjectMatrix((CVector*)&matPlayer.pos, (CMatrix*)&matEntity, (CVector*)&m_ofSync.vecSurfOffsets);
-
-		/*matPlayer.pos.x = matEntity.pos.x + m_ofSync.vecSurfOffsets.x;
-		matPlayer.pos.y = matEntity.pos.y + m_ofSync.vecSurfOffsets.y;
-		matPlayer.pos.z = matEntity.pos.z + m_ofSync.vecSurfOffsets.z;*/
-
-		m_pPlayerPed->m_pPed->SetMatrix((CMatrix&)matPlayer);
-		//m_pPlayerPed->SetVelocity(vecMoveSpeed);
-		//m_pPlayerPed->SetTurnSpeedVector(vecTurnSpeed);
-	}
-	else if(pObjectSurfing)
-	{
-		RwMatrix matEntity, matPlayer;
-		CVector vecMoveSpeed, vecTurnSpeed;
-
-        matEntity = pObjectSurfing->m_pEntity->GetMatrix().ToRwMatrix();
-
-		/* unused ? */
-		vecMoveSpeed = m_pCurrentVehicle->m_pVehicle->GetMoveSpeed();
-		vecTurnSpeed = m_pCurrentVehicle->m_pVehicle->GetTurnSpeed();
-		/* unused ? */
-
-		matPlayer = m_pPlayerPed->m_pPed->GetMatrix().ToRwMatrix();
-
-		ProjectMatrix((CVector*)&matPlayer.pos, (CMatrix*)&matEntity, (CVector*)&m_ofSync.vecSurfOffsets);
-
-		/*matPlayer.pos.x = matEntity.pos.x + m_ofSync.vecSurfOffsets.x;
-		matPlayer.pos.y = matEntity.pos.y + m_ofSync.vecSurfOffsets.y;
-		matPlayer.pos.z = matEntity.pos.z + m_ofSync.vecSurfOffsets.z;*/
-
-		m_pPlayerPed->m_pPed->SetMatrix((CMatrix&)matPlayer);
-		//m_pPlayerPed->SetVelocity(vecMoveSpeed);
-		//m_pPlayerPed->SetTurnSpeedVector(vecTurnSpeed);
-	}
 }
 
 void CRemotePlayer::StoreTrailerFullSyncData(TRAILER_SYNC_DATA *trSync)
@@ -1192,11 +1117,7 @@ void CRemotePlayer::StoreTrailerFullSyncData(TRAILER_SYNC_DATA *trSync)
 		CVehicle *pTrailer = pVehiclePool->GetAt(trailerId);
 		if(pTrailer && (pTrailer->IsATrailer() || pTrailer->IsATowTruck()))
 		{
-			if(m_pCurrentVehicle->GetTrailer() != pTrailer)
-			{
-				m_pCurrentVehicle->SetTrailer(pTrailer);
-				m_pCurrentVehicle->AttachTrailer();
-			}
+
 
 			RwMatrix matTrailer = pTrailer->m_pVehicle->GetMatrix().ToRwMatrix();
 			trSync->quat.GetMatrix(&matTrailer);

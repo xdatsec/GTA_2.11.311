@@ -860,16 +860,6 @@ void CGame::Process() {
                 pUI->buttonpanel()->m_bH->setCaption("H");
         }
 
-        CObjectPool* pObjectPool = pNetGame->GetObjectPool();
-        if (pObjectPool) {
-            pObjectPool->Process();
-            pObjectPool->ProcessMaterialText();
-        }
-
-        CTextDrawPool* pTextDrawPool = pNetGame->GetTextDrawPool();
-        if (pTextDrawPool) {
-            pTextDrawPool->SnapshotProcess();
-        }
     }
 
     ProcessMainThreadTasks();
