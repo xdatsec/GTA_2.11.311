@@ -742,7 +742,7 @@ void AllVehicles__ProcessControl_hook(uintptr_t thiz)
             break;
 
             // CMonsterTruck
-        case 0x8831120:
+        case 0x831120:
             call_addr = 0x6CB314;
             break;
 
@@ -833,7 +833,7 @@ void CPed__ProcessControl_hook(uintptr_t thiz)
             *wCameraMode2 = 0;
 
         // CPed::UpdatePosition nulled from CPed::ProcessControl
-        CHook::NOP(g_libGTASA + 0x58AE24, 2);
+      //  CHook::NOP(g_libGTASA + 0x58AE24, 2);
 
         CWorld::PlayerInFocus = byteCurPlayer;
         // call original
@@ -842,7 +842,7 @@ void CPed__ProcessControl_hook(uintptr_t thiz)
 
         // restore
 
-        CHook::WriteMemory(g_libGTASA + 0x58AE24, "\x7A\xFB\xFF\x97", 4);
+       // CHook::WriteMemory(g_libGTASA + 0x58AE24, "\x7A\xFB\xFF\x97", 4);
 
 
         CWorld::PlayerInFocus = 0;

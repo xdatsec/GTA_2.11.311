@@ -116,7 +116,6 @@ public:
 
     static bool CanSeeOutSideFromCurrArea();
 
-    static void InitialiseOnceBeforeRW();
 
     static bool InitialiseRenderWare();
 

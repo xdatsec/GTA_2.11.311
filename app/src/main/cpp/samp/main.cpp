@@ -232,7 +232,6 @@ void DoInitStuff()
 		pGame->Initialize();
 		pGame->SetMaxStats();
 		pGame->ToggleThePassingOfTime(false);
-        pGPS = new GPS();
 
         //InitializeGraphicsSystem();
 

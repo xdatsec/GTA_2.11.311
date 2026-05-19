@@ -48,7 +48,6 @@ CPlayerPed::CPlayerPed(int iNum, int iSkin, float fX, float fY, float fZ, float 
     static int iPlayerNum;
     iPlayerNum = iNum; // ty killman <3
 
-
     m_pPed = nullptr;
     m_dwGTAId = 0;
     m_dwArrow = 0;
@@ -61,7 +60,7 @@ CPlayerPed::CPlayerPed(int iNum, int iSkin, float fX, float fY, float fZ, float 
 
     m_bytePlayerNumber = iNum;
 
-    SetPlayerPedPtrRecord(m_bytePlayerNumber,m_pPed);
+    SetPlayerPedPtrRecord(m_bytePlayerNumber, m_pPed);
 
     m_pPed->bNeverEverTargetThisPed = true;
 
@@ -134,9 +133,6 @@ CPlayerPed::~CPlayerPed()
             ScriptCommand(&destroy_object_with_fade, m_dwParachuteObject);
             m_dwParachuteObject = 0;
         }
-
-        FlushAttach();
-
         // if(field_2C1)
 
         if (IsInVehicle()) {
@@ -159,8 +155,6 @@ CPlayerPed::~CPlayerPed()
         m_dwGTAId = 0;
 
     }
-
-    CStreaming::RemoveModelIfNoRefs(modelId);
 }
 
 
@@ -527,7 +521,6 @@ void CPlayerPed::SetModelIndex(uint uiModel)
 
         m_pPed->SetModelIndex(uiModel);
 
-        CStreaming::RemoveModelIfNoRefs(oldModelId);
     }
 }
 

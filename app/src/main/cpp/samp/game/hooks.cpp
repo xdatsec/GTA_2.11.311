@@ -87,43 +87,9 @@ PLAYERID FindActorIDFromGtaPtr(CPedGTA* pPed)
 }
 
 /* =============================================================================== */
-
-void RenderEffects() {
-//	RenderEffects();
-    CHook::CallFunction<void>(g_libGTASA + 0x5C9E04);
-    CHook::CallFunction<void>(g_libGTASA + 0x5EC7BC);
-//    CRopes::Render();
-//    CGlass::Render();
-    CHook::CallFunction<void>(g_libGTASA + 0x5D32E4);
-    CVisibilityPlugins::RenderReallyDrawLastObjects();
-    CCoronas::Render();
-
-    // FIXME
-    CCamera& TheCamera = *reinterpret_cast<CCamera*>(g_libGTASA + 0x9F86F8);
-    auto g_fx = *(uintptr_t *) (g_libGTASA + 0xA5BC20);
-    CHook::CallFunction<void>(g_libGTASA + 0x4D5020, &g_fx, TheCamera.m_pRwCamera, false);
-
-    CHook::CallFunction<void>(g_libGTASA + 0x5FA3B8);
-    CHook::CallFunction<void>(g_libGTASA + 0x6F4AA0);
-    CHook::CallFunction<void>(g_libGTASA + 0x5CD7EC);
-    //   CClouds::VolumetricCloudsRender();
-////    if (CHeli::NumberOfSearchLights || CTheScripts::NumberOfScriptSearchLights) {
-////        CHeli::Pre_SearchLightCone();
-////        CHeli::RenderAllHeliSearchLights();
-////        CTheScripts::RenderAllSearchLights();
-////        CHeli::Post_SearchLightCone();
-////    }
-    CHook::CallFunction<void>(g_libGTASA + 0x702670);
-////    if (CReplay::Mode != MODE_PLAYBACK && !CPad::GetPad(0)->DisablePlayerControls) {
-////        FindPlayerPed()->DrawTriangleForMouseRecruitPed();
-////    }
-    CHook::CallFunction<void>(g_libGTASA + 0x5EEFA8);
-//    //CVehicleRecording::Render();
-    CHook::CallFunction<void>(g_libGTASA + 0x5DE58C);
-//    //CRenderer::RenderFirstPersonVehicle();
-    CHook::CallFunction<void>(g_libGTASA + 0x5E2C9C);
-
-    //DebugModules::Render3D();
+void(*RenderEffects)();
+void RenderEffects_hook(){
+    RenderEffects();
 }
 
 /*void MainLoop();
@@ -173,59 +139,14 @@ void ShowHud()
     }
 }
 void MainLoop();
-void Render2dStuff()
+void(*Render2dStuff)();
+void Render2dStuff_hook()
 {
     ShowHud();
-
-    if( CHook::CallFunction<bool>(g_libGTASA + 0x739F40) ) // emu_IsAltRenderTarget()
-        CHook::CallFunction<void>(g_libGTASA + 0x73A848); // emu_FlushAltRenderTarget()
-
-    CHook::CallFunction<void>("_Z25RwTexDictionarySetCurrentP15RwTexDictionary", (uintptr_t)NULL);
-
-
-    RwRenderStateSet(rwRENDERSTATEZTESTENABLE, RWRSTATE(FALSE));
-    RwRenderStateSet(rwRENDERSTATEZWRITEENABLE, RWRSTATE(FALSE));
-    RwRenderStateSet(rwRENDERSTATEVERTEXALPHAENABLE, RWRSTATE(TRUE));
-    RwRenderStateSet(rwRENDERSTATESRCBLEND, RWRSTATE(rwBLENDSRCALPHA));
-    RwRenderStateSet(rwRENDERSTATEDESTBLEND, RWRSTATE(rwBLENDINVSRCALPHA));
-    RwRenderStateSet(rwRENDERSTATEFOGENABLE, RWRSTATE(rwRENDERSTATENARENDERSTATE));
-    RwRenderStateSet(rwRENDERSTATECULLMODE, RWRSTATE(rwCULLMODECULLNONE));
-
-
-
-    ( ( void(*)() )(g_libGTASA + 0x510D30))(); // прицелCHud::DrawCrossHairs(void)	000000000051C694
-
-    auto radar = CTouchInterface::m_pWidgets[WIDGET_RADAR];
-    if (radar) {
-        radar->m_fOriginX = 49.0f;
-        radar->m_fOriginY = 72.0f;
-
-        radar->m_fScaleX = 45.0f;
-        radar->m_fScaleY = 38.0f;
-    }
-    /*
-#if VER_x32
-    ((void (*)())(g_libGTASA + 0x00437B0C + 1))(); // DrawRadar
-#else
-    ((void (*)())(g_libGTASA + 0x51CFF0))();
-#endif */
-
-    CHook::CallFunction<void>("_ZN4CHud4DrawEv");
-
-    ((void(*)(bool))(g_libGTASA + 0x5017B0))(false);
-    CHook::CallFunction<void>("_Z12emu_GammaSeth", 1);
-    ((void (*)(bool))(g_libGTASA + 0x69DDB8))(1u); // CMessages::Display
-    ((void (*)(bool))(g_libGTASA + 0x5D6090))(1u); // CFont::RenderFontBuffer
-    CHook::CallFunction<void>("_Z12emu_GammaSeth", 0);
-
-    if(pNetGame)
-    {
-        //CTextDrawPool* pTextDrawPool = pNetGame->GetTextDrawPool();
-       // if(pTextDrawPool) pTextDrawPool->Draw();
-    }
-
-    if (pUI) pUI->render();
+    Render2dStuff();
     MainLoop();
+    if (pUI) pUI->render();
+    return;
 }
 
 /* =============================================================================== */
@@ -2092,8 +2013,8 @@ void InstallSpecialHooks()
 
 void InstallHooks()
 {
-    CHook::Redirect("_Z13Render2dStuffv", &Render2dStuff);
-    CHook::Redirect("_Z13RenderEffectsv", &RenderEffects);
+    CHook::InlineHook("_Z13Render2dStuffv", &Render2dStuff_hook, &Render2dStuff);
+    CHook::InlineHook("_Z13RenderEffectsv", &RenderEffects_hook, &RenderEffects);
     CHook::InlineHook("_Z14AND_TouchEventiiii", &AND_TouchEvent_hook, &AND_TouchEvent);
 
     CHook::Redirect("_ZN11CHudColours12GetIntColourEh", &CHudColours__GetIntColour); // dangerous
@@ -2196,7 +2117,7 @@ void InstallHooks()
     CHook::InlineHook("_ZN6CRadar15DrawRadarSpriteEtffh", (uintptr_t) CRadar__DrawRadarSprite_hook,
                       (uintptr_t *) &CRadar__DrawRadarSprite);
 
-
+    //CHook::installHook(g_libGTASA + 0x43AF28, (uintptr_t)DisplayScreen_hook, (uintptr_t*)&DisplayScreen);
     //CHook::InlineHook("_Z16_rxPacketDestroyP8RxPacket", rxPacketDestroy_hook, rxPacketDestroy);
 
     //CHook::InlineHook("_ZN18CVisibilityPlugins19InitAlphaEntityListEv", CVisibilityPlugins__InitAlphaEntityList_hook, CVisibilityPlugins__InitAlphaEntityList);
