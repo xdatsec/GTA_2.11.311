@@ -360,7 +360,6 @@ void CStreaming::AddModelsToRequestList(const CVector* point, int32 streamingFla
 extern CNetGame *pNetGame;
 void CStreaming::Update() {
     CHook::CallFunction<void>(g_libGTASA + 0x3AE8EC);
-
 }
 
 // Call `RemoveModel` on all models in the request list except

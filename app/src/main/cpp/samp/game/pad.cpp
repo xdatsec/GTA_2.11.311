@@ -20,7 +20,7 @@ PAD_KEYS RemotePlayerKeys[PLAYER_PED_SLOTS];
 uint16_t(*CPad__GetPedWalkLeftRight)(uintptr_t thiz);
 uint16_t CPad__GetPedWalkLeftRight_hook(uintptr_t thiz)
 {
-    if (CWorld::PlayerInFocus)
+    if (*pbyteCurrentPlayer)
     {
         // Remote player
         uint16_t dwResult = RemotePlayerKeys[byteCurPlayer].wKeyLR;
@@ -42,7 +42,7 @@ uint16_t CPad__GetPedWalkLeftRight_hook(uintptr_t thiz)
 uint16_t(*CPad__GetPedWalkUpDown)(uintptr_t thiz);
 uint16_t CPad__GetPedWalkUpDown_hook(uintptr_t thiz)
 {
-    if (CWorld::PlayerInFocus)
+    if (*pbyteCurrentPlayer)
     {
         // Remote player
         uint16_t dwResult = RemotePlayerKeys[byteCurPlayer].wKeyUD;
@@ -64,7 +64,7 @@ uint16_t CPad__GetPedWalkUpDown_hook(uintptr_t thiz)
 uint32_t(*CPad__GetSprint)(uintptr_t thiz, uint32_t unk);
 uint32_t CPad__GetSprint_hook(uintptr_t thiz, uint32_t unk)
 {
-    if (CWorld::PlayerInFocus)
+    if (*pbyteCurrentPlayer)
     {
         return RemotePlayerKeys[byteCurPlayer].bKeys[ePadKeys::KEY_SPRINT];
     }
@@ -78,7 +78,7 @@ uint32_t CPad__GetSprint_hook(uintptr_t thiz, uint32_t unk)
 uint32_t(*CPad__JumpJustDown)(uintptr_t thiz);
 uint32_t CPad__JumpJustDown_hook(uintptr_t thiz)
 {
-    if (CWorld::PlayerInFocus)
+    if (*pbyteCurrentPlayer)
     {
         if (!RemotePlayerKeys[byteCurPlayer].bIgnoreJump &&
             RemotePlayerKeys[byteCurPlayer].bKeys[ePadKeys::KEY_JUMP] &&
@@ -100,7 +100,7 @@ uint32_t CPad__JumpJustDown_hook(uintptr_t thiz)
 uint32_t(*CPad__GetJump)(uintptr_t thiz);
 uint32_t CPad__GetJump_hook(uintptr_t thiz)
 {
-    if (CWorld::PlayerInFocus)
+    if (*pbyteCurrentPlayer)
     {
         if (RemotePlayerKeys[byteCurPlayer].bIgnoreJump) return 0;
         return RemotePlayerKeys[byteCurPlayer].bKeys[ePadKeys::KEY_JUMP];
@@ -115,7 +115,7 @@ uint32_t CPad__GetJump_hook(uintptr_t thiz)
 uint32_t(*CPad__GetAutoClimb)(uintptr_t thiz);
 uint32_t CPad__GetAutoClimb_hook(uintptr_t thiz)
 {
-    if (CWorld::PlayerInFocus)
+    if (*pbyteCurrentPlayer)
     {
         return RemotePlayerKeys[byteCurPlayer].bKeys[ePadKeys::KEY_JUMP];
     }
@@ -129,7 +129,7 @@ uint32_t CPad__GetAutoClimb_hook(uintptr_t thiz)
 uint32_t(*CPad__GetAbortClimb)(uintptr_t thiz);
 uint32_t CPad__GetAbortClimb_hook(uintptr_t thiz)
 {
-    if (CWorld::PlayerInFocus)
+    if (*pbyteCurrentPlayer)
     {
         return RemotePlayerKeys[byteCurPlayer].bKeys[ePadKeys::KEY_SECONDARY_ATTACK];
     }
@@ -143,7 +143,7 @@ uint32_t CPad__GetAbortClimb_hook(uintptr_t thiz)
 uint32_t(*CPad__DiveJustDown)();
 uint32_t CPad__DiveJustDown_hook()
 {
-    if (CWorld::PlayerInFocus)
+    if (*pbyteCurrentPlayer)
     {
         // remote player
         return RemotePlayerKeys[byteCurPlayer].bKeys[ePadKeys::KEY_FIRE];
@@ -158,7 +158,7 @@ uint32_t CPad__DiveJustDown_hook()
 uint32_t(*CPad__SwimJumpJustDown)(uintptr_t thiz);
 uint32_t CPad__SwimJumpJustDown_hook(uintptr_t thiz)
 {
-    if (CWorld::PlayerInFocus)
+    if (*pbyteCurrentPlayer)
     {
         return RemotePlayerKeys[byteCurPlayer].bKeys[ePadKeys::KEY_JUMP];
     }
@@ -172,7 +172,7 @@ uint32_t CPad__SwimJumpJustDown_hook(uintptr_t thiz)
 uint32_t(*CPad__DuckJustDown)(uintptr_t thiz, int unk);
 uint32_t CPad__DuckJustDown_hook(uintptr_t thiz, int unk)
 {
-    if (CWorld::PlayerInFocus)
+    if (*pbyteCurrentPlayer)
     {
         return 0;
     }
@@ -191,7 +191,7 @@ uint32_t CPad__MeleeAttackJustDown_hook(uintptr_t thiz)
         2 - ������� ���� (��� + F)
     */
 
-    if (CWorld::PlayerInFocus)
+    if (*pbyteCurrentPlayer)
     {
         if (RemotePlayerKeys[byteCurPlayer].bKeys[ePadKeys::KEY_HANDBRAKE] &&
             RemotePlayerKeys[byteCurPlayer].bKeys[ePadKeys::KEY_SECONDARY_ATTACK])
@@ -221,7 +221,7 @@ uint32_t CPad__MeleeAttackJustDown_hook(uintptr_t thiz)
 uint32_t(*CPad__GetBlock)(uintptr_t thiz);
 uint32_t CPad__GetBlock_hook(uintptr_t thiz)
 {
-    if (CWorld::PlayerInFocus)
+    if (*pbyteCurrentPlayer)
     {
         if (RemotePlayerKeys[byteCurPlayer].bKeys[ePadKeys::KEY_JUMP] &&
             RemotePlayerKeys[byteCurPlayer].bKeys[ePadKeys::KEY_HANDBRAKE])
@@ -238,7 +238,7 @@ uint32_t CPad__GetBlock_hook(uintptr_t thiz)
 int16_t(*CPad__GetSteeringLeftRight)(uintptr_t thiz);
 int16_t CPad__GetSteeringLeftRight_hook(uintptr_t thiz)
 {
-    if (CWorld::PlayerInFocus)
+    if (*pbyteCurrentPlayer)
     {
         // remote player
         return (int16_t)RemotePlayerKeys[byteCurPlayer].wKeyLR;
@@ -254,7 +254,7 @@ int16_t CPad__GetSteeringLeftRight_hook(uintptr_t thiz)
 uint16_t(*CPad__GetSteeringUpDown)(uintptr_t thiz);
 uint16_t CPad__GetSteeringUpDown_hook(uintptr_t thiz)
 {
-    if (CWorld::PlayerInFocus)
+    if (*pbyteCurrentPlayer)
     {
         // remote player
         return RemotePlayerKeys[byteCurPlayer].wKeyUD;
@@ -270,7 +270,7 @@ uint16_t CPad__GetSteeringUpDown_hook(uintptr_t thiz)
 uint16_t(*CPad__GetAccelerate)(uintptr_t thiz);
 uint16_t CPad__GetAccelerate_hook(uintptr_t thiz)
 {
-    if (CWorld::PlayerInFocus)
+    if (*pbyteCurrentPlayer)
     {
         // remote player
         return RemotePlayerKeys[byteCurPlayer].bKeys[ePadKeys::KEY_SPRINT] ? 0xFF : 0x00;
@@ -310,7 +310,7 @@ uint16_t CPad__GetAccelerate_hook(uintptr_t thiz)
 uint16_t(*CPad__GetBrake)(uintptr_t thiz);
 uint16_t CPad__GetBrake_hook(uintptr_t thiz)
 {
-    if (CWorld::PlayerInFocus)
+    if (*pbyteCurrentPlayer)
     {
         // remote player
         return RemotePlayerKeys[byteCurPlayer].bKeys[ePadKeys::KEY_JUMP] ? 0xFF : 0x00;
@@ -348,7 +348,7 @@ uint16_t CPad__GetBrake_hook(uintptr_t thiz)
 uint32_t(*CPad__GetHandBrake)(uintptr_t thiz);
 uint32_t CPad__GetHandBrake_hook(uintptr_t thiz)
 {
-    if (CWorld::PlayerInFocus)
+    if (*pbyteCurrentPlayer)
     {
         // remote player
         return RemotePlayerKeys[byteCurPlayer].bKeys[ePadKeys::KEY_HANDBRAKE] ? 0xFF : 0x00;
@@ -365,7 +365,7 @@ uint32_t CPad__GetHandBrake_hook(uintptr_t thiz)
 uint32_t(*CPad__GetHorn)(uintptr_t thiz);
 uint32_t CPad__GetHorn_hook(uintptr_t thiz)
 {
-    if (CWorld::PlayerInFocus)
+    if (*pbyteCurrentPlayer)
     {
         // remote player
         return RemotePlayerKeys[byteCurPlayer].bKeys[ePadKeys::KEY_CROUCH];
@@ -438,17 +438,17 @@ uint32_t CPad__GetExitVehicle_hook(uintptr_t thiz)
 bool (*CPad__GetEnterTargeting)(uintptr_t thiz);
 bool CPad__GetEnterTargeting_hook(uintptr_t thiz)
 {
-    if (CWorld::PlayerInFocus)
+    if (*pbyteCurrentPlayer)
     {
         return RemotePlayerKeys[byteCurPlayer].bKeys[ePadKeys::KEY_HANDBRAKE];
     }
     else
     {
-        uint8_t old = CWorld::PlayerInFocus;
-        CWorld::PlayerInFocus = byteCurPlayer;
+        uint8_t old =   *pbyteCurrentPlayer;
+          *pbyteCurrentPlayer = byteCurPlayer;
         uintptr_t result = CPad__GetEnterTargeting(thiz);
         LocalPlayerKeys.bKeys[ePadKeys::KEY_HANDBRAKE] = result;
-        CWorld::PlayerInFocus = old;
+          *pbyteCurrentPlayer = old;
         return result;
     }
 }
@@ -473,7 +473,7 @@ uint32_t CPad__CycleWeaponRightJustDown_hook(uintptr_t thiz)
 uint32_t(*CPad__CycleWeaponLeftJustDown)(uintptr_t thiz);
 uint32_t CPad__CycleWeaponLeftJustDown_hook(uintptr_t thiz)
 {
-    if (CWorld::PlayerInFocus)
+    if (*pbyteCurrentPlayer)
     {
         return 0;
     }
@@ -486,7 +486,7 @@ uint32_t CPad__CycleWeaponLeftJustDown_hook(uintptr_t thiz)
 bool (*CPad__GetWeapon)(uintptr_t thiz, CPedGTA* pPed);
 bool CPad__GetWeapon_hook(uintptr_t thiz, CPedGTA* pPed)
 {
-    if (CWorld::PlayerInFocus)
+    if (*pbyteCurrentPlayer)
     {
         return RemotePlayerKeys[byteCurPlayer].bKeys[ePadKeys::KEY_FIRE];
     }
@@ -541,7 +541,7 @@ uint32_t CPad__GetLookBehindForPed_hook(uint32_t thiz)
 int (*CPad__GetNitroFired)(uintptr_t thiz);
 int CPad__GetNitroFired_hook(uintptr_t thiz)
 {
-    if(CWorld::PlayerInFocus)
+      if (*pbyteCurrentPlayer)
     {
         if(RemotePlayerKeys[byteCurPlayer].bKeys[ePadKeys::KEY_FIRE])
             return 1;
@@ -556,7 +556,7 @@ int CPad__GetNitroFired_hook(uintptr_t thiz)
 uint32_t (*CPad__GetLookLeft)(uintptr_t thiz);
 uint32_t CPad__GetLookLeft_hook(uintptr_t thiz)
 {
-    if(CWorld::PlayerInFocus)
+      if (*pbyteCurrentPlayer)
     {
         if(RemotePlayerKeys[byteCurPlayer].bKeys[ePadKeys::KEY_FIRE])
             return 1;
@@ -571,7 +571,7 @@ uint32_t CPad__GetLookLeft_hook(uintptr_t thiz)
 uint32_t (*CPad__GetLookRight)(uintptr_t thiz);
 uint32_t CPad__GetLookRight_hook(uintptr_t thiz)
 {
-    if(CWorld::PlayerInFocus)
+    if (*pbyteCurrentPlayer)
     {
         if(RemotePlayerKeys[byteCurPlayer].bKeys[ePadKeys::KEY_FIRE])
             return 1;
@@ -586,7 +586,7 @@ uint32_t CPad__GetLookRight_hook(uintptr_t thiz)
 uint16_t(*CPad__GetCarGunLeftRight)(unsigned int a1, int a2, int a3);
 uint16_t CPad__GetCarGunLeftRight_hook(unsigned int a1, int a2, int a3)
 {
-    if (CWorld::PlayerInFocus)
+    if (*pbyteCurrentPlayer)
     {
         // Remote player
         uint16_t dwResult = RemotePlayerKeys[byteCurPlayer].wKeyLR;
@@ -623,7 +623,7 @@ uint16_t CPad__GetCarGunLeftRight_hook(unsigned int a1, int a2, int a3)
 uint16_t(*CPad__GetCarGunUpDown)(unsigned int a1, int a2, void *a3, float a4, int a5);
 uint16_t CPad__GetCarGunUpDown_hook(unsigned int a1, int a2, void *a3, float a4, int a5)
 {
-    if (CWorld::PlayerInFocus)
+    if (*pbyteCurrentPlayer)
     {
         // Remote player
         uint16_t dwResult = RemotePlayerKeys[byteCurPlayer].wKeyUD;
@@ -660,7 +660,7 @@ uint16_t CPad__GetCarGunUpDown_hook(unsigned int a1, int a2, void *a3, float a4,
 uint32_t (*CPad__GetCarGunFired)(uintptr_t thiz);
 uint32_t CPad__GetCarGunFired_hook(uintptr_t thiz)
 {
-    if(CWorld::PlayerInFocus)
+      if (*pbyteCurrentPlayer)
     {
         return RemotePlayerKeys[byteCurPlayer].bKeys[ePadKeys::KEY_FIRE];
     }
@@ -674,7 +674,7 @@ uint32_t CPad__GetCarGunFired_hook(uintptr_t thiz)
 bool (*CPad__GetTurretRight)(uintptr_t *thiz);
 bool CPad__GetTurretRight_hook(uintptr_t *thiz)
 {
-    if(CWorld::PlayerInFocus)
+      if (*pbyteCurrentPlayer)
     {
         return RemotePlayerKeys[byteCurPlayer].bKeys[ePadKeys::KEY_LOOK_RIGHT];
     }
@@ -688,7 +688,7 @@ bool CPad__GetTurretRight_hook(uintptr_t *thiz)
 bool (*CPad__GetTurretLeft)(uintptr_t *thiz);
 bool CPad__GetTurretLeft_hook(uintptr_t *thiz)
 {
-    if(CWorld::PlayerInFocus)
+      if (*pbyteCurrentPlayer)
     {
         return RemotePlayerKeys[byteCurPlayer].bKeys[ePadKeys::KEY_LOOK_LEFT];
     }
@@ -757,15 +757,15 @@ void AllVehicles__ProcessControl_hook(uintptr_t thiz)
             break;
     }
 
-    uint8_t saved_focus = CWorld::PlayerInFocus;
+    uint8_t saved_focus =   *pbyteCurrentPlayer;
     uint8_t saved_cur_player = byteCurPlayer;
 
     if (pVehicle && pVehicle->pDriver) {
         byteCurPlayer = FindPlayerNumFromPedPtr(pVehicle->pDriver);
-        CWorld::PlayerInFocus = byteCurPlayer;
+          *pbyteCurrentPlayer = byteCurPlayer;
     } else {
         byteCurPlayer = 0;
-        CWorld::PlayerInFocus = 0;
+          *pbyteCurrentPlayer = 0;
     }
 
     if(pVehicle->pDriver && pVehicle->pDriver->m_nPedType == 0 &&
@@ -801,7 +801,7 @@ void AllVehicles__ProcessControl_hook(uintptr_t thiz)
     // VEHTYPE::ProcessControl()
     (( void (*)(CVehicleGTA*))(g_libGTASA + call_addr))(pVehicle);
 
-    CWorld::PlayerInFocus = saved_focus;
+      *pbyteCurrentPlayer = saved_focus;
     byteCurPlayer = saved_cur_player;
 }
 
@@ -833,19 +833,18 @@ void CPed__ProcessControl_hook(uintptr_t thiz)
             *wCameraMode2 = 0;
 
         // CPed::UpdatePosition nulled from CPed::ProcessControl
-      //  CHook::NOP(g_libGTASA + 0x58AE24, 2);
+        CHook::NOP(g_libGTASA + 0x58AE24, 2);
 
-        CWorld::PlayerInFocus = byteCurPlayer;
+          *pbyteCurrentPlayer = byteCurPlayer;
         // call original
 
         CPed__ProcessControl(thiz);
 
         // restore
+        CHook::WriteMemory(g_libGTASA + 0x58AE24, "\xAF\x00\x0A\x94", 4);
 
-       // CHook::WriteMemory(g_libGTASA + 0x58AE24, "\x7A\xFB\xFF\x97", 4);
 
-
-        CWorld::PlayerInFocus = 0;
+          *pbyteCurrentPlayer = 0;
         *pbyteCameraMode = byteSavedCameraMode;
 
         GameSetLocalPlayerCameraExtZoomAndAspect();
@@ -882,8 +881,7 @@ uint32_t TaskUseGun(uintptr_t thiz, uintptr_t ped)
         // aim switching
         GameStoreLocalPlayerAim();
         GameSetRemotePlayerAim(byteCurPlayer);
-        CWorld::PlayerInFocus = byteCurPlayer;
-
+        *pbyteCurrentPlayer = byteCurPlayer;
         result = ((uint32_t(*)(uintptr_t, uintptr_t))(g_libGTASA + 0x616C0C))(thiz, ped);
 
         // restore the camera modes, internal id and local player's aim
@@ -892,7 +890,7 @@ uint32_t TaskUseGun(uintptr_t thiz, uintptr_t ped)
         // remote the local player's camera zoom factor
         GameSetLocalPlayerCameraExtZoomAndAspect();
 
-        CWorld::PlayerInFocus = 0;
+        *pbyteCurrentPlayer = 0;
         GameSetLocalPlayerAim();
         *wCameraMode2 = wSavedCameraMode2;
     }
@@ -908,14 +906,38 @@ uint32_t CPad__TaskProcess(uintptr_t thiz, uintptr_t ped, int unk, int unk1)
 {
     dwCurPlayerActor = ped;
     byteCurPlayer = FindPlayerNumFromPedPtr(reinterpret_cast<CPedGTA *>(dwCurPlayerActor));
-    uint8_t old = CWorld::PlayerInFocus;
-    CWorld::PlayerInFocus = byteCurPlayer;
-
+    uint8_t old = *pbyteCurrentPlayer ;
+    *pbyteCurrentPlayer  = byteCurPlayer;
     uint32_t result =  ((uint32_t(*)(uintptr_t, uintptr_t, int, int))(g_libGTASA + 0x68BD84))(thiz, ped, unk, unk1);
-    CWorld::PlayerInFocus = old;
+    *pbyteCurrentPlayer  = old;
     return result;
 }
+uint32_t (*CPed__GetWeaponSkill)(CPedGTA *ped);
+uint32_t CPed__GetWeaponSkill_hook(CPedGTA *ped)
+{
+    PED_TYPE * thiz = (PED_TYPE *)ped;
+    bool bWeaponSkillStored = false;
 
+    dwCurPlayerActor = reinterpret_cast<uintptr_t>(ped);
+    byteInternalPlayer = *pbyteCurrentPlayer;
+    byteCurPlayer = FindPlayerNumFromPedPtr(reinterpret_cast<CPedGTA *>(dwCurPlayerActor));
+
+    if(dwCurPlayerActor && byteCurPlayer != 0 && byteInternalPlayer == 0)
+    {
+        GameStoreLocalPlayerSkills();
+        GameSetRemotePlayerSkills(byteCurPlayer);
+        bWeaponSkillStored = true;
+    }
+    // CPed::GetWeaponSkill
+    uint32_t result = (( uint32_t (*)(CPedGTA *, uint32_t))(g_libGTASA+0x58E358))(ped, ped->m_aWeapons[ped->m_nActiveWeaponSlot].dwType);
+
+    if(bWeaponSkillStored)
+    {
+        GameSetLocalPlayerSkills();
+        bWeaponSkillStored = false;
+    }
+    return result;
+}
 void HookCPad()
 {
     memset(&LocalPlayerKeys, 0, sizeof(PAD_KEYS));
@@ -978,6 +1000,10 @@ void HookCPad()
     CHook::InlineHook("_ZN7CCamera17IsTargetingActiveEP10CPlayerPed", &CCamera_IsTargetingActive_hook, &CCamera_IsTargetingActive);
     CHook::InlineHook("_ZN4CPad24CycleWeaponRightJustDownEv", &CPad__CycleWeaponRightJustDown_hook, &CPad__CycleWeaponRightJustDown);
     //CHook::InstallPLT(g_libGTASA + 0x66F304, (uintptr_t)CPad__CycleWeaponLeftJustDown_hook, (uintptr_t*)&CPad__CycleWeaponLeftJustDown);
+
+    //
+    CHook::InstallPLT(g_libGTASA + 0x83F190, &CPed__GetWeaponSkill_hook, &CPed__GetWeaponSkill);
+
 
     // nitro
     CHook::InlineHook("_ZN4CPad13GetNitroFiredEv", &CPad__GetNitroFired_hook, &CPad__GetNitroFired);

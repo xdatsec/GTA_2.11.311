@@ -141,8 +141,228 @@ typedef struct _DAMAGE_MANAGER_INTERFACE            // 28 bytes due to the way i
 	uint32_t Panels;            // 4 bits per panel
 } DAMAGE_MANAGER_INTERFACE;
 #pragma pack(pop)
+#pragma pack(push, 1)
+#pragma pack(push, 1)
+typedef struct _VECTOR {
+	union
+	{
+		struct
+		{
+			float X, Y, Z;
+		};
+
+		struct
+		{
+			float x, y, z;
+		};
+	};
+
+	_VECTOR()
+	{
+		X = Y = Z = 0.0f;
+	}
+
+	_VECTOR(float f)
+	{
+		X = Y = Z = f;
+	}
+
+	_VECTOR(float x, float y, float z)
+	{
+		X = x;
+		Y = y;
+		Z = z;
+	}
+} VECTOR, *PVECTOR;
+#pragma pack(pop)
+
+typedef struct _MATRIX4X4
+{
+	VECTOR right;		// 0-12 	; r11 r12 r13
+	uint32_t  flags;	// 12-16
+	VECTOR up;			// 16-28	; r21 r22 r23
+	float  pad_u;		// 28-32
+	VECTOR at;			// 32-44	; r31 r32 r33
+	float  pad_a;		// 44-48
+	VECTOR pos;			// 48-60
+	float  pad_p;		// 60-64
+	uintptr *m_pRwMat;                 // XREF: _GLOBAL__sub_I_Camera.cpp+2B0/w
+	uint32 m_owner;                     // XREF: _GLOBAL__sub_I_Camera.cpp+2B8/w
+	PADDING(mapad, 4);
+} MATRIX4X4, *PMATRIX4X4;
+#pragma pack(pop)
+#pragma pack(push, 1)
+typedef struct _ENTITY_TYPE
+{
+	int64 vtable; 			// 0-4		;vtable
+	VECTOR vPos;				// 4-16
+	float fRotZBeforeMat;		// 16-20
+	MATRIX4X4 *mat; 			// 20-24	;mat
+
+	union {
+		uintptr_t m_pRwObject;
+		uintptr_t m_pRpClump;
+		uintptr_t m_pRpAtomic;
+	}; 							// 24-28
+
+	union {
+		uintptr_t dwProcessingFlags;
+		struct {
+			uintptr_t m_bUsesCollision : 1;
+			uintptr_t m_bCollisionProcessed : 1;
+			uintptr_t m_bIsStatic : 1;
+			uintptr_t m_bHasContacted : 1;
+			uintptr_t m_bIsStuck : 1;
+			uintptr_t m_bIsInSafePosition : 1;
+			uintptr_t m_bWasPostponed : 1;
+			uintptr_t m_bIsVisible : 1;
+
+			uintptr_t m_bIsBIGBuilding : 1;
+			uintptr_t m_bRenderDamaged : 1;
+			uintptr_t m_bStreamingDontDelete : 1;
+			uintptr_t m_bRemoveFromWorld : 1;
+			uintptr_t m_bHasHitWall : 1;
+			uintptr_t m_bImBeingRendered : 1;
+			uintptr_t m_bDrawLast :1;
+			uintptr_t m_bDistanceFade : 1;
+
+			uintptr_t m_bDontCastShadowsOn : 1;
+			uintptr_t m_bOffscreen : 1;
+			uintptr_t m_bIsStaticWaitingForCollision : 1;
+			uintptr_t m_bDontStream : 1;
+			uintptr_t m_bUnderwater : 1;
+			uintptr_t m_bHasPreRenderEffects : 1;
+			uintptr_t m_bIsTempBuilding : 1;
+			uintptr_t m_bDontUpdateHierarchy : 1;
+
+			uintptr_t m_bHasRoadsignText : 1;
+			uintptr_t m_bDisplayedSuperLowLOD : 1;
+			uintptr_t m_bIsProcObject : 1;
+			uintptr_t m_bBackfaceCulled : 1;
+			uintptr_t m_bLightObject : 1;
+			uintptr_t m_bUnimportantStream : 1;
+			uintptr_t m_bTunnel : 1;
+			uintptr_t m_bTunnelTransition : 1;
+		} nEntityFlags;
+	};  						// 28-32
+
+	uint16 RandomSeed;
+	uint16_t nModelIndex; 		// 38-40
+	PADDING(_pad93, 23);		// 40-72
+	uint8_t byteAreaCode;		// 51-52
+	PADDING(_padE94, 14);			// 52-58
 
 
+	uint8_t nControlFlags;
+
+
+	PADDING(_pad95, 9);			// 59-68
+	uint32_t flags;				// 68-72
+	VECTOR vecMoveSpeed; 		// 72-84
+	VECTOR vecTurnSpeed;		// 84-96
+	PADDING(_pad94, 96);		// 96-184
+	uintptr_t dwUnkModelRel; 	// 184-188
+} ENTITY_TYPE;
+#pragma pack(pop)
+
+//-----------------------------------------------------------
+
+
+
+#pragma pack(push, 1)
+typedef struct
+{
+	uint8_t bFlags;
+	PADDING(_pad75, 3);
+	VECTOR vOffset;
+	uintptr_t pInterpFrame;
+	uint32_t m_nNodeId;
+	PADDING(_pad76, 4);
+} AnimBlendFrameData1;
+#pragma pack(pop)
+
+#pragma pack(push, 1)
+typedef struct _WEAPON_SLOT_TYPE
+{
+	uint32_t dwType;
+	uint32_t dwState;
+	uint32_t dwAmmoInClip;
+	uint32_t dwAmmo;
+	PADDING(_pwep1, 16);
+} WEAPON_SLOT_TYPE;  // MUST BE EXACTLY ALIGNED TO 28 bytes
+#pragma pack(pop)
+
+#pragma pack(push, 1)
+typedef struct _PED_TASKS_TYPE
+{
+	uintptr_t *pdwPed; 					// 0-4
+	// Basic Tasks
+	uintptr_t *pdwDamage; 				// 4-8
+	uintptr_t *pdwFallEnterExit; 		// 8-12
+	uintptr_t *pdwSwimWasted;		 	// 12-16
+	uintptr_t *pdwJumpJetPack; 			// 16-20
+	uintptr_t *pdwAction; 				// 20-24
+	// Extended Tasks
+	uintptr_t *pdwFighting; 				// 24-28
+	uintptr_t *pdwCrouching; 			// 28-32
+	uintptr_t *pdwExtUnk1; 				// 32-36
+	uintptr_t *pdwExtUnk2; 				// 36-40
+	uintptr_t *pdwExtUnk3; 				// 40-44
+	uintptr_t *pdwExtUnk4; 				// 44-48
+} PED_TASKS_TYPE;
+#pragma pack(pop)
+
+
+class CTaskManager2
+{
+public:
+	void* m_aPrimaryTasks[5];
+	void* m_aSecondaryTasks[6];
+	class CPed* m_pPed;
+};
+
+class CPedIntelligence2
+{
+public:
+	class CPed* m_pPed;
+	CTaskManager2   m_TaskMgr;
+};
+#pragma pack(push, 1)
+typedef struct _PED_TYPE
+{
+	ENTITY_TYPE entity; 				// 0000-E8	;entity				- 2.0
+	PADDING(_pad100, 1096);				// E8-530
+	CPedIntelligence2* pPedIntelligence; // 530-538
+	PED_TASKS_TYPE *Tasks; 				// 538-540
+	uintptr_t dwPlayerInfoOffset;		// 540-548	;dwPlayerInfoOffset - 2.0
+	PADDING(_pad106, 4);				// 548-54C
+	uint32_t dwAction;					// 54C-550	;Action				- 2.0
+	PADDING(_pad101, 52);				// 550-584
+	uint32_t dwStateFlags; 				// 584-588	;StateFlags		- ???? ???????
+	PADDING(_pad102, 16);				// 587-598
+	AnimBlendFrameData1* m_pPedBones[19];// 598-630
+	PADDING(_pad174, 124);				// 630-6AC
+	float fHealth;		 				// 6AC-6B0	;Health				- 2.0
+	float fMaxHealth;					// 6B0-6B4	;MaxHealth			- 2.0
+	float fArmour;						// 6B4-6B8	;Armour				- 2.0
+	PADDING(_pad103, 12);				// 6B8-6C4
+	float fRotation1;					// 6C4-6C8	;Rotation1			- 2.0
+	float fRotation2;					// 6C8-6CC	;Rotation2			- 2.0
+	PADDING(_pad104, 60);				// 6CC-708
+	uintptr_t pVehicle;					// 708-710	;pVehicle			- 2.0
+	PADDING(_pad105, 16);				// 710-720
+	uint32_t dwPedType;					// 720-724	;dwPedType			- 2.0
+	PADDING(_pad107, 12);				// 724-730
+	WEAPON_SLOT_TYPE WeaponSlots[13];	// 730-8D0	;WeaponSlots		- 2.0
+	PADDING(_pad108, 12);				// 8D0-8DC
+	uint8_t byteCurWeaponSlot;			// 8DC-8DD	;byteCurWeaponSlot	- 2.0
+	PADDING(_pad109, 95);				// 8DD-93C
+	uint32_t dwWeaponUsed;				// 93C-940	;dwWeaponUsed		- 2.0
+	ENTITY_TYPE* pdwDamageEntity;		// 940-948	;pdwDamageEntity
+	PADDING(_pad282, 40);		 		// 1896-1932
+	uintptr *dwEntryExit;				// 1932-1936
+} PED_TYPE;
+#pragma pack(pop)
 
 enum ePanels
 {
@@ -193,22 +413,21 @@ enum eWeaponState : uint32 {
     WEAPONSTATE_MELEE_MADECONTACT,
 };
 
+#pragma pack(push, 1)
 struct CWeapon
 {
-    eWeaponType dwType;
-    eWeaponState dwState;
-    union {
-        uint32_t dwAmmoInClip;
-        uint32_t m_nAmmoInClip;
-    };
-    uint32_t dwAmmo;
-    uint32_t m_nTimer;
-    bool m_bFirstPersonWeaponModeSelected;
-    bool m_bDontPlaceInHand;
-    uint8_t pad[2];
-    uintptr_t *m_pWeaponFxSys;
-};  // MUST BE EXACTLY ALIGNED TO 28 bytes
-static_assert(sizeof(CWeapon) == (VER_x32 ? 0x1C : 0x20), "Invalid size CPlaceable");
+	uint32 dwType;
+	uint32 dwState;
+	uint32_t dwAmmoInClip;
+	uint32_t dwAmmo;
+	uint32_t m_nTimer;
+	bool m_bFirstPersonWeaponModeSelected;
+	bool m_bDontPlaceInHand;
+	uint8_t pad[2];
+	uintptr_t *m_pWeaponFxSys;
+};
+#pragma pack(pop)
+static_assert(sizeof(CWeapon) == 0x20, "Invalid size CPlaceable");
 
 //-----------------------------------------------------------
 

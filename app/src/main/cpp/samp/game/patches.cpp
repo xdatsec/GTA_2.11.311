@@ -91,15 +91,22 @@ int32_t CWorld__FindPlayerSlotWithPedPointer(CPedGTA* pPlayersPed)
     lastIndex = -1;
     return -1;
 }
+CPlayerInfoGta * GetPlayerInfoForThisPlayerPed(CPedGTA *thiz)
+{
+    CPlayerInfoGta *v1; // x8
+    v1 = CWorld::Players;
 
+    return v1;
+
+}
 void ApplyPatches_level0()
 {
     FLog("ApplyPatches_level0");
 
     CHook::Write(g_libGTASA + 0x837358, &CWorld::Players);
-    CHook::Write(g_libGTASA + 0x837378, &CWorld::PlayerInFocus);
 
     CHook::Redirect("_ZN6CWorld28FindPlayerSlotWithPedPointerEPv", &CWorld__FindPlayerSlotWithPedPointer);
+    CHook::Redirect("_ZN10CPlayerPed29GetPlayerInfoForThisPlayerPedEv", &GetPlayerInfoForThisPlayerPed);
 
 
     CHook::WriteMemory(g_libGTASA + 0x77584C, (uintptr_t)"\x22\x00\x80\x52", 4);
@@ -247,7 +254,7 @@ void ApplyGlobalPatches()
     CHook::NOP(g_libGTASA + 0x555A08, 1);	// CStreaming::ms_memoryAvailable = (int)v24
 
 
-    CHook::NOP(g_libGTASA + 0x5B7C20, 1);  // CCamera::ClearPlayerWeaponMode from CPlayerPed::ClearWeaponTarget
+   // CHook::NOP(g_libGTASA + 0x5B7C20, 1);  // CCamera::ClearPlayerWeaponMode from CPlayerPed::ClearWeaponTarget
     CHook::WriteMemory(g_libGTASA + 0x496200, "\x1F\x0D\x00\x71", 4); // RE3: Fix R* optimization that prevents peds to spawn
 
 /*
