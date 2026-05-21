@@ -13,98 +13,23 @@
 
 extern CNetGame *pNetGame;
 extern CGame *pGame;
-
-CWidgetGta* m_pWidgets[WidgetIDs::NUM_WIDGETS];
-
-enum eWidgetState {
-    STATE_NONE,
-    STATE_FIXED
-};
-
-WidgetIDs GetWidgetTypeFromWidget(CWidgetGta* pWidget)
-{
-    if(pWidget)
-    {
-        if(m_pWidgets[WidgetIDs::WIDGET_ATTACK] && pWidget == m_pWidgets[WidgetIDs::WIDGET_ATTACK]) return WidgetIDs::WIDGET_ATTACK;
-        if(m_pWidgets[WidgetIDs::WIDGET_SPRINT] && pWidget == m_pWidgets[WidgetIDs::WIDGET_SPRINT]) return WidgetIDs::WIDGET_SPRINT;
-        if(m_pWidgets[WidgetIDs::WIDGET_ACCELERATE] && pWidget == m_pWidgets[WidgetIDs::WIDGET_ACCELERATE]) return WidgetIDs::WIDGET_ACCELERATE;
-        if(m_pWidgets[WidgetIDs::WIDGET_ENTER_CAR] && pWidget == m_pWidgets[WidgetIDs::WIDGET_ENTER_CAR]) return WidgetIDs::WIDGET_ENTER_CAR;
-        if(m_pWidgets[WidgetIDs::WIDGET_BRAKE] && pWidget == m_pWidgets[WidgetIDs::WIDGET_BRAKE]) return WidgetIDs::WIDGET_BRAKE;
-    }
-
-    return static_cast<WidgetIDs>(-1);
-}
-
-void SetWidgetFromId(int idWidget, CWidgetGta* pWidget)
-{
-    m_pWidgets[idWidget] = pWidget;
-}
-
-void SetWidgetFromName(const char* name, CWidgetGta* pWidget)
-{
-    if(!strcmp("accelerate", name)) SetWidgetFromId(WidgetIDs::WIDGET_ACCELERATE, pWidget);
-    if(!strcmp("hud_car", name)) SetWidgetFromId(WidgetIDs::WIDGET_ENTER_CAR, pWidget);
-    if(!strcmp("brake", name)) SetWidgetFromId(WidgetIDs::WIDGET_BRAKE, pWidget);
-}
-
-eWidgetState ProcessFixedWidget(CWidgetGta* pWidget)
-{
-    WidgetIDs widgetType = GetWidgetTypeFromWidget(pWidget);
-
-    CPlayerPed *pPlayerPed = pGame->FindPlayerPed();
-    switch(widgetType)
-    {
-        case -1:
-            return STATE_NONE;
-        case WidgetIDs::WIDGET_ATTACK:
-        case WidgetIDs::WIDGET_SPRINT:
-            if(pPlayerPed->IsInVehicle() ||
-               pPlayerPed->IsInJetpackMode())
-            {
-                return STATE_FIXED;
-            }
-            break;
-        case WidgetIDs::WIDGET_ACCELERATE:
-        case WidgetIDs::WIDGET_BRAKE:
-            if(!pPlayerPed->IsInVehicle() &&
-               !pPlayerPed->IsInJetpackMode())
-            {
-                return STATE_FIXED;
-            }
-            break;
-        case WidgetIDs::WIDGET_ENTER_CAR:
-            if(pPlayerPed->IsInJetpackMode()) return STATE_NONE;
-
-            if(pNetGame)
-            {
-                CVehiclePool *pVehiclePool = pNetGame->GetVehiclePool();
-                if(pVehiclePool)
-                {
-                    VEHICLEID vehicleId = pVehiclePool->FindNearestToLocalPlayerPed();
-                    if(vehicleId == INVALID_VEHICLE_ID) return STATE_FIXED;
-
-                    if(vehicleId != INVALID_VEHICLE_ID)
-                    {
-                        CVehicle *pVehicle = pVehiclePool->GetAt(vehicleId);
-                        if(pVehicle)
-                        {
-                            if(!pPlayerPed->IsInVehicle() &&
-                               pVehicle->m_pVehicle->GetDistanceFromLocalPlayerPed() > 10.0f)
-                            {
-                                return STATE_FIXED;
-                            }
-                        }
-                    }
-                }
-            }
-            break;
-    }
-
-    return STATE_NONE;
-}
-
+bool bNeedEnterVehicleDriver;
 void CWidgetGta::SetEnabled(bool bEnabled) {
     m_bEnabled = bEnabled;
+}
+
+void updateWidgetVisibility(CWidgetGta* widget, bool shouldShow) {
+    if (widget) {
+        if (shouldShow) {
+            if (widget->m_fOriginY < 0) {
+                widget->m_fOriginY += 10000.0f;
+            }
+        } else {
+            if (widget->m_fOriginY >= 0) {
+                widget->m_fOriginY -= 10000.0f;
+            }
+        }
+    }
 }
 
 bool (*CWidget__IsTouched)(uintptr_t *thiz, CVector2D *pVecOut);
@@ -119,50 +44,145 @@ bool CWidget__IsTouched_hook(uintptr_t *thiz, CVector2D *pVecOut) {
     return CWidget__IsTouched(thiz, pVecOut);
 }
 
-uintptr_t (*CWidget)(CWidgetButton* thiz, const char* name, uintptr_t* a3, int a4, uintptr_t* a5);
-uintptr_t CWidget_hook(CWidgetButton* thiz, const char* name, uintptr_t*  a3, int a4, uintptr_t* a5)
-{
-    FLog("New Widget: \"%s\" 0x%X", name, thiz-g_libGTASA);
-
-    SetWidgetFromName(name, thiz);
-    return CWidget(thiz, name, a3, a4, a5);
-}
-
-void (*CWidget__SetEnabled)(CWidgetGta* pWidget, bool bEnabled);
-void CWidget__SetEnabled_hook(CWidgetGta* pWidget, bool bEnabled)
-{
-    if(pNetGame)
-    {
-        switch(ProcessFixedWidget(pWidget))
-        {
-            case STATE_NONE: break;
-            case STATE_FIXED:
-                bEnabled = false;
-                break;
-        }
-    }
-
-    CWidget__SetEnabled(pWidget, bEnabled);
-}
-
 void (*CWidgetButton__Update)(CWidgetButton* thiz);
 void CWidgetButton__Update_hook(CWidgetButton* thiz) {
-    if(pNetGame)
-    {
-        switch(ProcessFixedWidget(thiz))
+    CTouchInterface::m_pWidgets[WidgetIDs::WIDGET_RADAR]->m_fTapHoldTime = 1.0;
+    CTouchInterface::m_pWidgets[WidgetIDs::WIDGET_PHONE]->m_bEnabled = false; // voice
+
+
+    if(pNetGame) {
+        CPlayerPed *pPlayerPed = pGame->FindPlayerPed();
+        if (pPlayerPed) {
+            bool bSwimming = pPlayerPed->m_pPed->physicalFlags.bSubmergedInWater;
+            bool isInVehicle = pPlayerPed->m_pPed->IsInVehicle();
+            bool isDriver = pPlayerPed->m_pPed->IsADriver();
+            const auto pVehicle = pPlayerPed->GetCurrentVehicle();
+            bool isEngine = false;
+            bool enableshoot = false;
+            if (pVehicle) {
+                isEngine = pVehicle->m_bIsEngineOn;
+
+                if ((pPlayerPed->GetCurrentWeapon() == WEAPON_MP5 ||pPlayerPed->GetCurrentWeapon() == WEAPON_MICRO_UZI)
+                        &&
+                        (pVehicle->GetVehicleSubtype() == VEHICLE_SUBTYPE_BIKE || pVehicle->GetVehicleSubtype() == VEHICLE_SUBTYPE_PUSHBIKE) &&
+                        isDriver
+                        )
+                {
+                    enableshoot = true;
+                    CTouchInterface::m_pWidgets[WidgetIDs::WIDGET_VEHICLE_SHOOT_RIGHT]->m_bEnabled = true;
+                    CTouchInterface::m_pWidgets[WidgetIDs::WIDGET_VEHICLE_SHOOT_LEFT]->m_bEnabled = true;
+                }else{
+                    enableshoot = false;
+                    CTouchInterface::m_pWidgets[WidgetIDs::WIDGET_VEHICLE_SHOOT_RIGHT]->m_bEnabled = false;
+                    CTouchInterface::m_pWidgets[WidgetIDs::WIDGET_VEHICLE_SHOOT_LEFT]->m_bEnabled = false;
+                }
+
+            }else{
+                CTouchInterface::m_pWidgets[WidgetIDs::WIDGET_VEHICLE_SHOOT_RIGHT]->m_bEnabled = false;
+                CTouchInterface::m_pWidgets[WidgetIDs::WIDGET_VEHICLE_SHOOT_LEFT]->m_bEnabled = false;
+            }
+
+
+
+            //updateWidgetVisibility(CTouchInterface::m_pWidgets[WidgetIDs::WIDGET_VEHICLE_SHOOT_RIGHT], enableshoot);
+
+           // updateWidgetVisibility(CTouchInterface::m_pWidgets[WidgetIDs::WIDGET_VEHICLE_SHOOT_LEFT], enableshoot);
+
+            updateWidgetVisibility(CTouchInterface::m_pWidgets[WidgetIDs::WIDGET_BUTTON_SWIM], bSwimming);
+            updateWidgetVisibility(CTouchInterface::m_pWidgets[WidgetIDs::WIDGET_BUTTON_DIVE], bSwimming);
+            updateWidgetVisibility(CTouchInterface::m_pWidgets[WidgetIDs::WIDGET_SPRINT], (bSwimming || isInVehicle) ? false : true);
+            updateWidgetVisibility(CTouchInterface::m_pWidgets[WidgetIDs::WIDGET_PED_MOVE], isInVehicle ? false : true);
+            updateWidgetVisibility(CTouchInterface::m_pWidgets[WidgetIDs::WIDGET_ACCELERATE], (!bSwimming && isDriver && isEngine) ? true : false);
+            updateWidgetVisibility(CTouchInterface::m_pWidgets[WidgetIDs::WIDGET_BRAKE], (!bSwimming && isDriver && isEngine) ? true : false);
+            updateWidgetVisibility(CTouchInterface::m_pWidgets[WidgetIDs::WIDGET_HANDBRAKE], (!bSwimming && isDriver && isEngine) ? true : false);
+            updateWidgetVisibility(CTouchInterface::m_pWidgets[WidgetIDs::WIDGET_VEHICLE_STEER_ANALOG], (!bSwimming && isDriver && isEngine) ? true : false);
+            updateWidgetVisibility(CTouchInterface::m_pWidgets[WidgetIDs::WIDGET_HORN], (!bSwimming && isDriver && isEngine) ? true : false);
+        }
+
+        if(CTouchInterface::m_pWidgets[WidgetIDs::WIDGET_ENTER_CAR]->IsTouched(nullptr))
         {
-            case STATE_NONE: break;
-            case STATE_FIXED: return;
+            if (bNeedEnterVehicleDriver == false) {
+                CPlayerPed *pPlayerPed = pGame->FindPlayerPed();
+                if (!pPlayerPed->IsInVehicle()) {
+                    bNeedEnterVehicleDriver = true;
+                }else{
+                    pPlayerPed->ExitCurrentVehicle();
+                }
+            }
+
         }
     }
 
     CWidgetButton__Update(thiz);
 }
 
+void (*CWidgetRegionLook__Update)(CWidgetRegionLook *thiz);
+
+void CWidgetRegionLook__Update_hook(CWidgetRegionLook *thiz) {
+    CWidgetRegionLook__Update(thiz);
+
+    if (thiz->m_bLookBack) {
+        thiz->m_bLookBack = false;
+        // CActionsPed::bPressed = true;
+        return;
+    }
+    // CActionsPed::bPressed = false;
+}
+
+void (*CWidgetButtonEnterCar__Draw)(uintptr_t *thiz);
+void CWidgetButtonEnterCar__Draw_hook(uintptr_t *thiz) {
+
+
+    // if(!CHUD::bIsShowEnterExitButt)
+    //  return;
+
+    CWidgetButtonEnterCar__Draw(thiz);
+}
+
+void (*CWidgetButton__Enabled)(CWidgetButton* thiz, bool bEnabled);
+void CWidgetButton__Enabled_hook(CWidgetButton* thiz, bool bEnabled) {
+
+    if(pNetGame) {
+        CPlayerPed *pPlayerPed = pGame->FindPlayerPed();
+        if (pPlayerPed) {
+            bool bSwimming = pPlayerPed->m_pPed->physicalFlags.bSubmergedInWater;
+            bool isInVehicle = pPlayerPed->m_pPed->IsInVehicle();
+            bool isInDriver = pPlayerPed->m_pPed->IsADriver();
+
+            struct WidgetCondition {
+                CWidgetGta* widget;
+                bool (*condition)(bool, bool, bool);
+            };
+
+            WidgetCondition widgetConditions[] = {
+                    { CTouchInterface::m_pWidgets[WidgetIDs::WIDGET_BUTTON_SWIM], [](bool swimming, bool, bool) { return swimming; }},
+                    { CTouchInterface::m_pWidgets[WidgetIDs::WIDGET_BUTTON_DIVE], [](bool swimming, bool, bool) { return swimming; }},
+                    { CTouchInterface::m_pWidgets[WidgetIDs::WIDGET_SPRINT], [](bool swimming, bool inVehicle, bool) { return (swimming || inVehicle) ? false : true; }},
+                    { CTouchInterface::m_pWidgets[WidgetIDs::WIDGET_PED_MOVE], [](bool, bool inVehicle, bool) { return inVehicle ? false : true; }},
+                    { CTouchInterface::m_pWidgets[WidgetIDs::WIDGET_ACCELERATE], [](bool swimming, bool, bool isDriver) { return (!swimming && isDriver) ? true : false; }},
+                    { CTouchInterface::m_pWidgets[WidgetIDs::WIDGET_BRAKE], [](bool swimming, bool, bool isDriver) { return (!swimming && isDriver) ? true : false; }},
+                    { CTouchInterface::m_pWidgets[WidgetIDs::WIDGET_HANDBRAKE], [](bool swimming, bool, bool isDriver) { return (!swimming && isDriver) ? true : false; }},
+                    { CTouchInterface::m_pWidgets[WidgetIDs::WIDGET_VEHICLE_STEER_ANALOG], [](bool swimming, bool, bool isDriver) { return (!swimming && isDriver) ? true : false; }},
+                    { CTouchInterface::m_pWidgets[WidgetIDs::WIDGET_HORN], [](bool swimming, bool, bool isDriver) { return (!swimming && isDriver) ? true : false; }},
+            };
+
+            for (const auto& widgetCondition : widgetConditions) {
+                if (thiz == widgetCondition.widget) {
+                    bEnabled = widgetCondition.condition(bSwimming, isInVehicle, isInDriver);
+                    break;
+                }
+            }
+        }
+    }
+
+    CWidgetButton__Enabled(thiz, bEnabled);
+}
+
 void CWidgetGta::InjectHooks() {
+    //CHook::InstallPLT(g_libGTASA + 0x821EE0, &CWidgetRegionLook__Update_hook, &CWidgetRegionLook__Update);
+    CHook::InlineHook("_ZN21CWidgetButtonEnterCar4DrawEv", &CWidgetButtonEnterCar__Draw_hook, &CWidgetButtonEnterCar__Draw);
+    CHook::InlineHook("_ZN7CWidget10SetEnabledEb", &CWidgetButton__Enabled_hook, &CWidgetButton__Enabled);
     CHook::InstallPLT(g_libGTASA + 0x83EEA8, &CWidgetButton__Update_hook, &CWidgetButton__Update);
-    CHook::InlineHook("_ZN13CWidgetButtonC2EPKcRK14WidgetPositionjj10HIDMapping", &CWidget_hook, &CWidget);
-    CHook::InlineHook("_ZN7CWidget10SetEnabledEb", &CWidget__SetEnabled_hook, &CWidget__SetEnabled);
 }
 
 void CWidgetGta::SetTexture(const char *name) {
@@ -170,11 +190,9 @@ void CWidgetGta::SetTexture(const char *name) {
 }
 
 bool CWidgetGta::IsReleased(CVector2D *pVecOut) {
-    return CHook::CallFunction<bool>(g_libGTASA + 0x5046FC, this, pVecOut);
+    return CHook::CallFunction<bool>(g_libGTASA + (VER_x32 ? 0x002B3484 + 1 : 0x372794), this, pVecOut);
 }
 
 bool CWidgetGta::IsTouched(CVector2D *pVecOut) {
     return CHook::CallFunction<bool>(g_libGTASA + 0x504408, this, pVecOut);
 }
-
-

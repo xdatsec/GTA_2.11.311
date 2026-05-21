@@ -784,7 +784,32 @@ void CVehicle::UpdateColor()
 		}
 	}
 }
+void CVehicle::OpenDoor(eCarNodes index, eDoors doorId, bool state) {
+	if(!m_pVehicle)
+		return;
 
+	if (GetVehicleSubtype() == VEHICLE_SUBTYPE_CAR)
+	{
+		m_bDoorsState[doorId] = state;
+
+		if(state)
+			CHook::CallFunction<void>(g_libGTASA + 0x6A3778, m_pVehicle, 0, index, doorId, 1.0f, 1);
+		else
+			CHook::CallFunction<void>(g_libGTASA + 0x6A3778, m_pVehicle, 0, index, doorId, 0.0f, 1);
+	}
+}
+void CVehicle::SetEngineState(bool bEnable) {
+	if(!m_dwGTAId)return;
+	if(!m_pVehicle)return;
+	if (!GamePool_Vehicle_GetAt(m_dwGTAId)) {
+		return;
+	}
+	m_bIsEngineOn = bEnable;
+}
+void CVehicle::SetLightState(int iLight, eLightsDamageState state) const
+{
+	CHook::CallFunction<void>(g_libGTASA + 0x6C4774, (uintptr_t)m_pVehicle + sizeof(CVehicle), iLight, state);
+}
 bool CVehicle::UpdateLastDrivenTime()
 {
 	if(m_pVehicle)

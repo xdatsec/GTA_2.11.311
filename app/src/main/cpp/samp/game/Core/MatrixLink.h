@@ -27,3 +27,6 @@ public:
     void Remove();
 };
 static_assert(sizeof(CMatrixLink) == (VER_x32 ? 0x54 : 0x68));
+
+
+

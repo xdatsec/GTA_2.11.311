@@ -48,6 +48,7 @@ typedef unsigned short OBJECTID;
 #include "playerpool.h"
 #include "vehiclepool.h"
 #include "menupool.h"
+#include "objectpool.h"
 #include "playerbubblepool.h"
 
 class CNetGame
@@ -104,7 +105,7 @@ public:
 	RakClientInterface* GetRakClient() { return m_pRakClient; }
 	CPlayerPool* GetPlayerPool() { return m_pPools->pPlayerPool; }
 	CVehiclePool* GetVehiclePool() { return m_pPools->pVehiclePool; }
-
+	CObjectPool* GetObjectPool() { return m_pPools->pObjectPool; }
 	CMenuPool* GetMenuPool() { return m_pPools->pMenuPool; }
 	CPlayerBubblePool* GetPlayerBubblePool() { return m_pPools->pPlayerBubblePool; }
 
@@ -170,6 +171,7 @@ private:
 		CVehiclePool		*pVehiclePool;
 		CMenuPool			*pMenuPool;
 		CPlayerBubblePool	*pPlayerBubblePool;
+		CObjectPool			*pObjectPool;
 	} *m_pPools;
 
     void Packet_UnoccupiedSync(Packet *pkt);

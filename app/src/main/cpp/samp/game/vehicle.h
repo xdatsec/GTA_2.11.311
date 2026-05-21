@@ -2,7 +2,8 @@
 
 #include <cstring>
 #include "Entity/CVehicleGTA.h"
-
+#include "game/Enums/eCarNodes.h"
+extern bool bNeedEnterVehicleDriver;
 enum eTurnState
 {
     TURN_OFF,
@@ -10,7 +11,16 @@ enum eTurnState
     TURN_RIGHT,
     TURN_ALL
 };
+enum eLightsDamageState : uint8_t {
+    VEHICLE_LIGHT_OK      = 0x0,
+    VEHICLE_LIGHT_SMASHED = 0x1
+};
 
+enum class eLightsState {
+    OFF,
+    ON_NEAR,
+    HIGH,
+};
 class CVehicle
 {
 public:
@@ -107,6 +117,14 @@ public:
 	void EnableSiren(bool bState);
 
 	bool IsLandingGearNotUp();
+    void OpenDoor(eCarNodes index, eDoors doorId, bool state);
+    void SetEngineState(bool bEnable);
+    void SetLightState(int iLight, eLightsDamageState iState) const;
+
+    bool            m_bDoorsState[eDoors::MAX_DOORS] {};
+
+    bool 			m_bIsEngineOn = false;
+    eLightsState 	m_bIsLightOn = eLightsState::OFF;
 
 	bool			m_bHasBeenDriven;
 	uint32_t		m_dwTimeSinceLastDriven;\

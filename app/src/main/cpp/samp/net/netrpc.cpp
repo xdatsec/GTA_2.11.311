@@ -1124,6 +1124,7 @@ void ExitVehicle(RPCParameters* rpcParams)
 			pRemotePlayer->ExitVehicle();
 	}
 }
+
 // 0.3.7
 void VehicleParamsEx(RPCParameters* rpcParams)
 {
@@ -1144,9 +1145,9 @@ void VehicleParamsEx(RPCParameters* rpcParams)
 	CVehicle* pVehicle = pVehiclePool->GetAt(VehicleID);
 	if (!pVehicle) return;
 
-	pVehicle->ApplyEngineState(vehParamsEx.byteEngine);
-
-	pVehicle->ApplyLightState(vehParamsEx.byteLight);
+    pVehicle->SetEngineState((vehParamsEx.byteEngine == 1));
+    // lights
+    pVehicle->m_bIsLightOn = static_cast<eLightsState>(vehParamsEx.byteLight);
 
 	if (vehParamsEx.byteDoors)
 	{

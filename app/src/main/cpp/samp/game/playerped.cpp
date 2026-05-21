@@ -1160,7 +1160,6 @@ void CPlayerPed::FireInstant()
     LOGI("CPlayerPed::FireInstan6");
     if (GetCurrentWeapon() == WEAPON_SNIPERRIFLE)
     {
-        LOGI("CPlayerPed::FireInstan99");
         if(m_pPed)
             CWeapon__FireSniper(GetCurrentWeaponSlot(), m_pPed, nullptr, nullptr);
         else
@@ -1168,23 +1167,13 @@ void CPlayerPed::FireInstant()
     }
     else
     {
-        LOGI("CPlayerPed::FireInstan88");
         GetWeaponInfoForFire(0, &vecBonePos, &vecOut);
-        LOGI("CPlayerPed::FireInstan89");
-        CWeapon* pSlot = GetCurrentWeaponSlot();
-        LOGI("CPlayerPed::FireInstan90");
-        if(m_pPed) {
-            LOGI("CPlayerPed::FireInstan91");
 
-            ((void (*)(CWeapon*, CPedGTA*, CVector*, CVector*, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t))(g_libGTASA + 0x6FA408))(
-                    pSlot, m_pPed, &vecBonePos, &vecOut, 0, 0, 0, 0, 1);
+        WEAPON_SLOT_TYPE* pSlot = reinterpret_cast<WEAPON_SLOT_TYPE *>(GetCurrentWeaponSlot());
 
-        }else {
-            LOGI("CPlayerPed::FireInstan92");
-            CWeapon__FireInstantHit(nullptr, nullptr, &vecBonePos, &vecOut, nullptr, nullptr,
-                                    nullptr, 0, 1);
-
-        }
+        // CWeapon::FireInstantHit
+        ((void (*)(WEAPON_SLOT_TYPE*, PED_TYPE*, CVector*, CVector*, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t))(g_libGTASA + 0x6FA408))(
+                pSlot, reinterpret_cast<PED_TYPE *>(m_pPed), &vecBonePos, &vecOut, 0, 0, 0, 0, 1);
     }
     LOGI("CPlayerPed::FireInstan7");
     g_pCurrentFiredPed = nullptr;

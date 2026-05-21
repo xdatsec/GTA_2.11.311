@@ -333,6 +333,7 @@ public:
     CPedIntelligence* GetIntelligence() const { return m_pIntelligence; }
     CTaskManager& GetTaskManager() { return m_pIntelligence->m_TaskMgr; }
     CTaskManager& GetTaskManager() const { return m_pIntelligence->m_TaskMgr; }
+    bool IsADriver() const noexcept     { return bInVehicle && pVehicle != nullptr && pVehicle->pDriver == this; }
 
     bool IsEnteringCar();
     bool IsExitingVehicle();

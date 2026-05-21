@@ -835,7 +835,7 @@ void CPed__ProcessControl_hook(uintptr_t thiz)
         // CPed::UpdatePosition nulled from CPed::ProcessControl
         CHook::NOP(g_libGTASA + 0x58AE24, 2);
 
-          *pbyteCurrentPlayer = byteCurPlayer;
+        *pbyteCurrentPlayer = byteCurPlayer;
         // call original
 
         CPed__ProcessControl(thiz);
@@ -844,7 +844,7 @@ void CPed__ProcessControl_hook(uintptr_t thiz)
         CHook::WriteMemory(g_libGTASA + 0x58AE24, "\xAF\x00\x0A\x94", 4);
 
 
-          *pbyteCurrentPlayer = 0;
+        *pbyteCurrentPlayer = 0;
         *pbyteCameraMode = byteSavedCameraMode;
 
         GameSetLocalPlayerCameraExtZoomAndAspect();
@@ -997,7 +997,7 @@ void HookCPad()
     // WEAPON
     CHook::InlineHook("_ZN4CPad17GetEnterTargetingEv", &CPad__GetEnterTargeting_hook, &CPad__GetEnterTargeting);
     CHook::InlineHook("_ZN4CPad9GetWeaponEP4CPedb", &CPad__GetWeapon_hook, &CPad__GetWeapon);
-    CHook::InlineHook("_ZN7CCamera17IsTargetingActiveEP10CPlayerPed", &CCamera_IsTargetingActive_hook, &CCamera_IsTargetingActive);
+   // CHook::InlineHook("_ZN7CCamera17IsTargetingActiveEP10CPlayerPed", &CCamera_IsTargetingActive_hook, &CCamera_IsTargetingActive);
     CHook::InlineHook("_ZN4CPad24CycleWeaponRightJustDownEv", &CPad__CycleWeaponRightJustDown_hook, &CPad__CycleWeaponRightJustDown);
     //CHook::InstallPLT(g_libGTASA + 0x66F304, (uintptr_t)CPad__CycleWeaponLeftJustDown_hook, (uintptr_t*)&CPad__CycleWeaponLeftJustDown);
 
@@ -1014,8 +1014,8 @@ void HookCPad()
     //CHook::InstallPLT(g_libGTASA + 0x674418, (uintptr_t)CPad__GetCarGunLeftRight_hook,(uintptr_t*)&CPad__GetCarGunLeftRight);
     //CHook::InstallPLT(g_libGTASA + 0x675ABC, (uintptr_t)CPad__GetCarGunFired_hook, (uintptr_t*)&CPad__GetCarGunFired);
 
-    CHook::InlineHook("_ZN4CPad13GetTurretLeftEv", &CPad__GetTurretLeft_hook, &CPad__GetTurretLeft);
-    CHook::InlineHook("_ZN4CPad14GetTurretRightEv", &CPad__GetTurretRight_hook, &CPad__GetTurretRight);
+    //CHook::InlineHook("_ZN4CPad13GetTurretLeftEv", &CPad__GetTurretLeft_hook, &CPad__GetTurretLeft);
+   // CHook::InlineHook("_ZN4CPad14GetTurretRightEv", &CPad__GetTurretRight_hook, &CPad__GetTurretRight);
 }
 
 

@@ -19,9 +19,9 @@ void ApplyFPSPatch(uint8_t fps)
     uint8_t targetFPS = 120;
 
 
-    CHook::WriteMemory(g_libGTASA + 0x3685B8 + 1, &targetFPS, 1);
-    CHook::WriteMemory(g_libGTASA + 0x368644 + 1, &targetFPS, 1);
-    CHook::WriteMemory(g_libGTASA + 0x368924 + 1, &targetFPS, 1);
+    //CHook::WriteMemory(g_libGTASA + 0x3685B8 + 1, &targetFPS, 1);
+   // CHook::WriteMemory(g_libGTASA + 0x368644 + 1, &targetFPS, 1);
+    //CHook::WriteMemory(g_libGTASA + 0x368924 + 1, &targetFPS, 1);
 
     FLog("New fps limit = %d", targetFPS);
 }
@@ -55,12 +55,13 @@ void ApplySAMPPatchesInGame()
 //	CHook::WriteMemory(g_libGTASA + 0x00341F84, (uintptr_t)"\x00\xF0\x21\xBE", 4);
 
     // no vehicle audio processing
-    CHook::NOP(g_libGTASA + 0x6A7834, 2);
-    CHook::NOP(g_libGTASA + 0x6B69B8, 2);
-    CHook::NOP(g_libGTASA + 0x6C183C, 2);
+    CHook::NOP(g_libGTASA + 0x6A7834, 1); // CAutomobile
+    CHook::NOP(g_libGTASA + 0x6B69B8, 1); // CBike
+    CHook::NOP(g_libGTASA + 0x6C183C, 1); // CBoat
+    CHook::NOP(g_libGTASA + 0x6D4270, 1); // CTrain
 
     // Disable in-game radio
-    CHook::RET("_ZN20CAERadioTrackManager7ServiceEi");
+   // CHook::RET("_ZN20CAERadioTrackManager7ServiceEi");
 
     // карта в меню
     //CHook::NOP(g_libGTASA + 0x71DBB8, 2; // текст легенды карты
@@ -191,8 +192,14 @@ void ApplyGlobalPatches()
     // crash legend
     CHook::NOP(g_libGTASA + 0x71DB60, 1);
 
+    // Disable cutscene processing
+    CHook::NOP(g_libGTASA+0x04960E4, 2); // NOP calling CCutsceneMgr::Update from CGame::Process
 
     //ApplyShadowPatch();
+    // why to set task if i create my task hmmm
+    //ARMHook::writeMemory(g_libGTASA + 0x40AC28, (uintptr_t)"\x8F\xF5\x3A\xEF", 4); // CTaskComplexEnterCarAsDriver
+    //ARMHook::makeNOP(g_libGTASA + 0x40AC30, 2); // NOP calling CTaskComplexEnterCarAsDriver::CTaskComplexEnterCarAsDriver from CPlayerInfo::Process
+    CHook::NOP(g_libGTASA + 0x4AE114, 2); // CTaskManager::SetTask in CPLayerInfo::Process
 
     //CDebugInfo::ApplyDebugPatches();
 
@@ -254,7 +261,7 @@ void ApplyGlobalPatches()
     CHook::NOP(g_libGTASA + 0x555A08, 1);	// CStreaming::ms_memoryAvailable = (int)v24
 
 
-   // CHook::NOP(g_libGTASA + 0x5B7C20, 1);  // CCamera::ClearPlayerWeaponMode from CPlayerPed::ClearWeaponTarget
+     CHook::NOP(g_libGTASA + 0x5B7C20, 1);  // CCamera::ClearPlayerWeaponMode from CPlayerPed::ClearWeaponTarget
     CHook::WriteMemory(g_libGTASA + 0x496200, "\x1F\x0D\x00\x71", 4); // RE3: Fix R* optimization that prevents peds to spawn
 
 /*

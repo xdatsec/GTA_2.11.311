@@ -949,7 +949,7 @@ void CGame::Process() {
 
         if ( !CTimer::bSkipProcessThisFrame )
         {
-            CPickups::Update();
+            //CPickups::Update();
 //			CCarCtrl::PruneVehiclesOfInterest();
             CHook::CallFunction<void>(g_libGTASA+0x3F231C); //CGarages::Update();
 // 			CEntryExitManager::Update();
@@ -1016,6 +1016,7 @@ void CGame::InjectHooks()
 {
     CHook::Redirect("_ZN5CGame22InitialiseOnceBeforeRWEv", &CGame::InitialiseOnceBeforeRW);
     CHook::Redirect("_ZN5CGame7ProcessEv", &CGame::Process);
+
 
     CHook::Write(g_libGTASA + 0x8376C0, &CGame::currArea);
 

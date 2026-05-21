@@ -6,7 +6,7 @@
 #include "../vendor/armhook/patch.h"
 
 RpSkin* RpSkinGeometryGetSkin(RpGeometry* geometry) {
-    return CHook::CallFunction<RpSkin*>(g_libGTASA + 0x25DEA0, geometry);
+    return CHook::CallFunction<RpSkin*>(g_libGTASA + 0x784D00, geometry);
 }
 
 RpHAnimHierarchy* RpSkinAtomicGetHAnimHierarchy(const RpAtomic* atomic) {

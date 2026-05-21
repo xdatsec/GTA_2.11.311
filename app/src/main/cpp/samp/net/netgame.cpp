@@ -133,6 +133,7 @@ void CNetGame::InitializePools()
 
 	m_pPools->pMenuPool = new CMenuPool();
 	m_pPools->pPlayerBubblePool = new CPlayerBubblePool();
+	m_pPools->pObjectPool = new CObjectPool();
 }
 
 void CNetGame::UninitializePools()
@@ -151,7 +152,10 @@ void CNetGame::UninitializePools()
 		delete m_pPools->pMenuPool;
 		m_pPools->pMenuPool = nullptr;
 	}
-
+	if (m_pPools->pObjectPool) {
+		delete m_pPools->pObjectPool;
+		m_pPools->pObjectPool = nullptr;
+	}
 	if (m_pPools->pPlayerBubblePool)
 	{
 		delete m_pPools->pPlayerBubblePool;
@@ -1053,7 +1057,11 @@ void CNetGame::ResetPickupPool()
 // 0.3.7
 void CNetGame::ResetObjectPool()
 {
+    if (m_pPools->pObjectPool) {
+        delete m_pPools->pObjectPool;
+    }
 
+    m_pPools->pObjectPool = new CObjectPool();
 }
 // 0.3.7
 void CNetGame::ResetMenuPool()

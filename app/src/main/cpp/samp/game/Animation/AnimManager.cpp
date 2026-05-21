@@ -538,7 +538,7 @@ void CAnimManager::LoadAnimFiles() {
     RwStreamClose(stream, nullptr);
 
     ms_aAnimAssocGroups = new CAnimBlendAssocGroup[ms_numAnimAssocDefinitions];
-    CreateAnimAssocGroups();
+    return CHook::CallFunction<void>(g_libGTASA + 0x372D6C);
 }
 
 // 0x0033E650

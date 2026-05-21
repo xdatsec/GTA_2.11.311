@@ -219,19 +219,19 @@ void CVehiclePool::Process()
                         }*/
 
                         if (pNetGame->m_pNetSet->bManualVehicleEngineAndLight) {
-                            pVehicle->ApplyEngineState(pVehicle->GetEngineState());
-                            pVehicle->ApplyLightState(pVehicle->GetLightState());
+                            pVehicle->m_pVehicle->m_nVehicleFlags.bLightsOn = (pVehicle->m_bIsLightOn >= eLightsState::ON_NEAR);
+                            pVehicle->m_pVehicle->m_nVehicleFlags.bEngineOn = pVehicle->m_bIsEngineOn;
                         } else {
-                            if (pVehicle->GetEngineState() == -1) {
+                            if (pVehicle->m_bIsEngineOn== -1) {
                                 if (!pVehicle->IsDriverLocalPlayer())
-                                    pVehicle->ApplyEngineState(0);
+                                    pVehicle->m_pVehicle->m_nVehicleFlags.bEngineOn = 0;
                                 else
-                                    pVehicle->ApplyEngineState(1);
+                                    pVehicle->m_pVehicle->m_nVehicleFlags.bEngineOn = 1;
                             } else if (pVehicle->GetEngineState() != -1) {
-                                pVehicle->ApplyEngineState(pVehicle->GetEngineState());
+                                pVehicle->m_pVehicle->m_nVehicleFlags.bEngineOn = pVehicle->m_bIsEngineOn;
                             }
 
-                            pVehicle->ApplyLightState(pVehicle->GetLightState());
+                            pVehicle->m_pVehicle->m_nVehicleFlags.bLightsOn = (pVehicle->m_bIsLightOn >= eLightsState::ON_NEAR);
                         }
 
                         if (pVehicle->m_pVehicle != m_pGTAVehicles[VehicleID])
@@ -241,6 +241,7 @@ void CVehiclePool::Process()
                         pVehicle->UpdateLastDrivenTime();
                         pVehicle->UpdateColor();
                         pVehicle->ProcessMarkers();
+
                     }
                 }
             }

@@ -8,6 +8,7 @@
 
 CPhysical::CPhysical() : CEntityGTA()
 {
+    LOGI("OH MAMA IM CALLED");
     m_pCollisionList.m_pNode = nullptr;
 
     CPlaceable::AllocateStaticMatrix();

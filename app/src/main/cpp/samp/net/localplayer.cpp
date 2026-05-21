@@ -22,7 +22,7 @@ extern int iNetModeFiringSendRate;
 extern int iNetModeSendMultiplier;
 
 bool m_bWasInCar = false;
-
+extern bool bNeedEnterVehicleDriver;
 extern bool bUsedPlayerSlots[];
 
 uint32_t dwEnterVehTimeElasped = -1;
@@ -305,7 +305,9 @@ bool CLocalPlayer::Process()
                 }
 
                 HandlePassengerEntry();
-                ProcessOnFootWorldBounds();
+				HandlePassengerEntry();
+
+				ProcessOnFootWorldBounds();
 
                 if (m_CurrentVehicle != 0xFFFF)
                 {
@@ -1068,6 +1070,72 @@ void CLocalPlayer::MoveHeadWithCamera()
 {
 
 }
+extern bool bNeedEnterVehicleDriver;
+static bool NotifyEnterVehicleEnter(CVehicleGTA *_pVehicle)
+{
+	if(!pNetGame) {
+		return false;
+	}
+
+	CVehiclePool *pVehiclePool = pNetGame->GetVehiclePool();
+	if(!pVehiclePool) {
+		return false;
+	}
+
+	CVehicle *pVehicle = nullptr;
+	VEHICLEID VehicleID = pVehiclePool->FindIDFromGtaPtr(_pVehicle);
+
+	if(VehicleID <= 0 || VehicleID >= MAX_VEHICLES) {
+		return false;
+	}
+
+	if(!pVehiclePool->GetSlotState(VehicleID)) {
+		return false;
+	}
+
+	pVehicle = pVehiclePool->GetAt(VehicleID);
+	if(!pVehicle) {
+		return false;
+	}
+
+	CLocalPlayer *pLocalPlayer = pNetGame->GetPlayerPool()->GetLocalPlayer();
+
+	if(pLocalPlayer) {
+		FLog("Vehicle ID: %d", VehicleID);
+		pLocalPlayer->SendEnterVehicleNotification(VehicleID, false);
+	}
+
+	return true;
+}
+bool CLocalPlayer::HandleDriverEntry()
+{
+	CVehiclePool* pVehiclePool = pNetGame->GetVehiclePool();
+	if (!bNeedEnterVehicleDriver) return false;
+	// CTouchInterface::IsDoubleTapped
+	//int isHeldDown = ((int (*)(int, bool, int))(g_libGTASA + 0x2B2068 + 1))(0, true, 1);
+	//if (!isHeldDown) retubNeedEnterVehiclern false;
+	VEHICLEID ClosetVehicleID = pVehiclePool->FindNearestToLocalPlayerPed();
+	CVehicle* pVehicle = pVehiclePool->GetAt(ClosetVehicleID);
+
+	if (!pVehicle) return false;
+	if(!NotifyEnterVehicleEnter(pVehicle->m_pVehicle)) {
+		bNeedEnterVehicleDriver = false;
+		return false;
+	}
+	if(pVehicle->m_pVehicle->GetDistanceFromLocalPlayerPed() < 8.0f)
+	{
+		if (m_pPlayerPed->GetCurrentWeapon() == WEAPON_PARACHUTE) {
+			m_pPlayerPed->SetArmedWeapon(0, false);
+		}
+
+		m_pPlayerPed->EnterVehicle(pVehicle->m_dwGTAId, false);
+		SendEnterVehicleNotification(ClosetVehicleID, false);
+		bNeedEnterVehicleDriver = false;
+	}
+	bNeedEnterVehicleDriver = false;
+	return true;
+}
+
 extern bool bNeedEnterVehicle;
 // 0.3.7
 /*bool CLocalPlayer::EnterVehicleAsPassenger()

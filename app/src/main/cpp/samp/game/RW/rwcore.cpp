@@ -23,7 +23,7 @@ RwFrame* RwFrameCreate() {
 }
 
 RwCamera* RwCameraClear(RwCamera* camera, RwRGBA* colour, RwInt32 clearMode) {
-    return CHook::CallFunction<RwCamera*>(g_libGTASA + 0x26D1E8, camera, colour, clearMode);
+    return CHook::CallFunction<RwCamera*>(g_libGTASA + 0x76591C, camera, colour, clearMode);
 }
 
 RwCamera* RwCameraSetNearClipPlane(RwCamera* camera, RwReal nearClip) {

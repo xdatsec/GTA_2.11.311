@@ -129,78 +129,25 @@ void RenderEffects() {
     //DebugModules::Render3D();
 }
 
-/*void MainLoop();
-void(*Render2dStuff)();
-void Render2dStuff_hook()
-{
-    Render2dStuff();
-    if(pNetGame)
-    {
-        CTextDrawPool* pTextDrawPool = pNetGame->GetTextDrawPool();
-        if(pTextDrawPool) pTextDrawPool->Draw();
-    }
-    if (pUI) pUI->render();
-    return;
-}*/
+
 
 void ShowHud()
 {
     *(uint8_t*)(g_libGTASA + 0x9F13E8) = 1;
 }
 void MainLoop();
-void Render2dStuff()
+void(*Render2dStuff)();
+void Render2dStuff_hook()
 {
+    Render2dStuff();
+    MainLoop();
     ShowHud();
-
-    if( CHook::CallFunction<bool>(g_libGTASA + 0x739F40) ) // emu_IsAltRenderTarget()
-        CHook::CallFunction<void>(g_libGTASA + 0x73A848); // emu_FlushAltRenderTarget()
-
-    CHook::CallFunction<void>("_Z25RwTexDictionarySetCurrentP15RwTexDictionary", (uintptr_t)NULL);
-
-
-    RwRenderStateSet(rwRENDERSTATEZTESTENABLE, RWRSTATE(FALSE));
-    RwRenderStateSet(rwRENDERSTATEZWRITEENABLE, RWRSTATE(FALSE));
-    RwRenderStateSet(rwRENDERSTATEVERTEXALPHAENABLE, RWRSTATE(TRUE));
-    RwRenderStateSet(rwRENDERSTATESRCBLEND, RWRSTATE(rwBLENDSRCALPHA));
-    RwRenderStateSet(rwRENDERSTATEDESTBLEND, RWRSTATE(rwBLENDINVSRCALPHA));
-    RwRenderStateSet(rwRENDERSTATEFOGENABLE, RWRSTATE(rwRENDERSTATENARENDERSTATE));
-    RwRenderStateSet(rwRENDERSTATECULLMODE, RWRSTATE(rwCULLMODECULLNONE));
-
-
-
-    ( ( void(*)() )(g_libGTASA + 0x510D30))(); // прицелCHud::DrawCrossHairs(void)	000000000051C694
-
-    auto radar = CTouchInterface::m_pWidgets[WIDGET_RADAR];
-    if (radar) {
-        radar->m_fOriginX = 49.0f;
-        radar->m_fOriginY = 72.0f;
-
-        radar->m_fScaleX = 45.0f;
-        radar->m_fScaleY = 38.0f;
-    }
-    /*
-#if VER_x32
-    ((void (*)())(g_libGTASA + 0x00437B0C + 1))(); // DrawRadar
-#else
-    ((void (*)())(g_libGTASA + 0x51CFF0))();
-#endif */
-
-    CHook::CallFunction<void>("_ZN4CHud4DrawEv");
-
-    ((void(*)(bool))(g_libGTASA + 0x5017B0))(false);
-    CHook::CallFunction<void>("_Z12emu_GammaSeth", 1);
-    ((void (*)(bool))(g_libGTASA + 0x69DDB8))(1u); // CMessages::Display
-    ((void (*)(bool))(g_libGTASA + 0x5D6090))(1u); // CFont::RenderFontBuffer
-    CHook::CallFunction<void>("_Z12emu_GammaSeth", 0);
-
     if(pNetGame)
     {
         //CTextDrawPool* pTextDrawPool = pNetGame->GetTextDrawPool();
        // if(pTextDrawPool) pTextDrawPool->Draw();
     }
-
     if (pUI) pUI->render();
-    MainLoop();
 }
 
 /* =============================================================================== */
@@ -327,8 +274,37 @@ void CEntity_Render_hook(CEntityGTA* thiz) {
 void (*CObject_Render)(CObjectGta* thiz);
 void CObject_Render_hook(CObjectGta* thiz)
 {
+    CObjectGta *object = thiz;
+    if(pNetGame && object != 0)
+    {
+        CObject *pObject = pNetGame->GetObjectPool()->FindObjectFromGtaPtr(object);
+        if(pObject && pObject->m_pEntity)
+        {
+            RwObject* rwObject = (RwObject*)pObject->m_pEntity->m_pRwObject;
+            if(rwObject)
+            {
+                // SetObjectMaterial
+                if(pObject->m_bHasMaterial || pObject->m_bHasMaterialText)
+                {
+                    RwFrameForAllObjects((RwFrame*)rwObject->parent, (RwObject *(*)(RwObject *, void *))ObjectMaterialCallBack, pObject);
+                    //RpAtomic* atomic = (RpAtomic*)object->m_pRwAtomic;
+                    //RpGeometryForAllMaterials(atomic->geometry, ObjectMaterialCallBack, (void*)pObject);
+                }
+                // SetObjectMaterialText
+                if(pObject->m_bHasMaterialText)
+                {
+                    RwFrameForAllObjects((RwFrame*)rwObject->parent, (RwObject *(*)(RwObject *, void *))ObjectMaterialTextCallBack, pObject);
+                    //RpAtomic* atomic = (RpAtomic*)object->m_pRwAtomic;
+                    //RpGeometryForAllMaterials(atomic->geometry, ObjectMaterialTextCallBack, (void*)pObject);
+                }
+            }
 
-    //CObject_Render(thiz);
+
+        }
+
+        CObject_Render(object);
+    }
+
     //((void (*)(void))(g_libGTASA + (VER_x32 ? 0x005D1F98 + 1 : 0x6F6664)))();
     //((void (*)(void))(g_libGTASA + 0x5D1F5C + 1))();
 }
@@ -566,12 +542,12 @@ void SendBulletSync(CVector* vecOrigin, CVector* a2, CColPoint *colPoint, CEntit
     pGame->FindPlayerPed()->ProcessBulletData(&bulletData);
 }
 extern bool g_customFire;
-uint32_t(*CWeapon__FireInstantHit)(CWeapon* thiz, CPedGTA* pFiringEntity, CVector* vecOrigin, CVector* muzzlePosn, CEntityGTA* targetEntity,
+int64(*CWeapon__FireInstantHit)(CWeapon* thiz, CPedGTA* pFiringEntity, CVector* vecOrigin, CVector* muzzlePosn, CEntityGTA* targetEntity,
                                    CVector* target, CVector* originForDriveBy, bool arg6, bool muzzle);
-uint32_t CWeapon__FireInstantHit_hook(CWeapon* thiz, CPedGTA* pFiringEntity, CVector* vecOrigin, CVector* muzzlePosn, CEntityGTA* targetEntity,
+int64 CWeapon__FireInstantHit_hook(CWeapon* thiz, CPedGTA* pFiringEntity, CVector* vecOrigin, CVector* muzzlePosn, CEntityGTA* targetEntity,
                                       CVector* target, CVector* originForDriveBy, bool arg6, bool muzzle)
 {
-    LOGI("CWeapon__FireInstantHit_hook 1");
+
     if (pNetGame && pNetGame->GetPlayerPool()->GetLocalPlayer()->GetPlayerPed()->m_pPed)		// CWeapon::Fire
     {
         if(pFiringEntity != GamePool_FindPlayerPed())
@@ -584,7 +560,6 @@ uint32_t CWeapon__FireInstantHit_hook(CWeapon* thiz, CPedGTA* pFiringEntity, CVe
 
         if(pGame)
         {
-            LOGI("CWeapon__FireInstantHit_hook 4");
             CPlayerPed *pPlayerPed = pGame->FindPlayerPed();
             if(pPlayerPed)
                 pPlayerPed->FireInstant();
@@ -597,11 +572,11 @@ uint32_t CWeapon__FireInstantHit_hook(CWeapon* thiz, CPedGTA* pFiringEntity, CVe
 
         return muzzle;
     }
-    LOGI("CWeapon__FireInstantHit_hook 5");
+
+
     return CWeapon__FireInstantHit(thiz, pFiringEntity, vecOrigin, muzzlePosn, targetEntity,
                                    target, originForDriveBy, arg6, muzzle);
 }
-
 bool g_bForceWorldProcessLineOfSight = false;
 uint32_t (*CWeapon__ProcessLineOfSight)(CVector *vecOrigin, CVector *vecEnd, CVector *vecPos, CPedGTA **ppEntity, CWeapon *pWeaponSlot, CPedGTA **ppEntity2, bool b1, bool b2, bool b3, bool b4, bool b5, bool b6, bool b7);
 uint32_t CWeapon__ProcessLineOfSight_hook(CVector *vecOrigin, CVector *vecEnd, CVector *vecPos, CPedGTA **ppEntity, CWeapon *pWeaponSlot, CPedGTA **ppEntity2, bool b1, bool b2, bool b3, bool b4, bool b5, bool b6, bool b7)
@@ -611,7 +586,7 @@ uint32_t CWeapon__ProcessLineOfSight_hook(CVector *vecOrigin, CVector *vecEnd, C
 
     FLog("dwRetAddr CWeapon__ProcessLineOfSight_hook 0x%llx", dwRetAddr);
 
-    if(dwRetAddr >= 0x6FA408 && dwRetAddr <= 0x6FBA2C)
+    if(dwRetAddr >= 0x6FA408 && dwRetAddr <= 0x6FAE44)
     g_bForceWorldProcessLineOfSight = true;
 
 
@@ -627,84 +602,84 @@ uint32_t CWorld__ProcessLineOfSight_hook(CVector* vecOrigin, CVector* vecEnd, CC
 
     if(dwRetAddr == 0x6FB42C || g_bForceWorldProcessLineOfSight)
     {
-    g_bForceWorldProcessLineOfSight = false;
-    //LOGI("CWorld_ProcessLineOfSight iLagCompensationMode: %d", g_iLagCompensationMode);
-    static CVector vecPosPlusOffset;
+        g_bForceWorldProcessLineOfSight = false;
+        //LOGI("CWorld_ProcessLineOfSight iLagCompensationMode: %d", g_iLagCompensationMode);
+        static CVector vecPosPlusOffset;
 
-    if (g_iLagCompensationMode != 2)
-    {
-    if (g_pCurrentFiredPed != pGame->FindPlayerPed())
-    {
-    if (g_pCurrentBulletData && g_pCurrentBulletData->pEntity)
-    {
-    if (*(uintptr_t*)(g_pCurrentBulletData->pEntity) != g_libGTASA+0x81E628) // CPlaceable
-    {
-    if (g_iLagCompensationMode)
-    {
-        vecPosPlusOffset.x = g_pCurrentBulletData->pEntity->GetPosition().x + g_pCurrentBulletData->vecOffset.x;
-        vecPosPlusOffset.y = g_pCurrentBulletData->pEntity->GetPosition().y + g_pCurrentBulletData->vecOffset.y;
-        vecPosPlusOffset.z = g_pCurrentBulletData->pEntity->GetPosition().z + g_pCurrentBulletData->vecOffset.z;
-    }
-    else
-    {
-        //FLog("vecPosPlusOffset %f %f %f", vecPosPlusOffset.x, vecPosPlusOffset.y, vecPosPlusOffset.z);
-        //FLog("pEntity->GetMatrix().m_up %f %f %f", g_pCurrentBulletData->pEntity->GetMatrix().m_up.x, g_pCurrentBulletData->pEntity->GetMatrix().m_up.y, g_pCurrentBulletData->pEntity->GetMatrix().m_up.z);
-        //FLog("g_pCurrentBulletData->vecOffset %f %f %f", g_pCurrentBulletData->vecOffset.x, g_pCurrentBulletData->vecOffset.y, g_pCurrentBulletData->vecOffset.z);
-        ProjectMatrix((CVector*)&vecPosPlusOffset, &g_pCurrentBulletData->pEntity->GetMatrix(), &g_pCurrentBulletData->vecOffset);
-        //vecPosPlusOffset.x = pEntity->GetMatrix().m_up.x * g_pCurrentBulletData->vecOffset.z + pEntity->GetMatrix().m_forward.x * g_pCurrentBulletData->vecOffset.y + pEntity->GetMatrix().m_right.x * g_pCurrentBulletData->vecOffset.x + pEntity->GetMatrix().m_pos.x;
-        //vecPosPlusOffset.y = pEntity->GetMatrix().m_up.y * g_pCurrentBulletData->vecOffset.z + pEntity->GetMatrix().m_forward.y * g_pCurrentBulletData->vecOffset.y + pEntity->GetMatrix().m_right.y * g_pCurrentBulletData->vecOffset.x + pEntity->GetMatrix().m_pos.y;
-        //vecPosPlusOffset.z = pEntity->GetMatrix().m_up.z * g_pCurrentBulletData->vecOffset.z + pEntity->GetMatrix().m_forward.z * g_pCurrentBulletData->vecOffset.y + pEntity->GetMatrix().m_right.z * g_pCurrentBulletData->vecOffset.x + pEntity->GetMatrix().m_pos.z;
-    }
+        if (g_iLagCompensationMode != 2)
+        {
+            if (g_pCurrentFiredPed != pGame->FindPlayerPed())
+            {
+                if (g_pCurrentBulletData && g_pCurrentBulletData->pEntity)
+                {
+                    if (*(uintptr_t*)(g_pCurrentBulletData->pEntity) != g_libGTASA+0x81E628) // CPlaceable
+                    {
+                        if (g_iLagCompensationMode)
+                        {
+                            vecPosPlusOffset.x = g_pCurrentBulletData->pEntity->GetPosition().x + g_pCurrentBulletData->vecOffset.x;
+                            vecPosPlusOffset.y = g_pCurrentBulletData->pEntity->GetPosition().y + g_pCurrentBulletData->vecOffset.y;
+                            vecPosPlusOffset.z = g_pCurrentBulletData->pEntity->GetPosition().z + g_pCurrentBulletData->vecOffset.z;
+                        }
+                        else
+                        {
+                            //FLog("vecPosPlusOffset %f %f %f", vecPosPlusOffset.x, vecPosPlusOffset.y, vecPosPlusOffset.z);
+                            //FLog("pEntity->GetMatrix().m_up %f %f %f", g_pCurrentBulletData->pEntity->GetMatrix().m_up.x, g_pCurrentBulletData->pEntity->GetMatrix().m_up.y, g_pCurrentBulletData->pEntity->GetMatrix().m_up.z);
+                            //FLog("g_pCurrentBulletData->vecOffset %f %f %f", g_pCurrentBulletData->vecOffset.x, g_pCurrentBulletData->vecOffset.y, g_pCurrentBulletData->vecOffset.z);
+                            ProjectMatrix((CVector*)&vecPosPlusOffset, &g_pCurrentBulletData->pEntity->GetMatrix(), &g_pCurrentBulletData->vecOffset);
+                            //vecPosPlusOffset.x = pEntity->GetMatrix().m_up.x * g_pCurrentBulletData->vecOffset.z + pEntity->GetMatrix().m_forward.x * g_pCurrentBulletData->vecOffset.y + pEntity->GetMatrix().m_right.x * g_pCurrentBulletData->vecOffset.x + pEntity->GetMatrix().m_pos.x;
+                            //vecPosPlusOffset.y = pEntity->GetMatrix().m_up.y * g_pCurrentBulletData->vecOffset.z + pEntity->GetMatrix().m_forward.y * g_pCurrentBulletData->vecOffset.y + pEntity->GetMatrix().m_right.y * g_pCurrentBulletData->vecOffset.x + pEntity->GetMatrix().m_pos.y;
+                            //vecPosPlusOffset.z = pEntity->GetMatrix().m_up.z * g_pCurrentBulletData->vecOffset.z + pEntity->GetMatrix().m_forward.z * g_pCurrentBulletData->vecOffset.y + pEntity->GetMatrix().m_right.z * g_pCurrentBulletData->vecOffset.x + pEntity->GetMatrix().m_pos.z;
+                        }
 
-        vecEnd->x = vecPosPlusOffset.x - vecOrigin->x + vecPosPlusOffset.x;
-        vecEnd->y = vecPosPlusOffset.y - vecOrigin->y + vecPosPlusOffset.y;
-        vecEnd->z = vecPosPlusOffset.z - vecOrigin->z + vecPosPlusOffset.z;
-    }
-    }
-    }
-    }
-
-    uint32_t result = CWorld__ProcessLineOfSight(vecOrigin, vecEnd, colPoint, ppEntity, b1, b2, b3, b4, b5, b6, b7, b8);
-
-    if (g_iLagCompensationMode == 2)
-    {
-        if (g_pCurrentFiredPed == pGame->FindPlayerPed()) {
-            SendBulletSync(vecOrigin, vecEnd, colPoint, ppEntity);
+                        vecEnd->x = vecPosPlusOffset.x - vecOrigin->x + vecPosPlusOffset.x;
+                        vecEnd->y = vecPosPlusOffset.y - vecOrigin->y + vecPosPlusOffset.y;
+                        vecEnd->z = vecPosPlusOffset.z - vecOrigin->z + vecPosPlusOffset.z;
+                    }
+                }
+            }
         }
+
+        uint32_t result = CWorld__ProcessLineOfSight(vecOrigin, vecEnd, colPoint, ppEntity, b1, b2, b3, b4, b5, b6, b7, b8);
+
+        if (g_iLagCompensationMode == 2)
+        {
+            if (g_pCurrentFiredPed == pGame->FindPlayerPed()) {
+                SendBulletSync(vecOrigin, vecEnd, colPoint, ppEntity);
+            }
+            return result;
+        }
+
+        if (g_pCurrentFiredPed)
+        {
+            if (g_pCurrentFiredPed != pGame->FindPlayerPed())
+            {
+                if (g_pCurrentBulletData)
+                {
+                    if (g_pCurrentBulletData->pEntity == nullptr)
+                    {
+                       CPedGTA* pLocalPed = GamePool_FindPlayerPed();
+                        if (*ppEntity == GamePool_FindPlayerPed() ||
+                        pLocalPed->IsInVehicle() && *ppEntity == pLocalPed->pVehicle)
+                        {
+                            result = 0;
+                            *ppEntity = nullptr;
+                            colPoint->m_vecPoint.x = 0.0f;
+                            colPoint->m_vecPoint.y = 0.0f;
+                            colPoint->m_vecPoint.z = 0.0f;
+                            return result;
+                        }
+                    }
+                }
+            }
+            else {
+                SendBulletSync(vecOrigin, vecEnd, colPoint, ppEntity);
+            }
+        }
+
         return result;
     }
 
-    if (g_pCurrentFiredPed)
-    {
-    if (g_pCurrentFiredPed != pGame->FindPlayerPed())
-    {
-    if (g_pCurrentBulletData)
-    {
-    if (g_pCurrentBulletData->pEntity == nullptr)
-    {
-    CPedGTA* pLocalPed = GamePool_FindPlayerPed();
-    if (*ppEntity == GamePool_FindPlayerPed() ||
-    pLocalPed->IsInVehicle() && *ppEntity == pLocalPed->pVehicle)
-    {
-    result = 0;
-    *ppEntity = nullptr;
-    colPoint->m_vecPoint.x = 0.0f;
-    colPoint->m_vecPoint.y = 0.0f;
-    colPoint->m_vecPoint.z = 0.0f;
-    return result;
-    }
-    }
-    }
-    }
-    else {
-    SendBulletSync(vecOrigin, vecEnd, colPoint, ppEntity);
-    }
-    }
-
-    return result;
-    }
-
-return CWorld__ProcessLineOfSight(vecOrigin, vecEnd, colPoint, ppEntity, b1, b2, b3, b4, b5, b6, b7, b8);
+    return CWorld__ProcessLineOfSight(vecOrigin, vecEnd, colPoint, ppEntity, b1, b2, b3, b4, b5, b6, b7, b8);
 }
 
 // 0.3.7
@@ -1818,37 +1793,7 @@ void CWidgetButtonSprint_Update_hook(void* thiz)
     CWidgetButtonSprint_Update(thiz);
 }
 
-void (*CGame_Process)();
-void CGame_Process_hook()
-{
-    if(pGame->bIsGameExiting)return;
 
-    CGame_Process();
-
-    if (pNetGame)
-    {
-        if(pGame && pGame->FindPlayerPed() && pUI && pUI->buttonpanel() && pUI->buttonpanel()->m_bH)
-        {
-            if(pGame->FindPlayerPed()->IsInVehicle())
-            {
-                pUI->buttonpanel()->m_bH->setCaption("D/B");
-            }
-            else
-                pUI->buttonpanel()->m_bH->setCaption("H");
-        }
-
-       // CObjectPool* pObjectPool = pNetGame->GetObjectPool();
-        //if (pObjectPool) {
-        //    pObjectPool->Process();
-         //   pObjectPool->ProcessMaterialText();
-       // }
-
-        //CTextDrawPool* pTextDrawPool = pNetGame->GetTextDrawPool();
-        //if (pTextDrawPool) {
-        //    pTextDrawPool->SnapshotProcess();
-        //}
-    }
-}
 
 float (*CDraw__SetFOV)(float thiz, float a2);
 float CDraw__SetFOV_hook(float thiz, float a2)
@@ -1880,79 +1825,20 @@ int mpg123_param_hook(void* mh, int key, long val, int ZERO, double fval)
 void InjectHooks()
 {
     FLog("InjectHooks");
-    CHook::Write(g_libGTASA + 0xCD0868, &Scene);
-
 #if !VER_x32 // mb all.. wtf crash x64?
     CHook::RET("_ZN11CPlayerInfo14LoadPlayerSkinEv");
     CHook::RET("_ZN11CPopulation10InitialiseEv");
 #endif
-    CCustomCarEnvMapPipeline::InjectHooks();
-    CCamera::InjectHooks(); //
-    CReferences::InjectHooks(); //
     CModelInfo::injectHooks(); //
     CTimer::InjectHooks(); //
-    //cTransmission::InjectHooks(); //
-    CAnimBlendAssociation::InjectHooks(); //
-    //cHandlingDataMgr::InjectHooks(); //
-    RQShader::InjectHooks();
     CPools::InjectHooks(); //
-    CVehicleGTA::InjectHooks(); //
-    CMatrixLink::InjectHooks(); //
-    CMatrixLinkList::InjectHooks(); //
     CStreaming::InjectHooks();
-    CPlaceable::InjectHooks(); //
-    CMatrix::InjectHooks(); //
-    CCollision::InjectHooks(); //
-    //CIdleCam::InjectHooks(); //
     CTouchInterface::InjectHooks(); //
     CWidgetGta::InjectHooks();
-    CEntityGTA::InjectHooks(); //
-    CPhysical::InjectHooks(); //
-   // CAnimManager::InjectHooks(); //
-    //CCarEnterExit::InjectHooks();
-    CPlayerPedGta::InjectHooks(); //
-    CTaskManager::InjectHooks(); //
-    //CPedIntelligence::InjectHooks(); //
-    CWorld::InjectHooks(); //
     CGame::InjectHooks();
-    ES2VertexBuffer::InjectHooks();
-    //CRQ_Commands::InjectHooks();
-    CTxdStore::InjectHooks();
-    CVisibilityPlugins::InjectHooks();
-    //CAdjustableHUD::InjectHooks();
-
-    // new
-    //CClouds::InjectHooks();
-    //CWeather::InjectHooks();
-    //RenderBuffer::InjectHooks();
-    CTimeCycle::InjectHooks();
-    //CCoronas::InjectHooks();
-    //CDraw::InjectHooks();
-    //CClock::InjectHooks();
-    //CBirds::Init();
-    CVehicleModelInfo::InjectHooks();
-    //CPathFind::InjectHooks();
     CSprite2d::InjectHooks();
-    //CFileLoader::InjectHooks();
-    //CPickups::InjectHooks();
-    //CRenderer::InjectHooks();
-   // CStreamingInfo::InjectHooks();
-    TextureDatabase::InjectHooks();
-    TextureDatabaseEntry::InjectHooks();
-    TextureDatabaseRuntime::InjectHooks();
-    //CCustomBuildingDNPipeline::InjectHooks();
-    //CWidgetRadar::InjectHooks();
+    CStreamingInfo::InjectHooks();
 
-    //CRealTimeShadowManager::InjectHooks();
-
-    //COcclusion::InjectHooks();
-
-   // CMobileMenu::InjectHooks();
-   // CMobileSettings::InjectHooks();
-
-    //CRealTimeShadowManager::InjectHooks();
-    //CHook::Write(g_libGTASA+(VER_x32 ? 0xA41140 : 0xCE3EE8), &COcclusion::aOccluders);
-    //CHook::Write(g_libGTASA+(VER_x32 ? 0xA45790:0xCE8538), &COcclusion::NumOccludersOnMap);
 }
 
 void InstallUrezHooks()
@@ -1973,6 +1859,7 @@ void CPlaceable_InitMatrixArray_hook(CMatrixLinkList *thiz, int32 size)
 {
     // CMatrixLinkList::Init
     CHook::CallFunction<void>(g_libGTASA + 0x4AC048, thiz, 10000);
+    CPlaceable_InitMatrixArray(thiz, size);
 }
 int (*_RwTextureDestroy)(int a1);
 int _RwTextureDestroy_hook(int a1)
@@ -2048,13 +1935,24 @@ void InstallCrashFixHooks()
 
 
 }
+void InitGui();
+bool (*CGame__InitialiseRenderWare)();
+bool CGame__InitialiseRenderWare_hook() {
+    FLog("Loading SAMP texture database..");
+    CGame__InitialiseRenderWare();
+
+    TextureDatabaseRuntime::Load("samp", false, TextureDatabaseFormat::DF_Default);
+
+    InitGui();
+    return true;
+}
 void InstallSpecialHooks()
 {
     InjectHooks();
 
     InstallUrezHooks();
 
-    CHook::Redirect("_ZN5CGame20InitialiseRenderWareEv", &CGame::InitialiseRenderWare);
+    CHook::InlineHook("_ZN5CGame20InitialiseRenderWareEv", &CGame__InitialiseRenderWare_hook, &CGame__InitialiseRenderWare);
     CHook::InstallPLT(g_libGTASA + 0x83DE90, &StartGameScreen__OnNewGameCheck_hook, &StartGameScreen__OnNewGameCheck);
     CHook::InlineHook("_Z10NvUtilInitv", &NvUtilInit_hook, &NvUtilInit);
 
@@ -2076,7 +1974,7 @@ void InstallSpecialHooks()
 
     CHook::InlineHook("_Z27AtomicDefaultRenderCallBackP8RpAtomic", &AtomicDefaultRenderCallBack_hook, &AtomicDefaultRenderCallBack_orig);
     CHook::InlineHook("_ZN18CVisibilityPlugins12RenderEntityEPvf", &CVisibilityPlugins_RenderEntity_hook, &CVisibilityPlugins_RenderEntity_orig);
-    CHook::InlineHook("_ZN15CMatrixLinkList4InitEi", &CPlaceable_InitMatrixArray_hook, & CPlaceable_InitMatrixArray);
+    CHook::InlineHook(g_libGTASA+0x846B00, &CPlaceable_InitMatrixArray_hook, & CPlaceable_InitMatrixArray);
 
 }
 RwFrame * (*CClumpModelInfo__GetFrameFromId)(RpClump * a1, int32 a2);
@@ -2085,7 +1983,6 @@ RwFrame * CClumpModelInfo__GetFrameFromId_hook(RpClump * a1, int32 a2)
 
     uintptr_t dwRetAddr = 0;
     GET_LR(dwRetAddr);
-    dwRetAddr -= g_libGTASA;
 
     if(!CClumpModelInfo__GetFrameFromId(a1, a2))
     {
@@ -2180,8 +2077,8 @@ void InstallMiscHooks()
 
 void InstallHooks()
 {
-    CHook::Redirect("_Z13Render2dStuffv", &Render2dStuff);
-    CHook::Redirect("_Z13RenderEffectsv", &RenderEffects);
+    CHook::InlineHook("_Z13Render2dStuffv", &Render2dStuff_hook, &Render2dStuff);
+    //CHook::InlineHook("_Z13RenderEffectsv", &RenderEffects_hook, &RenderEffects);
     CHook::InlineHook("_Z14AND_TouchEventiiii", &AND_TouchEvent_hook, &AND_TouchEvent);
 
     CHook::Redirect("_ZN11CHudColours12GetIntColourEh", &CHudColours__GetIntColour); // dangerous
@@ -2199,14 +2096,14 @@ void InstallHooks()
 
     // Bullet sync
     //CHook::InlineHook("_ZN7CWeapon14FireInstantHitEP7CEntityP7CVectorS3_S1_S3_S3_bb", &CWeapon__FireInstantHit_hook, &CWeapon__FireInstantHit);
-    CHook::InlineHook("_ZN7CWeapon14FireInstantHitEP7CEntityP7CVectorS3_S1_S3_S3_bb", &CWeapon__FireInstantHit_hook, &CWeapon__FireInstantHit);
-    CHook::InlineHook("_ZN7CWeapon10FireSniperEP4CPedP7CEntityP7CVector", &CWeapon__FireSniper_hook, &CWeapon__FireSniper);
+    CHook::InstallPLT(g_libGTASA+0x844688, &CWeapon__FireInstantHit_hook, &CWeapon__FireInstantHit);
+    CHook::InstallPLT(g_libGTASA+0x84D150, &CWeapon__FireSniper_hook, &CWeapon__FireSniper);
     CHook::InlineHook("_ZN6CWorld18ProcessLineOfSightERK7CVectorS2_R9CColPointRP7CEntitybbbbbbbb", &CWorld__ProcessLineOfSight_hook, &CWorld__ProcessLineOfSight);
     CHook::InlineHook("_ZN28CPedDamageResponseCalculator21ComputeDamageResponseEP4CPedR18CPedDamageResponseb", &CPedDamageResponseCalculator__ComputeDamageResponse_hook, &CPedDamageResponseCalculator__ComputeDamageResponse);
     CHook::InlineHook("_ZN7CWeapon18ProcessLineOfSightERK7CVectorS2_R9CColPointRP7CEntity11eWeaponTypeS6_bbbbbbb", &CWeapon__ProcessLineOfSight_hook, &CWeapon__ProcessLineOfSight);
     CHook::InlineHook("_ZN11CBulletInfo9AddBulletEP7CEntity11eWeaponType7CVectorS3_", &CBulletInfo_AddBullet_hook, &CBulletInfo_AddBullet);
 
-    CHook::InlineHook("_ZN11CFileLoader18LoadObjectInstanceEP19CFileObjectInstancePKc", &CFileLoader__LoadObjectInstance_hook, &CFileLoader__LoadObjectInstance);
+   // CHook::InlineHook("_ZN11CFileLoader18LoadObjectInstanceEP19CFileObjectInstancePKc", &CFileLoader__LoadObjectInstance_hook, &CFileLoader__LoadObjectInstance);
 
     CHook::InlineHook("_ZN6CRadar9ClearBlipEi", &CRadar_ClearBlip_hook, &CRadar_ClearBlip);
 
@@ -2281,6 +2178,7 @@ void InstallHooks()
     CHook::InlineHook("_ZN6CRadar15DrawRadarSpriteEtffh", (uintptr_t) CRadar__DrawRadarSprite_hook,
                       (uintptr_t *) &CRadar__DrawRadarSprite);
 
+    CHook::InlineHook("_ZN7CObject6RenderEv", &CObject_Render_hook, & CObject_Render);
 
     //CHook::InlineHook("_Z16_rxPacketDestroyP8RxPacket", rxPacketDestroy_hook, rxPacketDestroy);
 
@@ -2290,7 +2188,7 @@ void InstallHooks()
 
     //CHook::InlineHook("_ZN16cHandlingDataMgr13FindExactWordEPcS0_ii", &cHandlingDataMgr__FindExactWord_hook, &cHandlingDataMgr__FindExactWord);
     //CHook::Redirect("_ZN16cHandlingDataMgr22ConvertDataToGameUnitsEP13tHandlingData", &cHandlingDataMgr__ConvertDataToGameUnits);
-    CHook::InlineHook("_ZN21CAEWeatherAudioEntity16UpdateParametersEP8CAESounds", &CAEWeatherAudioEntity__UpdateParameter_hook, &CAEWeatherAudioEntity__UpdateParameter);
+    //CHook::InlineHook("_ZN21CAEWeatherAudioEntity16UpdateParametersEP8CAESounds", &CAEWeatherAudioEntity__UpdateParameter_hook, &CAEWeatherAudioEntity__UpdateParameter);
     HookCPad();
     InstallCrashFixHooks();
     InstallMiscHooks();

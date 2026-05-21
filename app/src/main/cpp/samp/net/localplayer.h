@@ -338,6 +338,7 @@ private:
 		uint32_t dwLastMoney;
 		uint32_t dwLastDrunkLevel;
 	} m_statsData;
+	bool HandleDriverEntry();
 
 	void SendUnoccupiedData(VEHICLEID vehicleId, CVehicle *pVehicle);
 

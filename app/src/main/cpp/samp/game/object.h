@@ -22,7 +22,7 @@ public:
 
 	void SetMaterial(int iModel, int iIndex, char* txdname, char* texturename, uint32_t dwColor);
 	void SetMaterialText(int iIndex, char* text, int materialSize, char* fontname, int fontSize, bool bold,
-		uint32_t dwFontColor, uint32_t dwBackColor, int textAlignment);
+						 uint32_t dwFontColor, uint32_t dwBackColor, int textAlignment);
 
 	void MoveTo(float fX, float fY, float fZ, float fSpeed, float fRotX, float fRotY, float fRotZ);
 	void StopMoving();
@@ -37,7 +37,7 @@ public:
 
 	bool AttachedToMovingEntity();
 
-    void SetPos(float x, float y, float z);
+	void SetPos(float x, float y, float z);
 
 	/* attach */
 	uint16_t	m_AttachedVehicleID;
@@ -64,9 +64,9 @@ public:
 	bool		m_bAttachedToPed;
 	bool		m_bForceRender;
 
-    CPhysical		*m_pEntity;
-    uint8_t		m_byteMoving;
-    uint32_t		m_dwGTAId;
+	CPhysical		*m_pEntity;
+	uint8_t		m_byteMoving;
+	uint32_t		m_dwGTAId;
 
 	void InstantRotate(float x, float y, float z);
 
@@ -75,7 +75,7 @@ private:
 	CVector		m_vecRotation;
 	int			m_iModel;
 
-    float		m_fMoveSpeed;
+	float		m_fMoveSpeed;
 	bool		m_bNeedRotate;
 	RwMatrix	m_matTarget;
 	CQuaternion m_quatStart;

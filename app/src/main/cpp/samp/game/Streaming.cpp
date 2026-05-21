@@ -22,26 +22,21 @@
 extern UI *pUI;
 extern CGame* pGame;
 bool CStreaming::TryLoadModel(int modelId) {
-    FLog("TryLoadModel %d", modelId);
-    if(!pGame->IsModelLoaded(modelId)) {
-        FLog("TryLoadModel 1");
-        pGame->RequestModel(modelId, 1);
-        FLog("TryLoadModel 11");
-        pGame->LoadRequestedModels();
-        FLog("TryLoadModel 2");
+    if(!CStreaming::GetInfo(modelId).IsLoaded()) {
+        CStreaming::RequestModel(modelId, STREAMING_GAME_REQUIRED | STREAMING_KEEP_IN_MEMORY);
+        CStreaming::LoadAllRequestedModels(false);
+
         uint32 count = 0;
-        while (!pGame->IsModelLoaded(modelId)) {
+        while (!CStreaming::GetInfo(modelId).IsLoaded()) {
             count++;
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
             if (count > 30) {
-                pUI->chat()->addDebugMessage("{ff0000} Error loading model %d", modelId);
+                //CChatWindow::DebugMessage("{ff0000} Error loading model %d", modelId);
                 return false;
             }
         }
-        FLog("TryLoadModel 3");
     }
-    FLog("TryLoadModel 4");
     return true;
 }
 
@@ -226,6 +221,7 @@ void CStreaming::InjectHooks() {
 
     CHook::Redirect("_ZN10CStreaming13InitImageListEv", &CStreaming::InitImageList);
     CHook::Redirect("_ZN10CStreaming12MakeSpaceForEi", &CStreaming::MakeSpaceFor);
+    //CHook::Redirect("_ZN10CStreaming6UpdateEv", &CStreaming::Update);
     //CHook::Redirect("_ZN10CStreaming22LoadAllRequestedModelsEb", &CStreaming::LoadAllRequestedModels);
 }
 
@@ -357,9 +353,130 @@ void CStreaming::AddModelsToRequestList(const CVector* point, int32 streamingFla
 }
 
 #include "Textures/TextureDatabaseRuntime.h"
+
+
 extern CNetGame *pNetGame;
+namespace {
+    constexpr uint32_t kAutoCleanIntervalMs = 5000;
+    constexpr float kAutoCleanHighWatermark = 0.90f;
+    constexpr float kAutoCleanDeleteRwHighWatermark = 0.95f;
+    constexpr int kAutoCleanMaxPasses = 12;
+    constexpr int32_t kAutoCleanSkipFlags = STREAMING_KEEP_IN_MEMORY |
+                                            STREAMING_MISSION_REQUIRED |
+                                            STREAMING_GAME_REQUIRED |
+                                            STREAMING_PRIORITY_REQUEST |
+                                            STREAMING_LOADING_SCENE;
+}
 void CStreaming::Update() {
-    CHook::CallFunction<void>(g_libGTASA + 0x3AE8EC);
+    if (CTimer::GetIsPaused())
+        return;
+
+    if(!CStreaming::GetInfo(MODEL_MALE01).IsLoaded()) {
+        RequestModel(MODEL_MALE01, STREAMING_KEEP_IN_MEMORY);
+        CStreaming::LoadAllRequestedModels(false);
+    }
+    CModelInfo::GetModelInfo(MODEL_MALE01)->m_nRefCount = 999;
+
+    /*if(CTimer::m_snTimeInMillisecondsNonClipped % 100 == 0)
+        RemoveLeastUsedModel(STREAMING_KEEP_IN_MEMORY);*/
+
+    static double previousTime{};
+    const double currentTimeInSeconds = CTimer::m_snTimeInMillisecondsNonClipped / 1000.0;
+    const double deltaTime = currentTimeInSeconds - previousTime;
+    previousTime = currentTimeInSeconds;
+    const double clampedDeltaTime = std::min(0.1, deltaTime);
+    // Avoid aggressively flushing streamed textures each frame; this can evict UI atlases (buttons)
+    TextureDatabaseRuntime::UpdateStreaming(clampedDeltaTime, false);
+
+    static uint32_t lastAutoCleanTick = 0;
+    const uint32_t nowTick = CTimer::m_snTimeInMillisecondsNonClipped;
+    if (nowTick - lastAutoCleanTick >= kAutoCleanIntervalMs) {
+        if (ms_memoryAvailable > 0) {
+            const size_t highWatermark = static_cast<size_t>(ms_memoryAvailable * kAutoCleanHighWatermark);
+            if (ms_memoryUsed > highWatermark) {
+                int removed = 0;
+                for (int i = 0; i < kAutoCleanMaxPasses; ++i) {
+                    if (!RemoveLeastUsedModel(kAutoCleanSkipFlags)) {
+                        break;
+                    }
+                    ++removed;
+                }
+                if (ms_memoryUsed > static_cast<size_t>(ms_memoryAvailable * kAutoCleanDeleteRwHighWatermark)) {
+                    DeleteRwObjectsBehindCamera(ms_memoryUsed - highWatermark);
+                }
+                if (removed > 0) {
+                    TextureDatabaseRuntime::UpdateStreaming(0.0f, true);
+                }
+            }
+        }
+
+        lastAutoCleanTick = nowTick;
+    }
+
+    CCamera& TheCamera = *reinterpret_cast<CCamera*>(g_libGTASA + 0x9F86F8);
+
+    const auto& camPos = TheCamera.GetPosition();
+    const float fCamDistanceToGroundZ = camPos.z - TheCamera.CalculateGroundHeight(eGroundHeightType::ENTITY_BB_BOTTOM);
+
+    if (!ms_disableStreaming && !CRenderer::m_loadingPriority) {
+        if (fCamDistanceToGroundZ >= 50.0f) {
+            if (CGame::CanSeeOutSideFromCurrArea()) {
+                AddLodsToRequestList(&camPos, 0);
+            }
+        }
+        else if (CRenderer::ms_bRenderOutsideTunnels) {
+            AddModelsToRequestList(&camPos, 0);
+        }
+    }
+
+//    if (CTimer::GetFrameCounter() % 128 == 106) {
+//        m_bBoatsNeeded = false;
+//        if (camPos.z < 500.0f) {
+//            m_bBoatsNeeded = ThePaths.IsWaterNodeNearby(camPos, 80.0f);
+//        }
+//    }
+    if(!pNetGame || !pNetGame->GetPlayerPool()->GetLocalPlayer())
+        return;
+
+    auto pLocalPed = pNetGame->GetPlayerPool()->GetLocalPlayer()->GetPlayerPed()->m_pPed;
+    const CVector& playerPos = pLocalPed->GetPosition();
+
+//    if (!ms_disableStreaming
+//        && !CCutsceneMgr::IsCutsceneProcessing()
+//        && CGame::CanSeeOutSideFromCurrArea()
+//        && CReplay::Mode != MODE_PLAYBACK
+//        && fCamDistanceToGroundZ < 50.0f
+//            ) {
+//        StreamVehiclesAndPeds_Always(playerPos);
+//        if (!IsVeryBusy()) {
+//            StreamVehiclesAndPeds();
+//            StreamZoneModels(playerPos);
+//        }
+//    }
+    LoadRequestedModels();
+
+    if (pLocalPed->IsInVehicle()) {
+        CVehicleGTA* remoteVehicle = pLocalPed->pVehicle;
+
+        CColStore::AddCollisionNeededAtPosn(&playerPos);
+        CIplStore::AddIplsNeededAtPosn(&playerPos);
+
+        const auto& removeVehiclePos = remoteVehicle->GetPosition();
+        CColStore::LoadCollision(removeVehiclePos, false);
+        CColStore::EnsureCollisionIsInMemory(&removeVehiclePos);
+        CIplStore::LoadIpls(removeVehiclePos, false);
+        CIplStore::EnsureIplsAreInMemory(&removeVehiclePos);
+    }
+    else {
+        CColStore::LoadCollision(playerPos, false);
+        CColStore::EnsureCollisionIsInMemory(&playerPos);
+        CIplStore::LoadIpls(playerPos, false);
+        CIplStore::EnsureIplsAreInMemory(&playerPos);
+    }
+
+    if (ms_bEnableRequestListPurge) {
+        PurgeRequestList();
+    }
 }
 
 // Call `RemoveModel` on all models in the request list except

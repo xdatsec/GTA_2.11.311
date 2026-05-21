@@ -631,13 +631,8 @@ void CRemotePlayer::StoreInCarFullSyncData(INCAR_SYNC_DATA* picSync, uint32_t dw
 		m_dwLastRecvTick = GetTickCount();
 		m_byteSpecialAction = 0;
 
-        if(!m_pPlayerPed->m_pPed->IsInVehicle())
-        {
-            ScriptCommand(&put_actor_in_car, m_pPlayerPed->m_dwGTAId, m_pCurrentVehicle->m_dwGTAId);
-        }
-        if (m_pPlayerPed->GetCurrentVehicle() != m_pCurrentVehicle) {
-            m_pPlayerPed->RemoveFromVehicleAndPutAt(picSync->vecPos.x, picSync->vecPos.y, picSync->vecPos.z);
-        }
+		if(m_pPlayerPed && !m_pPlayerPed->IsInVehicle())
+			PutInCurrentVehicle();
 
 		SetState(PLAYER_STATE_DRIVER);
 	}

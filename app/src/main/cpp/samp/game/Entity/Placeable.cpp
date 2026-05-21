@@ -131,14 +131,69 @@ void CPlaceable::RemoveMatrix() {
 }
 
 void CPlaceable::AllocateStaticMatrix() {
-    if (m_matrix)
-        return gMatrixList.MoveToList2(m_matrix);
+    CMatrixLink *m_pMat; // x8
+    CMatrixLink *m_pNext; // x20
+    CPlaceable *pPlaceable; // x23
+    uintptr v5; // x24
+    float tz; // w25
+    float v7; // s0
+    CMatrixLink *m_pPrev; // x8
+    CMatrixLink *v9; // x9
 
-    if (gMatrixList.IsFull())
-        gMatrixList.GetOldestLink()->m_pOwner->RemoveMatrix();
-
-    m_matrix = gMatrixList.AddToList2();
-    m_matrix->m_pOwner = this;
+    m_pMat = (CMatrixLink *)this->m_matrix;
+    if ( m_matrix )
+    {
+        m_pMat->m_pNext->m_pPrev = m_pMat->m_pPrev;
+        m_pMat->m_pPrev->m_pNext = m_pMat->m_pNext;
+        m_pMat->m_pNext = gMatrixList.m_tail.m_pNext;
+        gMatrixList.m_tail.m_pNext->m_pPrev = m_pMat;
+        m_pMat->m_pPrev = &gMatrixList.m_tail;
+        gMatrixList.m_tail.m_pNext = m_pMat;
+    }
+    else {
+        m_pNext = gMatrixList.m_freeListHead.m_pNext;
+        if (gMatrixList.m_freeListHead.m_pNext == &gMatrixList.m_freeListTail
+            ||
+            (gMatrixList.m_freeListHead.m_pNext->m_pNext->m_pPrev = gMatrixList.m_freeListHead.m_pNext->m_pPrev,
+             m_pNext->m_pPrev->m_pNext = m_pNext->m_pNext,
+             m_pNext->m_pNext = gMatrixList.m_tail.m_pNext,
+             gMatrixList.m_tail.m_pNext->m_pPrev = m_pNext,
+             m_pNext->m_pPrev = &gMatrixList.m_tail,
+                    (gMatrixList.m_tail.m_pNext = m_pNext) == 0)) {
+            pPlaceable = gMatrixList.m_head.m_pPrev->m_pOwner;
+            m_pNext = (CMatrixLink *) pPlaceable->m_matrix;
+            v5 = *(uintptr_t *) &m_pNext->m_pOwner->m_matrix->m_pos.x;
+            tz = m_pNext->m_pOwner->m_matrix->m_pos.z;
+            v7 = atan2f(-m_pNext->m_pOwner->m_matrix->m_forward.x,
+                        m_pNext->m_pOwner->m_matrix->m_forward.y);
+            *(uintptr_t *) &pPlaceable->m_placement.m_vPosn.x = v5;
+            pPlaceable->m_placement.m_vPosn.z = tz;
+            pPlaceable->m_placement.m_fHeading = v7;
+            pPlaceable->m_matrix = 0;
+            m_pPrev = m_pNext->m_pPrev;
+            v9 = m_pNext->m_pNext;
+            m_pNext->m_pOwner = 0;
+            v9->m_pPrev = m_pPrev;
+            m_pNext->m_pPrev->m_pNext = m_pNext->m_pNext;
+            m_pNext->m_pNext = gMatrixList.m_freeListHead.m_pNext;
+            gMatrixList.m_freeListHead.m_pNext->m_pPrev = m_pNext;
+            m_pNext->m_pPrev = &gMatrixList.m_freeListHead;
+            gMatrixList.m_freeListHead.m_pNext = m_pNext;
+            if (m_pNext == &gMatrixList.m_freeListTail) {
+                m_pNext = 0;
+            } else {
+                m_pNext->m_pNext->m_pPrev = m_pNext->m_pPrev;
+                m_pNext->m_pPrev->m_pNext = m_pNext->m_pNext;
+                m_pNext->m_pNext = gMatrixList.m_tail.m_pNext;
+                gMatrixList.m_tail.m_pNext->m_pPrev = m_pNext;
+                m_pNext->m_pPrev = &gMatrixList.m_tail;
+                gMatrixList.m_tail.m_pNext = m_pNext;
+            }
+        }
+        m_pNext->m_pOwner = this;
+        this->m_matrix = reinterpret_cast<CMatrixLink *>(&m_pNext->m_pOwner->m_matrix);
+        CHook::CallFunction<void>(g_libGTASA + 0x52E1A8, &m_pNext->m_pOwner->m_matrix);
+    }
 }
 
 void CPlaceable::AllocateMatrix() {
@@ -154,18 +209,23 @@ void CPlaceable::AllocateMatrix() {
 
 void CPlaceable::SetMatrix(CMatrix& matrix) {
     if (!m_matrix) {
-        if (matrix.GetUp().z == 1.0F) {
-            auto& vecForward = matrix.GetForward();
-            auto fHeading = std::atan2(-vecForward.x, vecForward.y);
 
-            m_placement.m_vPosn = matrix.GetPosition();
-            m_placement.m_fHeading = fHeading;
-            return;
-        }
-        CPlaceable::AllocateMatrix();
+        m_matrix->m_right.x = matrix.m_right.x;
+        m_matrix->m_right.y = matrix.m_right.y;
+        m_matrix->m_right.z = matrix.m_right.z;
+
+        m_matrix->m_forward.x = matrix.m_forward.x;
+        m_matrix->m_forward.y = matrix.m_forward.y;
+        m_matrix->m_forward.z = matrix.m_forward.z;
+
+        m_matrix->m_up.x = matrix.m_up.x;
+        m_matrix->m_up.y = matrix.m_up.y;
+        m_matrix->m_up.z = matrix.m_up.z;
+
+        m_matrix->m_pos.x = matrix.m_pos.x;
+        m_matrix->m_pos.y = matrix.m_pos.y;
+        m_matrix->m_pos.z = matrix.m_pos.z;
     }
-
-    *static_cast<CMatrix*>(m_matrix) = matrix;
 }
 
 float CPlaceable::GetRoll() const {
@@ -184,11 +244,6 @@ bool CPlaceable::IsPointInRange(const CVector& point, float range) {
 }
 
 CMatrix& CPlaceable::GetMatrix() {
-    if (!m_matrix) {
-        CPlaceable::AllocateMatrix();
-        m_placement.UpdateMatrix(m_matrix);
-    }
-
     return *m_matrix;
 }
 
@@ -232,9 +287,9 @@ void CPlaceable_SetMatrix(CPlaceable *thiz, CMatrix& matrix) {
 }
 
 void CPlaceable::InjectHooks() {
-    //CHook::Redirect("_ZN10CPlaceable20AllocateStaticMatrixEv", &CPlaceable_AllocateStaticMatrix);
-   // CHook::Redirect("_ZN10CPlaceable15InitMatrixArrayEv", &CPlaceable::InitMatrixArray);
-  //  CHook::Redirect("_ZN10CPlaceable19ShutdownMatrixArrayEv", &CPlaceable::ShutdownMatrixArray);
+   // CHook::Redirect("_ZN10CPlaceable20AllocateStaticMatrixEv", &CPlaceable_AllocateStaticMatrix);
+    CHook::Redirect("_ZN10CPlaceable15InitMatrixArrayEv", &CPlaceable::InitMatrixArray);
+    CHook::Redirect("_ZN10CPlaceable19ShutdownMatrixArrayEv", &CPlaceable::ShutdownMatrixArray);
 
 
 
