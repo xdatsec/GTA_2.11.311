@@ -140,6 +140,8 @@ void Plugin::MainLoop()
 
                         if (!Network::SendControlPacket(SV::ControlPacketType::pressKey, &pressKeyPacket, sizeof(pressKeyPacket)))
                             LogVoice("[sv:err:main:HookWndProc] : failed to send PressKey packet");
+
+
                     }
                     if (!vbutton->recording() && Plugin::recordStatus == 1) {
                         if (!Plugin::recordBusy)

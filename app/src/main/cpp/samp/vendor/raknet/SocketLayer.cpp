@@ -24,9 +24,8 @@
 #include "SocketLayer.h"
 #include <assert.h>
 #include "MTUSize.h"
-#include "SAMP/samp_netencr.h"
 
-#include "main.h"
+#include "..//..//main.h"
 
 #ifdef _WIN32
 #include <process.h>
@@ -42,6 +41,8 @@ typedef int socklen_t;
 #endif
 
 #include "ExtendedOverlappedPool.h"
+#include "raknet/SAMP/samp_netencr.h"
+
 #ifdef __USE_IO_COMPLETION_PORTS
 #include "AsynchronousFileIO.h"
 #endif
@@ -502,7 +503,7 @@ int SocketLayer::SendTo( SOCKET s, const char *data, int length, unsigned int bi
 
 #ifdef RAKSAMP_CLIENT
 
-	kyretardizeDatagram((unsigned char *)data, length, port, 0);
+    kyretardizeDatagram((unsigned char *)data, length, port, 0);
 
 #endif
 	do

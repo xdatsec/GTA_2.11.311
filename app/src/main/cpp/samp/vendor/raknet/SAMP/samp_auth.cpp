@@ -1,6 +1,6 @@
 // https://github.com/P3ti/RakSAMP/blob/master/raknet/SAMP/samp_auth.cpp
 #include "..//..//..//main.h"
-#include <cstdlib>
+#include "str_obfuscator.hpp"
 
 #define endian_swap8(x) (x)
 #define endian_swap16(x) ((x>>8) | (x<<8))
@@ -221,8 +221,7 @@ void gen_auth_key(char* buf, char* auth_in)
     auth_stringify(buf, pb_out);
 }
 
-#define AAAstringA(x) encoder<sizeCalculate(x)>(x).decode().c_str()
-
+//#define AAAstringA(x) encoder<sizeCalculate(x)>(x).decode().c_str()
 
 struct AuthEntry {
     const char* send;
@@ -524,8 +523,8 @@ static const AuthEntry AuthTable[] = {
 const char* findKey(const char* sendValue) {
     for (size_t i = 0; i < std::size(AuthTable); ++i) {
         if (strcmp(AuthTable[i].send, sendValue) == 0) {
-            return AuthTable[i].recv; // Найдено соответствие, возвращаем recv
+            return AuthTable[i].recv; // ������� ������������, ���������� recv
         }
     }
-    return nullptr; // Если не найдено соответствие, возвращаем nullptr или другое значение по умолчанию
+    return nullptr; // ���� �� ������� ������������, ���������� nullptr ��� ������ �������� �� ���������
 }

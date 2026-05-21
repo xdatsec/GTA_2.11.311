@@ -154,3 +154,4 @@ extern int RPC_SetPlayerSkillLevel;
 extern int RPC_EditObject;
 extern int RPC_EditAttachedObject;
 extern int RPC_EnterEditObject;
+extern int RPC_SetPlayerVirtualWorld;

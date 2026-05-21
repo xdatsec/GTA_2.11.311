@@ -104,7 +104,7 @@ CNetGame::CNetGame(const char* szHostOrIp, int iPort, const char *szPlayerName, 
     if(pSettings)
         sampVer = pSettings->Get().szVersion;
 
-	if (pUI) pUI->chat()->addDebugMessage("{FFFFFF}Kurdish RolePlay Client started...", sampVer);
+	if (pUI) pUI->chat()->addDebugMessage("{FFFFFF}Samp Mobile Clientstarted...", sampVer);
 }
 // 0.3.7
 CNetGame::~CNetGame()
@@ -203,7 +203,6 @@ void CNetGame::Process()
 
 void CNetGame::UpdateNetwork()
 {
-    bool breakStatus = false;
     Packet *pkt = nullptr;
     unsigned char packetIdentifier;
 
@@ -269,7 +268,9 @@ void CNetGame::UpdateNetwork()
             case ID_MARKERS_SYNC:
                 Packet_MarkerSync(pkt);
                 break;
-
+            case ID_PASSENGER_SYNC:
+                Packet_PassengerSync(pkt);
+                break;
             case ID_UNOCCUPIED_SYNC:
                 Packet_UnoccupiedSync(pkt);
                 break;
@@ -277,28 +278,14 @@ void CNetGame::UpdateNetwork()
             case ID_TRAILER_SYNC:
                 Packet_TrailerSync(pkt);
                 break;
-
-            case ID_PASSENGER_SYNC:
-                Packet_PassengerSync(pkt);
-                break;
-
-            case Network::kRaknetPacketId: {
-                Network::OnRaknetReceive(*pkt);
-                break;
-            }
-
-            case 251:
-                Packet_CustomRPC(pkt);
-                break;
         }
-
         // voice
-        /*
-        if (!Network::OnRaknetReceive(*pkt)) breakStatus = true;
-        if (breakStatus) return;
-        */
+        bool breakStatus = false;
+        if(!Network::OnRaknetReceive(*pkt)) breakStatus = true;
+        if(breakStatus) return;
 
         m_pRakClient->DeallocatePacket(pkt);
+
     }
 }
 

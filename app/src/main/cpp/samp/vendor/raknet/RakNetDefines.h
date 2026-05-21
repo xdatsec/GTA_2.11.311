@@ -7,7 +7,7 @@
 /// Define this if you use the same instance of RakPeer from multiple threads
 /// Otherwise leave it undefined, since it makes things an order of magnitude slower.
 /// Disabled by default
-// #define _RAKNET_THREADSAFE
+//#define _RAKNET_THREADSAFE
 
 /// Can interrupt a Sleep() if a message is incoming.  Useful to define if you pass a large sleep value to RakPeer::Initialize
 // #define USE_WAIT_FOR_MULTIPLE_EVENTS

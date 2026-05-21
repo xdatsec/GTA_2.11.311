@@ -13,7 +13,7 @@ class LocalStream : public Stream {
 
 protected:
     explicit LocalStream(StreamType type, uint32_t color,
-                         std::string name, float distance) noexcept;
+                            std::string name, float distance) noexcept;
 
 public:
     virtual ~LocalStream() noexcept = default;

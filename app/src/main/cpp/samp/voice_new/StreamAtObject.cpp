@@ -16,10 +16,48 @@ StreamAtObject::StreamAtObject(const uint32_t color, std::string name,
 
 void StreamAtObject::Tick() noexcept
 {
+    this->LocalStream::Tick();
 
+    if(!pNetGame) return;
+
+    CObjectPool *pObjectPool = pNetGame->GetObjectPool();
+    if(!pObjectPool) return;
+
+    CObject *pObject = pObjectPool->GetAt(this->objectId);
+    if(!pObject) return;
+
+    RwMatrix pObjectMatrix;
+    pObject->m_pEntity->GetMatrix(&pObjectMatrix);
+
+    for(const auto& channel : this->GetChannels())
+    {
+        if(channel->HasSpeaker())
+        {
+            BASS_ChannelSet3DPosition(channel->GetHandle(),
+                reinterpret_cast<BASS_3DVECTOR*>(&pObject->m_pEntity->GetPosition()),
+                nullptr, nullptr);
+        }
+    }
 }
 
 void StreamAtObject::OnChannelCreate(const Channel& channel) noexcept
 {
+    static const BASS_3DVECTOR kZeroVector { 0, 0, 0 };
 
+    this->LocalStream::OnChannelCreate(channel);
+
+    if(!pNetGame) return;
+
+    CObjectPool *pObjectPool = pNetGame->GetObjectPool();
+    if(!pObjectPool) return;
+
+    CObject *pObject = pObjectPool->GetAt(this->objectId);
+    if(!pObject) return;
+
+    RwMatrix pObjectMatrix;
+    pObject->m_pEntity->GetMatrix(&pObjectMatrix);
+
+    BASS_ChannelSet3DPosition(channel.GetHandle(),
+    reinterpret_cast<BASS_3DVECTOR*>(&pObject->m_pEntity->GetPosition()),
+    &kZeroVector, &kZeroVector);
 }

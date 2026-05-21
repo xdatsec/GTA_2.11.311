@@ -461,7 +461,7 @@ namespace big
 	// n <<= 1
 	BIGONETYPE void shiftLeft1( T &n )
 	{
-		word w_i, carry = 0;
+		 word w_i, carry = 0;
 		
 		for ( u32 ii = 0; ii < BIGWORDCOUNT( T ); ++ii )
 		{
@@ -475,8 +475,8 @@ namespace big
 	// n <<= s (s <= WORDBITS)
 	BIGONETYPE void shiftLeft( T &n, u32 s )
 	{
-		s32 ii;
-		u32 bases = s / WORDBITS;
+		 s32 ii;
+		 u32 bases = s / WORDBITS;
 		u32 bits = s % WORDBITS;
 		
 		// move whole bases first
@@ -509,7 +509,7 @@ namespace big
 	// n >>= 1 (unsigned)
 	BIGONETYPE void ushiftRight1( T &n )
 	{
-		word w_i, carry = 0;
+		 word w_i, carry = 0;
 		
 		for ( s32 ii = BIGWORDCOUNT( T ) - 1; ii >= 0; --ii )
 		{

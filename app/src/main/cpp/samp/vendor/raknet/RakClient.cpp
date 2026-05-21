@@ -18,7 +18,7 @@
 #include "PacketEnumerations.h"
 #include "GetTime.h"
 
-#include "main.h"
+#include "../../main.h"
 
 #ifdef _MSC_VER
 #pragma warning( push )
@@ -112,6 +112,14 @@ bool RakClient::Send( RakNet::BitStream * bitStream, PacketPriority priority, Pa
 	return RakPeer::Send( bitStream, priority, reliability, orderingChannel, remoteSystemList[ 0 ].playerId, false );
 }
 
+#include "../../game/common.h"
+
+
+#include "../../main.h"
+#include "../../game/game.h"
+#include "../..//net/netgame.h"
+extern CNetGame* pNetGame;
+
 Packet* RakClient::Receive( void )
 {
 	Packet * packet = RakPeer::Receive();
@@ -166,7 +174,12 @@ Packet* RakClient::Receive( void )
 				if ( i >= 0 )
 					otherClients[ i ].isActive = false;
 			}
-		}			
+		}
+
+		else if (packet->data[0] == ID_AIM_SYNC || packet->data[0] == ID_WEAPONS_UPDATE || packet->data[0] == ID_VEHICLE_SYNC)
+		{
+			//CheckForProtected0();
+		}
 		else if ( packet->data[ 0 ] == ID_REMOTE_STATIC_DATA )
 		{
 			bitStream.IgnoreBits( 8 ); // Ignore identifier

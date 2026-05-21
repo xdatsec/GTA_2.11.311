@@ -36,6 +36,7 @@ int RPC_GameModeRestart = 40;
 int RPC_ConnectionRejected = 130;
 int RPC_ClientMessage = 93;
 int RPC_WorldTime = 94;
+int RPC_SetPlayerVirtualWorld = 48;
 int RPC_Pickup = 95;
 int RPC_DestroyPickup = 63;
 int RPC_DestroyWeaponPickup = 97;

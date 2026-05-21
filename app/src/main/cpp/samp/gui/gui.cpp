@@ -100,7 +100,7 @@ bool UI::initialize()
     // mem
     Label* d_label1;
 
-    d_label1 = new Label(cryptor::create("Kurdish RolePlay | ARM:32/64").decrypt(), ImColor(1.0f, 1.0f, 1.0f), true, UISettings::fontSize() / 3);
+    d_label1 = new Label(cryptor::create("SAMPMOBILE| ARM64 build SA 2.11.311").decrypt(), ImColor(1.0f, 1.0f, 1.0f), true, UISettings::fontSize() / 3);
     this->addChild(d_label1);
     d_label1->setPosition(ImVec2(3.0, 3.0));
 

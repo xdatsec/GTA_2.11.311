@@ -28,6 +28,7 @@
 #include "RPCMap.h"
 #include "SimpleMutex.h"
 #include "DS_OrderedList.h"
+#include "DS_QueueLinkedList.h"
 
 class HuffmanEncodingTree;
 class PluginInterface;
@@ -632,7 +633,7 @@ protected:
 	pthread_t
 #endif
 		processPacketsThreadHandle, recvfromThreadHandle;
-	SimpleMutex incomingQueueMutex, banListMutex; //,synchronizedMemoryQueueMutex, automaticVariableSynchronizationMutex;
+	SimpleMutex incomingQueueMutex, banListMutexTemp; //banListMutex; //,synchronizedMemoryQueueMutex, automaticVariableSynchronizationMutex;
 	//DataStructures::Queue<Packet *> incomingpacketSingleProducerConsumer; //, synchronizedMemorypacketSingleProducerConsumer;
 	// BitStream enumerationData;
 
@@ -772,7 +773,7 @@ protected:
 	// immediately while waiting on blocked RPCs
 	DataStructures::SingleProducerConsumer<Packet*> packetSingleProducerConsumer;
 	//DataStructures::Queue<Packet*> pushedBackPacket, outOfOrderDeallocatedPacket;
-	DataStructures::Queue<Packet*> packetPool;
+	DataStructures::QueueLinkedList<Packet*> packetPool;
 };
 
 #endif

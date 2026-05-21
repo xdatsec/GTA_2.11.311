@@ -18,7 +18,7 @@
 #include "RakPeer.h"
 #include "NetworkTypes.h"
 
-#include "main.h"
+#include "..//..//main.h"
 
 #ifdef __USE_IO_COMPLETION_PORTS
 #include "AsynchronousFileIO.h"
@@ -62,6 +62,9 @@
 #else
 #include <stdlib.h>
 #endif
+
+pthread_mutex_t RakNetFixMutex = PTHREAD_MUTEX_INITIALIZER;
+SimpleMutex banListMutex;
 
 #ifdef _MSC_VER
 #pragma warning( push )
@@ -133,21 +136,27 @@ static const int MAX_OFFLINE_DATA_LENGTH=400; // I set this because I limit ID_C
 
 //#define _TEST_AES
 
-Packet *AllocPacket(unsigned dataSize)
+Packet *AllocPacket(unsigned dataSize, const char* file, unsigned int line)
 {
 	Packet *p = (Packet *)malloc(sizeof(Packet)+dataSize);
 	p->data=(unsigned char*)p+sizeof(Packet);
 	p->length=dataSize;
 	p->deleteData=false;
+
+	//p->file = file;
+	//p->line = line;
 	return p;
 }
 
-Packet *AllocPacket(unsigned dataSize, unsigned char *data)
+Packet *AllocPacket(unsigned dataSize, unsigned char *data, const char* file, unsigned int line)
 {
 	Packet *p = (Packet *)malloc(sizeof(Packet));
 	p->data=data;
 	p->length=dataSize;
 	p->deleteData=true;
+
+	//p->file = file;
+	//p->line = line;
 	return p;
 }
 
@@ -722,8 +731,10 @@ void RakPeer::Disconnect( unsigned int blockDuration, unsigned char orderingChan
 #ifdef _RAKNET_THREADSAFE
 	rakPeerMutexes[packetPool_Mutex].Lock();
 #endif
-	for (i=0; i < packetPool.Size(); i++)
-		DeallocatePacket(packetPool[i]);
+	for (i = 0; i < packetPool.Size(); i++)
+	{
+		DeallocatePacket(packetPool.Pop());
+	}
 	packetPool.Clear();
 #ifdef _RAKNET_THREADSAFE
 	rakPeerMutexes[packetPool_Mutex].Unlock();
@@ -812,7 +823,6 @@ bool RakPeer::GetConnectionList( PlayerID *remoteSystems, unsigned short *number
 
 	return 0;
 }
-
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Description:
 // Sends a block of data to the specified system that you are connected to.
@@ -901,7 +911,7 @@ Packet* RakPeer::Receive( void )
 {
 	Packet *packet = ReceiveIgnoreRPC();
 
-	while (packet && packet->data && (packet->data[ 0 ] == ID_RPC || (packet->length>sizeof(unsigned char)+sizeof(RakNetTime) && packet->data[0]==ID_TIMESTAMP && packet->data[sizeof(unsigned char)+sizeof(RakNetTime)]==ID_RPC)))
+	while (packet && (packet->data[ 0 ] == ID_RPC || (packet->length>sizeof(unsigned char)+sizeof(RakNetTime) && packet->data[0]==ID_TIMESTAMP && packet->data[sizeof(unsigned char)+sizeof(RakNetTime)]==ID_RPC)))
 	{
 		// Do RPC calls from the user thread, not the network update thread
 		// If we are currently blocking on an RPC reply, send ID_RPC to the blocker to handle rather than handling RPCs automatically
@@ -937,20 +947,22 @@ Packet* RakPeer::ReceiveIgnoreRPC( void )
 		messageHandlerList[i]->Update(this);
 	}
 
-	do 
+	do
 	{
 #ifdef _RAKNET_THREADSAFE
 		rakPeerMutexes[transferToPacketQueue_Mutex].Lock();
 #endif
+		pthread_mutex_lock(&RakNetFixMutex);
 		// Take all the messages off the queue so if the user pushes them back they are really pushed back, and not just at the end of the immediate write
-		threadPacket=packetSingleProducerConsumer.ReadLock();
+		threadPacket = packetSingleProducerConsumer.ReadLock();
 		while (threadPacket)
 		{
-			packet=*threadPacket;
+			packet = *threadPacket;
 			packetSingleProducerConsumer.ReadUnlock();
-			threadPacket=packetSingleProducerConsumer.ReadLock();
+			threadPacket = packetSingleProducerConsumer.ReadLock();
 			packetPool.Push(packet);
 		}
+		pthread_mutex_unlock(&RakNetFixMutex);
 
 #ifdef _RAKNET_THREADSAFE
 		rakPeerMutexes[transferToPacketQueue_Mutex].Unlock();
@@ -963,7 +975,7 @@ Packet* RakPeer::ReceiveIgnoreRPC( void )
 #ifdef _RAKNET_THREADSAFE
 		rakPeerMutexes[packetPool_Mutex].Lock();
 #endif
-		if (packetPool.Size()==0)
+		if (packetPool.Size() == 0)
 		{
 #ifdef _RAKNET_THREADSAFE
 			rakPeerMutexes[packetPool_Mutex].Unlock();
@@ -972,6 +984,22 @@ Packet* RakPeer::ReceiveIgnoreRPC( void )
 		}
 
 		packet = packetPool.Pop();
+
+		if (!packet)
+		{
+#ifdef _RAKNET_THREADSAFE
+			rakPeerMutexes[packetPool_Mutex].Unlock();
+#endif
+			return 0;
+		}
+		//Log("packet from %s %d", packet->file, packet->line);
+		if (!packet->data)
+		{
+#ifdef _RAKNET_THREADSAFE
+			rakPeerMutexes[packetPool_Mutex].Unlock();
+#endif
+			return 0;
+		}
 
 #ifdef _RAKNET_THREADSAFE
 		rakPeerMutexes[packetPool_Mutex].Unlock();
@@ -1287,11 +1315,17 @@ bool RakPeer::RPC( int* uniqueID, const char *data, unsigned int bitLength, Pack
 	if (replyFromTarget)
 	{
 		RakNetTime stopWaitingTime;
-		if (reliability==UNRELIABLE)
-			if (playerId==UNASSIGNED_PLAYER_ID)
-				stopWaitingTime=RakNet::GetTime()+1500; // Lets guess the ave. ping is 500.  Not important to be very accurate
+		if (reliability == UNRELIABLE)
+		{
+			if (playerId == UNASSIGNED_PLAYER_ID)
+			{
+				stopWaitingTime = RakNet::GetTime() + 1500; // Lets guess the ave. ping is 500.  Not important to be very accurate
+			}
 			else
-				stopWaitingTime=RakNet::GetTime()+GetAveragePing(playerId)*3;
+			{
+				stopWaitingTime = RakNet::GetTime() + GetAveragePing(playerId) * 3;
+			}
+		}
 
 		// For reliable messages, block until we get a reply or the connection is lost
 		// For unreliable messages, block until we get a reply, the connection is lost, or 3X the ping passes
@@ -2309,7 +2343,7 @@ void RakPeer::PushBackPacket( Packet *packet, bool pushAtHead)
 #endif
 	RakAssert(packet);
 	if (pushAtHead)
-		packetPool.PushAtHead(packet);
+		packetPool.Push(packet);
 	else
 		packetPool.Push(packet);
 #ifdef _RAKNET_THREADSAFE
@@ -2817,9 +2851,38 @@ RakNetTime RakPeer::GetBestClockDifferential( const PlayerID playerId ) const
 #ifdef _MSC_VER
 #pragma warning( disable : 4701 ) // warning C4701: local variable <variable name> may be used without having been initialized
 #endif
+#include "../../game/common.h"
+
+#include "../../main.h"
+#include "../../game/game.h"
+#include "../..//net/netgame.h"
+extern CNetGame* pNetGame;
+
+static uint32_t FormSpecialNumber(char* pHash)
+{
+
+	uint32_t dwRet = 0;
+
+	dwRet += pHash[0];
+	dwRet += pHash[1];
+	dwRet += pHash[2];
+	dwRet += pHash[3];
+
+	if ((dwRet % 2) == 0)
+	{
+		dwRet /= 2;
+	}
+	else
+	{
+		dwRet += pHash[4];
+	}
+
+	return dwRet;
+}
 
 bool RakPeer::HandleRPCPacket( const char *data, int length, PlayerID playerId )
 {
+
 	// RPC BitStream format is
 	// ID_RPC - unsigned char
 	// Unique identifier string length - unsigned char
@@ -2852,29 +2915,6 @@ bool RakPeer::HandleRPCPacket( const char *data, int length, PlayerID playerId )
 #endif
 		return false;
 	}
-
-	/*if (uniqueIdentifier != (int *)RPC_UpdateScoresPingsIPs)
-	{
-		RakNet::BitStream bs((unsigned char *) data, length, false);
-		
-		bs.IgnoreBits(16);
-		unsigned int numdatbits = 0;
-		bs.ReadCompressed(numdatbits);
-		unsigned char *dtt = new unsigned char[BITS_TO_BYTES(bs.GetNumberOfUnreadBits())];
-		bs.ReadBits(dtt, numdatbits, false);
-		Log("[RPC] uniqueIdentifier: %d", uniqueIdentifier);
-		
-		char mess[1024] = {0};
-		for (unsigned int i = 0; i < BITS_TO_BYTES(numdatbits); i++)
-		{
-			char txt_t[32] = {0};
-			sprintf_s(txt_t, sizeof(txt_t), "%c", dtt[i]);
-			strcat_s(mess, sizeof(mess), txt_t);
-		}
-		Log(mess);
-
-		delete [] dtt;
-	} //*/// ponpon use this if you wanna identify RPCs
 
 	if (rpcIndex==UNDEFINED_RPC_INDEX)
 	{
@@ -2937,6 +2977,8 @@ bool RakPeer::HandleRPCPacket( const char *data, int length, PlayerID playerId )
 
 		// Call the function callback
 		rpcParms.input=userData;
+	//	int v = 22;
+
 		node->staticFunctionPointer( &rpcParms );
 
 		if (usedAlloca==false)
@@ -3087,7 +3129,7 @@ void RakPeer::SecuredConnectionConfirmation( RakPeer::RemoteSystemStruct * remot
 		if ( memcmp( ( char* ) & e, ( char* ) & publicKeyE, sizeof( big::u32 ) ) != 0 ||
 			memcmp( n, publicKeyN, sizeof( RSA_BIT_SIZE ) ) != 0 )
 		{
-			packet=AllocPacket(1);
+			packet=AllocPacket(1, __FILE__, __LINE__);
 			packet->data[ 0 ] = ID_RSA_PUBLIC_KEY_MISMATCH;
 			packet->bitSize = sizeof( char ) * 8;
 			packet->playerId = remoteSystem->playerId;
@@ -3584,9 +3626,13 @@ void RakPeer::ClearRequestedConnectionList(void)
 }
 inline void RakPeer::AddPacketToProducer(Packet *p)
 {
+	pthread_mutex_lock(&RakNetFixMutex);
+
 	Packet **packetPtr=packetSingleProducerConsumer.WriteLock();
 	*packetPtr=p;
 	packetSingleProducerConsumer.WriteUnlock();
+
+	pthread_mutex_unlock(&RakNetFixMutex);
 }
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 /*
@@ -3664,6 +3710,12 @@ void ProcessPortUnreachable( unsigned int binaryAddress, unsigned short port, Ra
 {
 	
 }
+#include <sstream>
+
+#include "../../main.h"
+#include "../../game/game.h"
+#include "..//..//net/netgame.h"
+extern CNetGame* pNetGame;
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #ifdef _WIN32
 void __stdcall ProcessNetworkPacket( const unsigned int binaryAddress, const unsigned short port, const char *data, const int length, RakPeer *rakPeer )
@@ -3697,6 +3749,19 @@ void ProcessNetworkPacket( const unsigned int binaryAddress, const unsigned shor
 		return;
 	}
 #endif
+	if (pNetGame)
+	{
+		if (pNetGame->GetGameState() == GAMESTATE_CONNECTED)
+		{
+			static bool once = false;
+			static uint32_t time;
+			if (!once)
+			{
+				time = GetTickCount();
+				once = true;
+			}
+		}
+	}
 	// We didn't check this datagram to see if it came from a connected system or not yet.
 	// Therefore, this datagram must be under 17 bits - otherwise it may be normal network traffic as the min size for a raknet send is 17 bits
 	// Banned ADDED RAKSAMP
@@ -3736,7 +3801,7 @@ void ProcessNetworkPacket( const unsigned int binaryAddress, const unsigned shor
 
 		if (connectionAttemptCancelled)
 		{
-			packet=AllocPacket(sizeof( char ));
+			packet=AllocPacket(sizeof( char ), __FILE__, __LINE__);
 			packet->data[ 0 ] = ID_CONNECTION_BANNED;
 			packet->bitSize = ( sizeof( char ) * 8);
 			packet->playerId = playerId;
@@ -3780,7 +3845,7 @@ void ProcessNetworkPacket( const unsigned int binaryAddress, const unsigned shor
 
 		if (connectionAttemptCancelled)
 		{
-			packet=AllocPacket(sizeof( char ));
+			packet=AllocPacket(sizeof( char ), __FILE__, __LINE__);
 			packet->data[ 0 ] = ID_NO_FREE_INCOMING_CONNECTIONS;
 			packet->bitSize = ( sizeof( char ) * 8);
 			packet->playerId = playerId;
@@ -3926,7 +3991,7 @@ void ProcessNetworkPacket( const unsigned int binaryAddress, const unsigned shor
 		if (connectionAttemptCancelled)
 		{
 			// Tell user of connection attempt failed
-			packet=AllocPacket(sizeof( char ));
+			packet=AllocPacket(sizeof( char ), __FILE__, __LINE__);
 			packet->data[ 0 ] = ID_CONNECTION_ATTEMPT_FAILED; // Attempted a connection and couldn't
 			packet->bitSize = ( sizeof( char ) * 8);
 			packet->playerId = playerId;
@@ -4047,7 +4112,7 @@ void ProcessNetworkPacket( const unsigned int binaryAddress, const unsigned shor
 #endif
 			{
 				// Unknown message.  Could be caused by old out of order stuff from unconnected or no longer connected systems, etc.
-				packet=AllocPacket(1);
+				packet=AllocPacket(1, __FILE__, __LINE__);
 				packet->data[ 0 ] = ID_MODIFIED_PACKET;
 				packet->bitSize = sizeof( char ) * 8;
 				packet->playerId = playerId;
@@ -4104,7 +4169,7 @@ void ProcessNetworkPacket( const unsigned int binaryAddress, const unsigned shor
 		// UNCONNECTED MESSAGE Pong with no data.  TODO - Problem - this matches a reliable send of other random data.
 		else if ((unsigned char) data[ 0 ] == ID_PONG && length >= sizeof(unsigned char)+sizeof(RakNetTime) && length < sizeof(unsigned char)+sizeof(RakNetTime)+MAX_OFFLINE_DATA_LENGTH)
 		{
-			packet=AllocPacket(length);
+			packet=AllocPacket(length, __FILE__, __LINE__);
 			memcpy(packet->data, data, length);
 			packet->bitSize = length * 8;
 			packet->playerId = playerId;
@@ -4113,7 +4178,7 @@ void ProcessNetworkPacket( const unsigned int binaryAddress, const unsigned shor
 		}
 		else if ((unsigned char) data[ 0 ] == ID_ADVERTISE_SYSTEM && length >= 2 && length < MAX_OFFLINE_DATA_LENGTH+2)
 		{
-			packet=AllocPacket(length);
+			packet=AllocPacket(length, __FILE__, __LINE__);
 			memcpy(packet->data, data, length);
 			packet->bitSize = length * 8;
 			packet->playerId = playerId;
@@ -4261,7 +4326,7 @@ bool RakPeer::RunUpdateCycle( void )
 				if (condition1 && !condition2 && rcs->actionToTake==RequestedConnectionStruct::CONNECT)
 				{
 					// Tell user of connection attempt failed
-					packet=AllocPacket(sizeof( char ));
+					packet=AllocPacket(sizeof( char ), __FILE__, __LINE__);
 					packet->data[ 0 ] = ID_CONNECTION_ATTEMPT_FAILED; // Attempted a connection and couldn't
 					packet->bitSize = ( sizeof( char ) * 8);
 					packet->playerId = rcs->playerId;
@@ -4371,7 +4436,7 @@ bool RakPeer::RunUpdateCycle( void )
 
 				//	staticDataBytes=remoteSystem->staticData.GetNumberOfBytesUsed();
 				//	packet=AllocPacket(sizeof( char ) + staticDataBytes);
-					packet=AllocPacket(sizeof( char ) );
+					packet=AllocPacket(sizeof( char ), __FILE__, __LINE__);
 					if (remoteSystem->connectMode==RemoteSystemStruct::REQUESTED_CONNECTION)
 						packet->data[ 0 ] = ID_CONNECTION_ATTEMPT_FAILED; // Attempted a connection and couldn't
 					else if (remoteSystem->connectMode==RemoteSystemStruct::CONNECTED)
@@ -4400,7 +4465,7 @@ bool RakPeer::RunUpdateCycle( void )
 			// Did the reliability layer detect a modified packet?
 			if ( remoteSystem->reliabilityLayer.IsCheater() )
 			{
-				packet=AllocPacket(sizeof(char));
+				packet=AllocPacket(sizeof(char), __FILE__, __LINE__);
 				packet->bitSize=8;
 				packet->data[ 0 ] = (unsigned char) ID_MODIFIED_PACKET;
 				packet->playerId = playerId;
@@ -4540,7 +4605,7 @@ bool RakPeer::RunUpdateCycle( void )
 
 							// Send this info down to the game
 
-							packet=AllocPacket(byteSize, data);
+							packet=AllocPacket(byteSize, data, __FILE__, __LINE__);
 							packet->bitSize = bitSize;
 							packet->playerId = playerId;
 							packet->playerIndex = ( PlayerIndex ) remoteSystemIndex;
@@ -4657,7 +4722,7 @@ bool RakPeer::RunUpdateCycle( void )
 						remoteSystem->staticData.Write( ( char* ) data + sizeof(unsigned char), byteSize - 1 );
 
 						// Inform game server code that we got static data
-						packet=AllocPacket(byteSize, data);
+						packet=AllocPacket(byteSize, data, __FILE__, __LINE__);
 						packet->bitSize = bitSize;
 						packet->playerId = playerId;
 						packet->playerIndex = ( PlayerIndex ) remoteSystemIndex;
@@ -4807,7 +4872,7 @@ bool RakPeer::RunUpdateCycle( void )
 							}
 
 							// Send the connection request complete to the game
-							packet=AllocPacket(byteSize, data);
+							packet=AllocPacket(byteSize, data, __FILE__, __LINE__);
 							packet->bitSize = byteSize * 8;
 							packet->playerId = playerId;
 							packet->playerIndex = ( PlayerIndex ) GetIndexFromPlayerID( playerId, true );
@@ -4841,7 +4906,7 @@ bool RakPeer::RunUpdateCycle( void )
 					}
 					else if (byteSize > (sizeof(unsigned char) + sizeof(unsigned char)) && (unsigned char)(data)[0] == ID_AUTH_KEY) 
 					{
-							packet=AllocPacket(byteSize, data);
+							packet=AllocPacket(byteSize, data, __FILE__, __LINE__);
 							packet->bitSize = bitSize;
 							packet->playerId = playerId;
 							packet->playerIndex = ( PlayerIndex ) remoteSystemIndex;
@@ -4851,7 +4916,7 @@ bool RakPeer::RunUpdateCycle( void )
 					{
 						if (data[0]>=(unsigned char)ID_RPC)
 						{
-							packet=AllocPacket(byteSize, data);
+							packet=AllocPacket(byteSize, data, __FILE__, __LINE__);
 							packet->bitSize = bitSize;
 							packet->playerId = playerId;
 							packet->playerIndex = ( PlayerIndex ) remoteSystemIndex;

@@ -22,7 +22,7 @@
 #include "Rand.h"
 #include "PacketEnumerations.h"
 
-#include "main.h"
+#include "../../main.h"
 
 // alloca
 #ifdef _COMPATIBILITY_1

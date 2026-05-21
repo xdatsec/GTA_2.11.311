@@ -26,9 +26,11 @@
 #include "RakNetDefines.h"
 #include "Export.h"
 #include "NetworkTypes.h"
+#include "Vector.h"
 #include <assert.h>
 #include <math.h>
 #include <float.h>
+#include <string>
 
 #ifdef _MSC_VER
 #pragma warning( push )
@@ -304,6 +306,7 @@ namespace RakNet
 		/// \return true on success false if there is some missing bytes. 
 		bool Read( char* output, const int numberOfBytes );
 
+        bool ReadStr8(std::string& var);
 		/// Read a normalized 3D vector, using (at most) 4 bytes + 3 bits instead of 12-24 bytes.  Will further compress y or z axis aligned vectors.
 		/// Accurate to 1/32767.5.
 		/// \param[in] x x
@@ -596,7 +599,7 @@ namespace RakNet
 
 		/// BitStreams that use less than BITSTREAM_STACK_ALLOCATION_SIZE use the stack, rather than the heap to store data.  It switches over if BITSTREAM_STACK_ALLOCATION_SIZE is exceeded
 		unsigned char stackData[BITSTREAM_STACK_ALLOCATION_SIZE];
-	};
+    };
 
 		template <class templateType>
 		inline bool BitStream::Serialize(bool writeToBitstream, templateType &var)
@@ -719,6 +722,19 @@ namespace RakNet
 				return ReadBits(input,numberOfBitsToSerialize,rightAlignedBits);
 			return true;
 		}
+
+	template <>
+	inline void BitStream::Write(std::string str) {
+		Write((uint32_t) str.size());
+		Write(str.c_str(), str.size());
+	}
+
+    template <>
+    inline void BitStream::Write(const CVector& vec) {
+        Write(vec.x);
+        Write(vec.y);
+        Write(vec.z);
+    }
 
 	template <class templateType>
 		inline void BitStream::Write(templateType var)
@@ -976,6 +992,29 @@ namespace RakNet
 		Write(currentValue);
 	}
 
+    inline bool BitStream::ReadStr8(std::string& var) {
+        uint8_t size;
+        Read(size);
+        var.resize(size);
+        return Read(var.data(), size);
+    }
+
+    template <>
+    inline bool BitStream::Read(CVector& var) {
+        Read(var.x);
+        Read(var.y);
+        Read(var.z);
+        return true;
+    }
+
+	template <>
+	inline bool BitStream::Read(std::string& var) {
+		uint32_t size;
+		Read(size);
+		var.resize(size);
+		return Read(var.data(), size);
+	}
+
 	/// Read any integral type from a bitstream.  Define __BITSTREAM_NATIVE_END if you need endian swapping.
 	/// \param[in] var The value to read
 	template <class templateType>
@@ -1010,19 +1049,22 @@ namespace RakNet
 
 	/// Read a bool from a bitstream
 	/// \param[in] var The value to read
-	template <>
-		inline bool BitStream::Read(bool &var)
-	{
-		if ( readOffset + 1 > numberOfBitsUsed )
-			return false;
+		template <>
+		inline bool BitStream::Read(bool& outTemplateVar)
+		{
+			if (readOffset + 1 > numberOfBitsUsed)
+				return false;
 
-		if ( data[ readOffset >> 3 ] & ( 0x80 >> ( readOffset++ % 8 ) ) )   // Is it faster to just write it out here?
-			var = true;
-		else
-			var = false;
+			if (data[readOffset >> 3] & (0x80 >> (readOffset & 7)))   // Is it faster to just write it out here?
+				outTemplateVar = true;
+			else
+				outTemplateVar = false;
 
-		return true;
-	}
+			// Has to be on a different line for Mac
+			readOffset++;
+
+			return true;
+		}
 
 	/// Read a playerID from a bitstream
 	/// \param[in] var The value to read

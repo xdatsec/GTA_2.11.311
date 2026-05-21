@@ -6,13 +6,13 @@
 #include "main.h"
 
 Channel::Channel(const uint32_t channelFlags)
-        : handle(BASS_StreamCreate(SV::kFrequency2, 1, channelFlags, STREAMPROC_PUSH, nullptr))
-        , decoder(opus_decoder_create(SV::kFrequency, 1, &opusErrorCode))
+    : handle(BASS_StreamCreate(SV::kFrequency2, 1, channelFlags, STREAMPROC_PUSH, nullptr))
+    , decoder(opus_decoder_create(SV::kFrequency, 1, &opusErrorCode))
 {
     if(this->handle == NULL) LogVoice("[sv:err:channel] : "
-                                      "failed to create bass channel (code:%d)", BASS_ErrorGetCode());
+        "failed to create bass channel (code:%d)", BASS_ErrorGetCode());
     if(this->decoder == nullptr) LogVoice("[sv:err:channel] : "
-                                          "failed to create opus decoder (code:%d)", this->opusErrorCode);
+        "failed to create opus decoder (code:%d)", this->opusErrorCode);
 
     if(this->handle == NULL || this->decoder == nullptr)
     {
@@ -26,7 +26,7 @@ Channel::~Channel() noexcept
 {
     if(this->playing) this->channelstop = true;
     //if(this->playing && this->stopCallback != nullptr)
-    //this->stopCallback(*this);
+        //this->stopCallback(*this);
 
     opus_decoder_destroy(this->decoder);
     BASS_StreamFree(this->handle);
@@ -65,7 +65,7 @@ void Channel::Reset() noexcept
     opus_decoder_ctl(this->decoder, OPUS_RESET_STATE);
 
     //if(this->playing && this->stopCallback != nullptr)
-    //this->stopCallback(*this);
+        //this->stopCallback(*this);
 
     this->speaker = SV::kNonePlayer;
     this->expectedPacketNumber = 0;
@@ -85,7 +85,7 @@ void Channel::Push(const uint32_t packetNumber, const uint8_t* const dataPtr, co
 
         if(this->playing) this->channelstop = true;
         //if(this->playing && this->stopCallback != nullptr)
-        //this->stopCallback(*this);
+            //this->stopCallback(*this);
 
         this->initialized = true;
         this->playing = false;
@@ -93,17 +93,17 @@ void Channel::Push(const uint32_t packetNumber, const uint8_t* const dataPtr, co
     else if(packetNumber < this->expectedPacketNumber)
     {
         LogVoice("[sv:dbg:channel:push] : late packet to channel (speaker:%hu) "
-                 "(pack:%u;expPack:%u)", this->speaker, packetNumber, this->expectedPacketNumber);
+            "(pack:%u;expPack:%u)", this->speaker, packetNumber, this->expectedPacketNumber);
 
         return;
     }
     else if(packetNumber > this->expectedPacketNumber)
     {
         LogVoice("[sv:dbg:channel:push] : lost packet to channel (speaker:%hu) "
-                 "(pack:%u;expPack:%u)", this->speaker, packetNumber, this->expectedPacketNumber);
+            "(pack:%u;expPack:%u)", this->speaker, packetNumber, this->expectedPacketNumber);
 
         if(const int length = opus_decode(this->decoder, dataPtr, dataSize, this->decBuffer.data(),
-                                          SV::kFrameSizeInSamples, true); length == static_cast<int>(SV::kFrameSizeInSamples))
+            SV::kFrameSizeInSamples, true); length == static_cast<int>(SV::kFrameSizeInSamples))
         {
             BASS_StreamPutData(this->handle, this->decBuffer.data(), SV::kFrameSizeInBytes);
 
@@ -113,9 +113,9 @@ void Channel::Push(const uint32_t packetNumber, const uint8_t* const dataPtr, co
 
         goto gohere;
     }
-
+    
     if(const int length = opus_decode(this->decoder, dataPtr, dataSize, this->decBuffer.data(),
-                                      SV::kFrameSizeInSamples, false); length == static_cast<int>(SV::kFrameSizeInSamples))
+    SV::kFrameSizeInSamples, false); length == static_cast<int>(SV::kFrameSizeInSamples))
     {
         BASS_StreamPutData(this->handle, this->decBuffer.data(), SV::kFrameSizeInBytes);
 
@@ -123,12 +123,12 @@ void Channel::Push(const uint32_t packetNumber, const uint8_t* const dataPtr, co
         speex_echo_playback(Record::speexEchoState, this->decBuffer.data());
     }
 
-    gohere:
+gohere:
     const auto channelStatus = BASS_ChannelIsActive(this->handle);
     const auto bufferSize = BASS_ChannelGetData(this->handle, nullptr, BASS_DATA_AVAILABLE);
 
     if((channelStatus == BASS_ACTIVE_PAUSED || channelStatus == BASS_ACTIVE_STOPPED) &&
-       bufferSize != -1 && bufferSize >= SV::kChannelPreBufferFramesCount * SV::kFrameSizeInBytes)
+        bufferSize != -1 && bufferSize >= SV::kChannelPreBufferFramesCount * SV::kFrameSizeInBytes)
     {
         LogVoice("[sv:dbg:channel:push] : playing channel (speaker:%hu)", this->speaker);
 
@@ -136,7 +136,7 @@ void Channel::Push(const uint32_t packetNumber, const uint8_t* const dataPtr, co
 
         if(!this->playing) this->channelplay = true;
         //if(!this->playing && this->playCallback != nullptr)
-        //this->playCallback(*this);
+            //this->playCallback(*this);
 
         this->playing = true;
     }

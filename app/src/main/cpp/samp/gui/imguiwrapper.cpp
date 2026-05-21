@@ -71,11 +71,11 @@ bool ImGuiWrapper::initialize()
     m_renderer = new ImGuiRenderer(ImGui::GetBackgroundDrawList(), font);
 
     // voice
-    /*for (const auto& deviceInitCallback : Render::deviceInitCallbacks) {
-        if (deviceInitCallback != nullptr) {
-            deviceInitCallback();
-        }
-    }*/
+	for (const auto& deviceInitCallback : CVoiceRender::deviceInitCallbacks) {
+		if (deviceInitCallback != nullptr) {
+			deviceInitCallback();
+		}
+	}
 
     return true;
 }
@@ -116,11 +116,11 @@ void ImGuiWrapper::shutdown()
 	Log::traceLastFunc("ImGuiWrapper::shutdown");
 
 	// voice
-	/*for (const auto& deviceFreeCallback : Render::deviceFreeCallbacks) {
+	for (const auto& deviceFreeCallback : CVoiceRender::deviceFreeCallbacks) {
 		if (deviceFreeCallback != nullptr) {
 			deviceFreeCallback();
 		}
-	}*/
+	}
 
 	destroyFontTexture();
 }

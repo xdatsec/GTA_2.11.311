@@ -27,6 +27,6 @@ void StreamAtPoint::OnChannelCreate(const Channel& channel) noexcept
     this->LocalStream::OnChannelCreate(channel);
 
     BASS_ChannelSet3DPosition(channel.GetHandle(),
-        reinterpret_cast<BASS_3DVECTOR*>(&this->position),
-        &kZeroVector, &kZeroVector);
+    reinterpret_cast<BASS_3DVECTOR*>(&this->position),
+    &kZeroVector, &kZeroVector);
 }

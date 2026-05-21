@@ -702,7 +702,7 @@ void Table::PrintRow(char *out, int outLength, char columnDelineator, bool print
 				len=0;
 			if (i+1!=columns.Size())
 				buff[len++]=columnDelineator;
-			buff[len]=0;
+			buff[len]='\0';
 		}
 		else if (columns[i].columnType==STRING)
 		{
@@ -716,7 +716,7 @@ void Table::PrintRow(char *out, int outLength, char columnDelineator, bool print
 				len=0;
 			if (i+1!=columns.Size())
 				buff[len++]=columnDelineator;
-			buff[len]=0;
+			buff[len]='\0';
 		}
 		else
 		{
