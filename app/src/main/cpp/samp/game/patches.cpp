@@ -17,12 +17,13 @@ extern CGame* pGame;
 void ApplyFPSPatch(uint8_t fps)
 {
     uint8_t targetFPS = 120;
+    CHook::WriteMemory(g_libGTASA + 0x3683D0, "\xE8\x0F\x80\x52", 4);
+    CHook::WriteMemory(g_libGTASA + 0x368644, "\x08\x0F\x80\x52", 4);
+    CHook::WriteMemory(g_libGTASA + 0x3685B8, "\x09\x0F\x80\x52", 4);
+    CHook::WriteMemory(g_libGTASA + 0x368924, "\x08\x0F\x80\x52", 4);
 
-
-    //CHook::WriteMemory(g_libGTASA + 0x3685B8 + 1, &targetFPS, 1);
-   // CHook::WriteMemory(g_libGTASA + 0x368644 + 1, &targetFPS, 1);
-    //CHook::WriteMemory(g_libGTASA + 0x368924 + 1, &targetFPS, 1);
-
+   // CHook::WriteMemory(g_libGTASA + 0x368688+1, &targetFPS, 1);
+    //CHook::WriteMemory(g_libGTASA + 0x70A458+1, &targetFPS, 1);
     FLog("New fps limit = %d", targetFPS);
 }
 
@@ -61,7 +62,7 @@ void ApplySAMPPatchesInGame()
     CHook::NOP(g_libGTASA + 0x6D4270, 1); // CTrain
 
     // Disable in-game radio
-   // CHook::RET("_ZN20CAERadioTrackManager7ServiceEi");
+    CHook::RET("_ZN20CAERadioTrackManager7ServiceEi");
 
     // карта в меню
     //CHook::NOP(g_libGTASA + 0x71DBB8, 2; // текст легенды карты
