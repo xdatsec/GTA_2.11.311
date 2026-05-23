@@ -404,7 +404,13 @@ typedef struct _ANIMATION_DATA {
 #pragma pack(pop)
 
 //-----------------------------------------------------------
-
+enum eWeaponState1
+{
+	WS_NO_BULLETS = 0,
+	WS_LAST_BULLET = 1,
+	WS_MORE_BULLETS = 2,
+	WS_RELOADING = 3,
+};
 enum eWeaponState : uint32 {
     WEAPONSTATE_READY = 0,
     WEAPONSTATE_FIRING,
