@@ -451,7 +451,7 @@ public class Speedometer {
     }
 
     public void HideSpeed() {
-        Log.d("Speedometer", "HideSpeed called");
+       // Log.d("Speedometer", "HideSpeed called");
         if (mInputLayout != null) {
             Util.HideLayout(mInputLayout, false);
         }

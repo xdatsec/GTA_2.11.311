@@ -105,7 +105,7 @@ void ApplyPatches_level0()
     FLog("ApplyPatches_level0");
 
     CHook::Write(g_libGTASA + 0x837358, &CWorld::Players);
-
+    CHook::Write(g_libGTASA + 0xA1A8D0, &CWorld::PlayerInFocus);
     CHook::Redirect("_ZN6CWorld28FindPlayerSlotWithPedPointerEPv", &CWorld__FindPlayerSlotWithPedPointer);
     CHook::Redirect("_ZN10CPlayerPed29GetPlayerInfoForThisPlayerPedEv", &GetPlayerInfoForThisPlayerPed);
 

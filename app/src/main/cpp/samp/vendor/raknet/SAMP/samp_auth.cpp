@@ -1,6 +1,6 @@
 // https://github.com/P3ti/RakSAMP/blob/master/raknet/SAMP/samp_auth.cpp
 #include "..//..//..//main.h"
-#include "str_obfuscator.hpp"
+#include "../vendor/str_obfuscator/str_obfuscator.hpp"
 
 #define endian_swap8(x) (x)
 #define endian_swap16(x) ((x>>8) | (x<<8))

@@ -62,8 +62,8 @@ void CModelInfo::Initialise() {
 void CModelInfo::injectHooks()
 {
     CHook::Write(g_libGTASA +  0xA76CF0, &CModelInfo::ms_atomicModelInfoStore);
-    CHook::Write(g_libGTASA +  0x83B180, &CModelInfo::ms_pedModelInfoStore);
-    CHook::Write(g_libGTASA +  0xB719E8, &CModelInfo::ms_vehicleModelInfoStore);
+    CHook::Write(g_libGTASA +  0xBCD208, &CModelInfo::ms_pedModelInfoStore);
+    CHook::Write(g_libGTASA +  0xB74840, &CModelInfo::ms_vehicleModelInfoStore);
     CHook::Write(g_libGTASA + 0x8373A8, &CModelInfo::ms_modelInfoPtrs);
 
     CHook::Redirect("_ZN10CModelInfo11AddPedModelEi", &CModelInfo::AddPedModel);

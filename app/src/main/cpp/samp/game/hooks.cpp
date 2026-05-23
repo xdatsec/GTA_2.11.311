@@ -1854,12 +1854,11 @@ void InstallUrezHooks()
     *(char*)(g_libGTASA + 0x246D17 + 14) = 't';
 }
 
-void (*CPlaceable_InitMatrixArray)(CMatrixLinkList *thiz, int32 size);
-void CPlaceable_InitMatrixArray_hook(CMatrixLinkList *thiz, int32 size)
+void (*CPlaceable_InitMatrixArray)(void);
+void CPlaceable_InitMatrixArray_hook(void)
 {
     // CMatrixLinkList::Init
-    CHook::CallFunction<void>(g_libGTASA + 0x4AC048, thiz, 10000);
-    CPlaceable_InitMatrixArray(thiz, size);
+    ((void (*)(uintptr_t, size_t))(g_libGTASA + 0x4AC048))(g_libGTASA + 0xA01668, 10000);
 }
 int (*_RwTextureDestroy)(int a1);
 int _RwTextureDestroy_hook(int a1)
@@ -1974,7 +1973,7 @@ void InstallSpecialHooks()
 
     CHook::InlineHook("_Z27AtomicDefaultRenderCallBackP8RpAtomic", &AtomicDefaultRenderCallBack_hook, &AtomicDefaultRenderCallBack_orig);
     CHook::InlineHook("_ZN18CVisibilityPlugins12RenderEntityEPvf", &CVisibilityPlugins_RenderEntity_hook, &CVisibilityPlugins_RenderEntity_orig);
-    CHook::InlineHook(g_libGTASA+0x846B00, &CPlaceable_InitMatrixArray_hook, & CPlaceable_InitMatrixArray);
+    CHook::InstallPLT(g_libGTASA+0x846B00, &CPlaceable_InitMatrixArray_hook, &CPlaceable_InitMatrixArray);
 
 }
 RwFrame * (*CClumpModelInfo__GetFrameFromId)(RpClump * a1, int32 a2);

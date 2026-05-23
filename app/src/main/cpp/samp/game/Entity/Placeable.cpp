@@ -208,24 +208,9 @@ void CPlaceable::AllocateMatrix() {
 }
 
 void CPlaceable::SetMatrix(CMatrix& matrix) {
-    if (!m_matrix) {
+    if (!m_matrix || !this) return;
 
-        m_matrix->m_right.x = matrix.m_right.x;
-        m_matrix->m_right.y = matrix.m_right.y;
-        m_matrix->m_right.z = matrix.m_right.z;
-
-        m_matrix->m_forward.x = matrix.m_forward.x;
-        m_matrix->m_forward.y = matrix.m_forward.y;
-        m_matrix->m_forward.z = matrix.m_forward.z;
-
-        m_matrix->m_up.x = matrix.m_up.x;
-        m_matrix->m_up.y = matrix.m_up.y;
-        m_matrix->m_up.z = matrix.m_up.z;
-
-        m_matrix->m_pos.x = matrix.m_pos.x;
-        m_matrix->m_pos.y = matrix.m_pos.y;
-        m_matrix->m_pos.z = matrix.m_pos.z;
-    }
+    *static_cast<CMatrix*>(m_matrix) = matrix;
 }
 
 float CPlaceable::GetRoll() const {
