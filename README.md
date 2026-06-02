@@ -73,7 +73,7 @@ Please review the commit history for additional information.
 
 Disclaimer
 
-This repository is provided for educational, research, and historical purposes. The project remains unfinished and may contain bugs, crashes, and incomplete functionality.
+This repository is provided for educational, research purposes. The project remains unfinished and may contain bugs, crashes, and incomplete functionality.
 
 All rights to Grand Theft Auto: San Andreas and its original source materials belong to Rockstar Games.
 
