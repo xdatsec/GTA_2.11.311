@@ -16,6 +16,7 @@ I contributed to the development of this project, including Android storage path
 Since copies are already circulating publicly, I am publishing this repository to preserve the project's history and ensure contributors receive proper credit.
 
 THE GTA CORE OF THIS WAS CREATED FROM SCRACH
+CREDIT GOES TO R*
 
 Credits FOR SOME SAMP CODE
 
