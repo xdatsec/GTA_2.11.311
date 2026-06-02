@@ -15,10 +15,11 @@ I contributed to the development of this project, including Android storage path
 
 Since copies are already circulating publicly, I am publishing this repository to preserve the project's history and ensure contributors receive proper credit.
 
-THE GTA CORE OF THIS WAS CREATED FROM SCRACH
-CREDIT GOES TO R*
+The GTA SA core included in this project was originally created by Rockstar Games.
 
-Credits FOR SOME SAMP CODE
+Credit for the GTA SA core goes to Rockstar Games.
+
+Credits for Some SAMP Code
 
 SAMP
 
@@ -40,34 +41,40 @@ Status
 - Contains known crashes and unfinished features.
 - Development was ongoing when the source became publicly distributed.
 
+---
 
-extra
+Extra Information
 
-GTA SA 2.11.311/GTA SA 2.11.277
+GTA SA 2.11.311 / GTA SA 2.11.277
 
-I am releasing the decompiled source code for GTA SA 2.11.311/2.11.277
+I am releasing the decompiled source code for GTA SA 2.11.311 and GTA SA 2.11.277.
 
-I hope that AML, CLEO, FASTMAN can be ported to version 2.11.311  or 277 in the future. Currently, the only patch included in this source changes the storage location so that files are stored outside of the assets folder has been redirected to Android/media
+I hope that AML, CLEO, and FASTMAN can be ported to versions 2.11.311 and 2.11.277 in the future.
+
+Currently, the only patch included in this source redirects the storage location from the assets folder to Android/media.
 
 The project is fully functional and can be built successfully. However, no additional fixes or improvements have been implemented beyond the storage path modification.
 
 This source is provided for research, educational, and development purposes.
 
 Added
-The repo also contains 2.11.277, just check commits 
 
-Credits for R* 
+The repository also contains GTA SA 2.11.277. Please check the commit history.
 
-2.11.311
+GTA SA 2.11.311
 
 https://github.com/xdatsec/GTA_2.11.311/tree/bcdb741cc0ff3bdd5d90fac58d005a11c94df7d0
 
-2.11.277
+GTA SA 2.11.277
+
 https://github.com/xdatsec/GTA_2.11.311/tree/278990c308bd5ad3fde3a783337776652cb0442a
 
-Check this commit history
-
+Please review the commit history for additional information.
 
 Disclaimer
 
 This repository is provided for educational, research, and historical purposes. The project remains unfinished and may contain bugs, crashes, and incomplete functionality.
+
+All rights to Grand Theft Auto: San Andreas and its original source materials belong to Rockstar Games.
+
+I do not claim ownership of Rockstar Games' original assets, code, trademarks, or intellectual property.
