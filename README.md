@@ -40,6 +40,34 @@ Status
 - Contains known crashes and unfinished features.
 - Development was ongoing when the source became publicly distributed.
 
+
+extra
+
+GTA SA 2.11.311/GTA SA 2.11.277
+
+I am releasing the decompiled source code for GTA SA 2.11.311/2.11.277
+
+I hope that AML, CLEO, FASTMAN can be ported to version 2.11.311  or 277 in the future. Currently, the only patch included in this source changes the storage location so that files are stored outside of the assets folder has been redirected to Android/media
+
+The project is fully functional and can be built successfully. However, no additional fixes or improvements have been implemented beyond the storage path modification.
+
+This source is provided for research, educational, and development purposes.
+
+Added
+The repo also contains 2.11.277, just check commits 
+
+Credits for R* 
+
+2.11.311
+
+https://github.com/xdatsec/GTA_2.11.311/tree/bcdb741cc0ff3bdd5d90fac58d005a11c94df7d0
+
+2.11.277
+https://github.com/xdatsec/GTA_2.11.311/tree/278990c308bd5ad3fde3a783337776652cb0442a
+
+Check this commit history
+
+
 Disclaimer
 
 This repository is provided for educational, research, and historical purposes. The project remains unfinished and may contain bugs, crashes, and incomplete functionality.
